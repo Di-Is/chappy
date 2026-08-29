@@ -1,0 +1,1391 @@
+- target: class:MainWindow
+  props:
+    doc.windowTitleKey:
+      text: chappy User Manual
+    doc.summaryByScopeKey:
+      common:
+        text: Review the shared context bar, spectrum view, and status bar that appear in every mode.
+      start:
+        text: Start mode is the landing screen where you load observation data or an existing project.
+      analysis_overview:
+        text: Analysis Overview reviews every region's readiness, fit result, and next action.
+      analysis_structure:
+        text: Analysis Structure edits the region and line hierarchy from Overview.
+      identify:
+        text: Identify mode focuses on reviewing detections and assigning absorption lines to species and regions.
+      continuum:
+        text: Continuum mode shapes the continuum curve so later analysis stays stable.
+      analysis_region_detail:
+        text: Analysis Region Detail prepares fitting conditions, runs the optimiser, and reviews one region's result.
+    doc.operationsHeadingKey:
+      text: Key Operations
+    doc.operationsByScopeKey:
+      common:
+        - text: Use the context bar to switch modes and invoke shared actions.
+        - text: Inspect observed flux, model, and residuals in the spectrum view.
+        - text: Adjust the wavelength and flux ranges with the data control panel. Velocity controls depend on the active mode.
+        - text: Open Display in the data control panel to show or hide the error spectrum.
+        - text: Use mouse wheel vertical scroll to zoom and horizontal scroll to pan.
+        - text: Double-click on the spectrum view to center the display on that wavelength (zoom level is preserved).
+      start:
+        - text: Drag and drop the flux/error FITS pair or a .h5 project onto the main view.
+        - text: Open existing projects through the context bar's "Open Project" action.
+        - text: Create an empty workspace with “New Project” when starting from scratch.
+      analysis_overview:
+        - text: Press Enter or double-click a row in the region list to open the region in Region Detail.
+        - text: Right-click a row in the region list and choose "Delete region…", or press the Delete key, to remove a region after a confirmation.
+        - text: Click a status count in the summary panel to filter the region list.
+      analysis_structure:
+        - text: '**Spectrum display**: Double-click an absorption region (region) to jump the spectrum to the wavelength span that contains all of its absorption lines (lines); the coloured bands highlight that range.'
+        - text: '**Analysis Structure panel**: Collapse the tree while reviewing each line’s type, wavelength span, redshift, velocity window, and Needs badge. The colour chip beside each region matches the spectrum overlay; see [Analysis Structure panel](#analysis-structure-panel) for a quick reference.'
+        - text: '**Edit regions**: Rearrange lines and use the visible Structure actions or context menu to merge, split, unlink, or delete items (see [Analysis Structure](../../../operations/analysis-structure.md)). Press Back to Overview at the top of the panel to return to Analysis Overview.'
+      identify:
+        - text: Pick a preset in the setup header at the top of the side panel, and use the manage button to open the [Preset Management dialog](../../../menus/main_window/dialogs/PresetListDialog.md) so you can add, edit, or remove presets.
+        - text: Slide the detection threshold to rebuild the hit list.
+        - text: Shift+click an absorption feature on the spectrum to add temporary lines; the temporary line list always shows how they will be grouped into regions.
+        - text: Hold Shift over an absorption feature and press V while the all-species preview is visible to verify that exact position in the Velocity Plot. Without a valid preview, press V and then select the velocity origin in the spectrum.
+        - text: Press Register all (N groups), or select rows and press Register selected (N groups), to save temporary groups immediately; the status bar reports the created or extended regions, and Undo reverts the registration.
+      continuum:
+        - text: Right-click the spectrum to add a control point, and drag existing points to shape the continuum curve.
+        - text: Use Auto Estimate in the side panel to rebuild control points from the current spectrum.
+      analysis_region_detail:
+        - text: Edit Analysis range [km/s] on a line or multiplet row to set the interval used for analysis.
+        - text: Use Display range in the Velocity Plot to reframe all subplots without changing the analysis interval.
+        - text: Open Display in the data control panel or right-click the spectrum, or press M, to show Component profiles; each component draws its own curve in the colour of its marker and label, and this toggle is disabled outside Region Detail.
+        - text: Select a row in the parameter table to emphasise that component in the spectrum view; its label reads bold and keeps the full name on the top row, while crowded neighbours shorten and alternate onto a second row.
+        - text: Lock or unlock parameters in the parameter table shown in the bottom pane to define the search space.
+        - text: Press Run fit and adjust masks to refine residuals.
+    doc.notesHeadingKey:
+      text: Notes & Caveats
+    doc.notesByScopeKey:
+      common:
+        - text: The data control panel is hidden while you stay in Start mode.
+      start:
+        - text: No spectrum or data controls appear until data has been loaded.
+        - text: When dragging FITS files, select both flux and error files together so they are paired automatically.
+        - text: Flux/error FITS files that follow the `*_f.fits` and `*_e.fits` pattern are paired automatically; when you pick files with other names, use the prompt to assign flux and error roles.
+        - text: Supported FITS inputs are 1D primary HDUs (with optional WCS), binary tables containing WAVELENGTH/WAVE/LAMBDA/WL and FLUX/INTENSITY/COUNTS/DATA columns, or multi-extension files with WAVELENGTH and FLUX (and optionally ERROR/ERR/SIGMA) extensions. Files whose column or extension names do not match cannot be loaded.
+      analysis_structure:
+        - text: '**Velocity window**: Each line heading in the tree shows its velocity window inline (±… km/s).'
+        - text: '**Colour indicator**: The colour chip beside each region matches the vertical band in the spectrum. Double-click when you need to refocus on the matching range.'
+        - text: '**Linked-line display**: Lines registered from the same preset link group are displayed as a single representative line with the highest f-value.'
+      identify:
+        - text: High-S/N spectra can produce many absorption-region candidates and slow down interaction; adjust the detection threshold to keep the list manageable.
+        - text: Pressing Register saves the temporary lines to regions immediately without a confirmation step; use Undo when you need to revert a registration.
+        - text: When a group heading in the temporary line list carries a warning mark, the lines overlap multiple existing regions; check the assignment in Analysis Structure after registering.
+        - text: '**Link groups**: When you add a candidate using a line in a link group, a temporary line is created for every line in that group. After you register them, those lines remain linked in the project.'
+      continuum:
+        - text: Auto estimation overwrites existing control points; save the current state first.
+      analysis_region_detail:
+        - text: A Needs badge marks regions that still require optimisation.
+        - text: Unlocking too many parameters can destabilise convergence; introduce changes gradually.
+        - text: '**Fitting linked lines**: When you add a model to one linked line, components are created for every line in the link. By default, redshift, column density, b parameter, and covering factor are shared; changing one updates all linked components.'
+        - text: A component that needs re-optimization shows its value without an uncertainty,
+            since the previous fit's uncertainty no longer applies; hover the cell to see that
+            previous value in the tooltip.
+        - text: The lookback time and comoving distance columns are hidden by default; enable
+            them from the column header's right-click menu. Both are recalculated immediately
+            when you apply new parameters in the Cosmology Settings dialog.
+- target: window.view_stack
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Spectrum View
+    doc.descKey:
+      text: Central canvas that shows the observed spectrum and fitted models with zoom and measurement tools.
+    doc.descByScopeKey:
+      start:
+        text: No spectrum is shown in this mode. Drag and drop two FITS files (observed flux and error) or a project file (.h5) here. You can also use File > Open. The data control panel is hidden in Start mode, but it appears beneath the spectrum view after you switch to another mode.
+    doc.sectionByScope:
+      identify: identify_overview
+
+- target: window.view_stack._view_stack
+  props:
+    doc.include: false
+
+- target: window.data_control_panel
+  props:
+    doc.include: true
+    doc.scope: common
+    doc.labelKey:
+      text: Data Controls
+    doc.descKey:
+      text: Controls for adjusting the spectrum view range and scaling.
+- target: objectName:dataControlPanel_wavelengthGroup
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Wavelength Range
+    doc.descKey:
+      text: Set the minimum and maximum wavelengths shown.
+- target: objectName:dataControlPanel_wavelengthHeaderLabel
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_fluxGroup
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Flux Range
+    doc.descKey:
+      text: Set the lower and upper flux limits.
+- target: objectName:dataControlPanel_fluxHeaderLabel
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_buttonGroup
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_wavelengthMinLabel
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_wavelengthMaxLabel
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_fluxMinLabel
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_fluxMaxLabel
+  props:
+    doc.include: false
+
+- target: objectName:displayMenuButton
+  props:
+    doc.labelKey:
+      text: Display
+    doc.descKey:
+      text: Open a popup with two checkable display toggles, "Error spectrum" (on by default) and "Component profiles" (off by default). Error spectrum shows or hides the error spectrum in the spectrum view and velocity subplots. Component profiles draws each absorption component's own profile curve in its identity colour, matching that component's marker line and label; it is available only in Analysis Region Detail and is disabled elsewhere with the tooltip "Available in Analysis region detail". Component profiles has the shortcut M. Both toggles also appear in the spectrum view's right-click menu.
+- target: objectName:resetViewButton
+  props:
+    doc.labelKey:
+      text: Reset
+    doc.descKey:
+      text: Restore the wavelength and flux ranges saved for the current view. If no view range is saved, show the full spectrum.
+- target: objectName:autoAdjustButton
+  props:
+    doc.labelKey:
+      text: Auto Adjust
+    doc.descKey:
+      text: Adjust only the flux axis to fit the observed data in the currently visible wavelength range.
+- target: objectName:analysisOverviewReviewWidget
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Analysis review table
+    doc.descKey:
+      text: Review every region's analysis status, fit result, and next action.
+- target: objectName:analysisOverviewFilterEdit
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Region filter
+    doc.descKey:
+      text: Filter review rows by region identity or analysis state.
+- target: objectName:analysisOverviewReadinessFilter
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Readiness filter
+    doc.descKey:
+      text: Show all regions or limit the table to one readiness category.
+- target: objectName:analysisOverviewReviewTable
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Region review rows
+    doc.descKey:
+      text: Select a row for its summary; press Enter or double-click to open Region Detail.
+- target: objectName:analysisOverviewSummaryPanel
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Selected region summary
+    doc.descKey:
+      text: Shows review counts, selected-region reasons, read-only structure, and explicit navigation actions.
+- target: objectName:analysisOverviewStatusCard
+  props:
+    doc.include: false
+- target: objectName:analysisOverviewStatusUnavailable
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Unavailable count
+    doc.descKey:
+      text: Number of regions that cannot be analysed yet. Click to filter the region list.
+- target: objectName:analysisOverviewStatusNotAnalyzed
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Not analyzed count
+    doc.descKey:
+      text: Number of regions that have not been fitted yet. Click to filter the region list.
+- target: objectName:analysisOverviewStatusStale
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Stale count
+    doc.descKey:
+      text: Number of regions whose fit result is outdated. Click to filter the region list.
+- target: objectName:analysisOverviewStatusLatest
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Latest count
+    doc.descKey:
+      text: Number of regions whose fit result is up to date. Click to filter the region list.
+- target: objectName:analysisBottomPane
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Bottom pane
+    doc.descByScopeKey:
+      analysis_overview:
+        text: Hosts the region list below the spectrum. Drag the splitter handle above it to resize.
+      analysis_region_detail:
+        text: Hosts the component parameter table while Region Detail is open. Drag the splitter handle above it to resize.
+- target: objectName:analysisOverviewOpenRegionButton
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Open region
+    doc.descKey:
+      text: Open the selected region in Analysis Region Detail.
+- target: objectName:analysisOverviewEditStructureButton
+  props:
+    doc.include: true
+    doc.scope: analysis_overview
+    doc.labelKey:
+      text: Edit region
+    doc.descKey:
+      text: Open Analysis Structure without leaving the Analysis workspace.
+- target: objectName:analysisOverviewMergeButton
+  props:
+    doc.include: true
+    doc.scope: analysis_structure
+    doc.labelKey:
+      text: Merge
+    doc.descKey:
+      text: Merge the selected regions after reviewing the impact confirmation.
+- target: objectName:analysisOverviewSplitButton
+  props:
+    doc.include: true
+    doc.scope: analysis_structure
+    doc.labelKey:
+      text: Split
+    doc.descKey:
+      text: Split selected lines into a new region.
+- target: objectName:analysisOverviewDeleteButton
+  props:
+    doc.include: true
+    doc.scope: analysis_structure
+    doc.labelKey:
+      text: Delete
+    doc.descKey:
+      text: Delete selected regions or lines after reviewing the impact confirmation.
+- target: objectName:organizeUnlinkSystemButton
+  props:
+    doc.include: true
+    doc.scope: analysis_structure
+    doc.labelKey:
+      text: Unlink system
+    doc.descKey:
+      text: Remove only the selected scientific link while keeping the lines.
+- target: objectName:organizeSidePanelBackButton
+  props:
+    doc.include: true
+    doc.scope: analysis_structure
+    doc.labelKey:
+      text: Back to Overview
+    doc.descKey:
+      text: Return to Analysis Overview (Alt+Left).
+- target: class:RegionDetailPanel
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.labelKey:
+      text: Analysis Region Detail panel
+    doc.descKey:
+      text: Workspace for one selected region, including masks, component parameters, fitting, and export.
+- target: objectName:optimizeHeader
+  props:
+    doc.include: false
+
+- target: objectName:optimizeGroupLabel
+  props:
+    doc.include: false
+
+- target: objectName:optimizeGroupSummary
+  props:
+    doc.include: false
+
+- target: objectName:optimizeNeedsBadge
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.labelKey:
+      text: Needs optimization badge
+    doc.descKey:
+      text: Appears when further adjustments are required for a region, highlighting items that need optimization.
+- target: objectName:analysisDetailRegionSelector
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.labelKey:
+      text: Region selector
+    doc.descKey:
+      text: Shows the absorption region currently open in Region Detail.
+- target: objectName:analysisDetailBackButton
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.labelKey:
+      text: Back to Overview
+    doc.descKey:
+      text: Return to Analysis Overview (Alt+Left).
+- target: objectName:optimizeMaskPanel
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.badgePosition: outside-left
+    doc.labelKey:
+      text: Mask panel
+    doc.descKey:
+      text: Create and adjust wavelength masks to exclude regions from the fit.
+- target: objectName:maskCollapseToggle
+  props:
+    doc.include: false
+
+- target: objectName:maskTitleLabel
+  props:
+    doc.include: false
+
+- target: objectName:analysisDetailParameterTree
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.labelKey:
+      text: Component parameter table
+    doc.descKey:
+      text: Shown in the bottom pane while Region Detail is open. Edit component
+        parameters and each line's Analysis range [km/s] for the selected region.
+        Component rows leave the analysis-range cell empty. Each parameter value
+        cell combines the shared tie label, fitted value, and uncertainty in one
+        display; right-click a column header to show or hide columns, and drag a
+        header to reorder columns (visibility, order, and width are remembered for next time).
+- target: objectName:analysisDetailAddModelButton
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.labelKey:
+      text: Add component
+    doc.descKey:
+      text: Insert a new component at the selected wavelength or region.
+- target: objectName:analysisDetailFitButton
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.labelKey:
+      text: Run fit
+    doc.descKey:
+      text: Start the fit with the current configuration and update the results.
+- target: objectName:analysisDetailExportButton
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.labelKey:
+      text: Export results
+    doc.descKey:
+      text: Save optimization results and statistics as CSV.
+- target: objectName:analysisDetailResultsCard
+  props:
+    doc.include: true
+    doc.scope: analysis_region_detail
+    doc.labelKey:
+      text: Results summary
+    doc.descKey:
+      text: Shows the fit status, χ² statistics, and component count for the region.
+        A note explains the next step while fitting is unavailable.
+- target: objectName:analysisDetailMaskCard
+  props:
+    doc.include: false
+- target: class:QHeaderView
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_wavelengthMinField
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_wavelengthMaxField
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_fluxMinField
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_fluxMaxField
+  props:
+    doc.include: false
+
+- target: objectName:dataControlPanel_separator_wavelength_flux
+  props:
+    doc.include: false
+
+- target: objectName:organizeSidePanel
+  props:
+    doc.include: true
+    doc.scope: analysis_structure
+    doc.labelKey:
+      text: Analysis Structure panel
+    doc.descKey:
+      text: Side panel for maintaining the tree of absorption regions and absorption lines.
+- target: objectName:analysisStructureTree
+  props:
+    doc.include: true
+    doc.scope: analysis_structure
+    doc.labelKey:
+      text: Absorber tree
+    doc.descKey:
+      text: Hierarchical view of regions, lines, and components with drag-and-drop editing and double-click focusing.
+- target: objectName:organizeSidePanelTreeContainer
+  props:
+    doc.include: false
+
+- target: objectName:organizeSidePanelEmptyState
+  props:
+    doc.include: false
+
+- target: objectName:organizeSidePanelHeader
+  props:
+    doc.include: false
+
+- target: window.mode_context_bar
+  props:
+    doc.labelKey:
+      text: Mode Bar
+    doc.descKey:
+      text: Top bar for switching modes and accessing common actions.
+- target: objectName:modeContextBar_open_observation_data
+  props:
+    doc.labelKey:
+      text: Open Observation Data
+    doc.descKey:
+      text: Load observed flux and error FITS files to start a new project.
+- target: objectName:modeContextBar_open_project
+  props:
+    doc.labelKey:
+      text: Open Project
+    doc.descKey:
+      text: Load an existing project file.
+- target: objectName:modeContextBar_save_project
+  props:
+    doc.labelKey:
+      text: Save
+    doc.descKey:
+      text: Save the current project state to disk.
+- target: objectName:modeContextBar_undo
+  props:
+    doc.labelKey:
+      text: Undo
+    doc.descKey:
+      text: Revert the last action.
+- target: objectName:modeContextBar_redo
+  props:
+    doc.labelKey:
+      text: Redo
+    doc.descKey:
+      text: Repeat the last undone action.
+- target: objectName:modeContextBar_zoom_rect
+  props:
+    doc.labelKey:
+      text: Zoom Area
+    doc.descKey:
+      text: Drag a rectangle to zoom into that region of the spectrum.
+- target: objectName:modeButton_IDENTIFY
+  props:
+    doc.labelKey:
+      text: Identify Mode
+    doc.descKey:
+      text: Identify absorption systems and assign them to line species and regions.
+- target: objectName:modeButton_ANALYSIS
+  props:
+    doc.labelKey:
+      text: Analysis Mode
+    doc.descKey:
+      text: Review all regions in Overview, edit Structure, and analyze one region in Detail.
+- target: objectName:modeButton_CONTINUUM
+  props:
+    doc.labelKey:
+      text: Continuum Mode
+    doc.descKey:
+      text: Adjust the continuum curve with control points.
+- target: objectName:modeContextBar_infoGroup
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Mode Info Area
+    doc.descKey:
+      text: Shows a short description of the active mode.
+- target: objectName:modeContextBar_subtitle
+  props:
+    doc.labelKey:
+      text: Mode Subtitle
+    doc.descKey:
+      text: Shows supplemental context for the active mode.
+    doc.include: false
+
+- target: objectName:modeSidePanel
+  props:
+    doc.include: true
+    doc.scope: common
+    doc.labelKey:
+      text: Side Panel
+    doc.descKey:
+      text: Supplementary panel with mode-specific controls and information.
+- target: objectName:continuumActionsFrame
+  props:
+    doc.include: true
+    doc.scope: continuum
+    doc.labelKey:
+      text: Quick Actions
+    doc.descKey:
+      text: Shortcuts for estimating or resetting continuum control points without leaving the panel.
+- target: objectName:continuumPercentileSpinBox
+  props:
+    doc.include: true
+    doc.scope: continuum
+    doc.labelKey:
+      text: Percentile
+    doc.descKey:
+      text: Enter the percentile threshold for automatic continuum estimation. The spectrum is divided into 100Å bins, and the flux value at the specified percentile within each bin is used as a control point. Higher values (closer to 99%) avoid absorption lines and capture peaks; lower values (closer to 50%) capture the median.
+- target: objectName:continuumAutoEstimateButton
+  props:
+    doc.include: true
+    doc.scope: continuum
+    doc.labelKey:
+      text: Auto Estimate
+    doc.descKey:
+      text: Recalculates control points from the current spectrum and replaces existing points with the new estimate.
+- target: objectName:continuumClearPointsButton
+  props:
+    doc.include: true
+    doc.scope: continuum
+    doc.labelKey:
+      text: Clear Control Points
+    doc.descKey:
+      text: Removes every registered control point and returns the continuum to a flat baseline.
+- target: objectName:continuumAnchorFrame
+  props:
+    doc.include: true
+    doc.scope: continuum
+    doc.labelKey:
+      text: Control Point List
+    doc.descKey:
+      text: Review each control point's wavelength and flux, then edit or delete entries as needed.
+- target: objectName:continuumPointsTable
+  props:
+    doc.include: true
+    doc.scope: continuum
+    doc.labelKey:
+      text: Control Point Table
+    doc.descKey:
+      text: Displays wavelength, flux, and action columns for every control point; double-click to edit values.
+- target: objectName:continuumPointsPlaceholder
+  props:
+    doc.include: false
+    doc.scope: continuum
+    doc.labelKey:
+      text: No Control Points Yet
+    doc.descKey:
+      text: No control points are registered. Right-click the spectrum or use the buttons to add new ones.
+- target: objectName:mainStatusBar
+  props:
+    doc.labelKey:
+      text: Status Bar
+    doc.descKey:
+      text: Displays application status, messages, and cursor readouts.
+- target: objectName:statusModeLabel
+  props:
+    doc.include: false
+    doc.labelKey:
+      text: Mode Indicator
+    doc.descKey:
+      text: Displays the current mode and project state.
+- target: objectName:statusMessageLabel
+  props:
+    doc.include: false
+    doc.labelKey:
+      text: Message Area
+    doc.descKey:
+      text: Shows progress and notification messages.
+- target: objectName:statusCoordinateLabel
+  props:
+    doc.include: false
+    doc.labelKey:
+      text: Coordinate Readout
+    doc.descKey:
+      text: Reports the cursor position in wavelength or velocity.
+- target: class:IdentifySidePanel
+  props:
+    doc.include: true
+    doc.scope: identify
+    doc.labelKey:
+      text: Identify side panel
+    doc.descKey:
+      text: Single-column panel ordered along the identify workflow — the preset setup header, detection candidates, temporary lines with registration, and confirmed regions. Drag the grip handles between sections to resize them. See “Side Panel Details” below for control-by-control guidance.
+    doc.section: identify_overview
+
+- target: objectName:collapsibleSectionSummary
+  props:
+    doc.include: false
+
+- target: objectName:identifyPresetCombo
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Preset selector
+    doc.descKey:
+      text: Switch the active candidate preset from the dropdown in the always-visible setup header.
+
+- target: objectName:identifyManagePresetButton
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Manage presets
+    doc.descKey:
+      text: Add new presets, edit membership (lines in or out), or delete unused presets.
+
+- target: objectName:identifyPresetLabel
+  props:
+    doc.include: false
+
+- target: objectName:identifyReferenceLineCombo
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Reference line selector
+    doc.descKey:
+      text: Choose the single line used as the identification anchor. The popup lists every line in the preset with its rest wavelength; hover an item to see its oscillator strength and full-precision wavelength.
+
+- target: objectName:identifyReferenceLineLabel
+  props:
+    doc.include: false
+
+- target: objectName:identifyNewCandidateAnalysisHalfWidthSpinBox
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: New-candidate range
+    doc.descKey:
+      text: Set the symmetric analysis range used by the next Shift preview and candidates added afterward. Existing temporary lines, registration grouping, and Velocity Plot Display range do not change.
+
+- target: objectName:identifyNewCandidateAnalysisHalfWidthLabel
+  props:
+    doc.include: false
+
+- target: objectName:identifyNewCandidateHalfWidthError
+  props:
+    doc.include: false
+
+- target: objectName:identifyCandidateSection
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Detection candidates
+    doc.descKey:
+      text: The σ threshold slider and numeric input are always visible on one row and stay synchronized. The heading reports the current candidate count.
+
+- target: objectName:identifyCandidateSectionLabel
+  props:
+    doc.include: false
+
+- target: objectName:identifyCandidateTable
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Detection candidate table
+    doc.descKey:
+      text: Each row shows a candidate's wavelength range, σ score, and status (Unassigned, Tentative, or Registered). A single click only selects a row; double-click it or press Enter to move to the candidate position, then Shift+click the absorption center to add temporary lines.
+
+- target: objectName:identifyCandidateStack
+  props:
+    doc.include: false
+
+- target: objectName:identifyRegistrationFeedback
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Registration result
+    doc.descKey:
+      text: Shows the result after a successful registration. The message clears when the temporary-line workflow changes again.
+
+- target: objectName:identifyTemporaryHeader
+  props:
+    doc.include: false
+
+- target: objectName:identifyTemporaryTree
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Temporary lines
+    doc.descKey:
+      text: Lists temporary lines grouped by the registration result. Group headings show whether the lines will create a new region or be added to an existing one; a warning mark flags overlaps with multiple existing regions.
+
+- target: objectName:identifyTemporaryDeleteButton
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Delete selection
+    doc.descKey:
+      text: Remove the highlighted temporary lines from the list.
+
+- target: objectName:identifyTemporaryMoreButton
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: More actions
+    doc.descKey:
+      text: Open the low-emphasis actions menu. Choose Clear All to empty the temporary line list.
+
+- target: objectName:identifyTemporaryRegisterButton
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Register
+    doc.descKey:
+      text: Save temporary groups to regions immediately. With no selection, the label is Register all (N groups); with selected rows, it is Register selected (N groups). Registration can be undone.
+
+- target: objectName:identifyConfirmedCollapsibleHeader
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Confirmed Regions section header
+    doc.descKey:
+      text: Click to expand or collapse the confirmed-region list. While collapsed, the summary shows the region count and a representative region and line.
+
+- target: objectName:identifyGroupsTree
+  props:
+    doc.include: true
+    doc.scope: identify_panel
+    doc.labelKey:
+      text: Confirmed regions
+    doc.descKey:
+      text: Shows the hierarchy of confirmed regions and their lines. A single click selects a row; press Enter or double-click a region or line to move the spectrum view to its range.
+
+- target: objectName:velocityPlotContainer
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Velocity Plot
+    doc.descByScopeKey:
+      identify:
+        text: Hold Shift over an absorption feature and press V while the all-species preview is visible to open the plot immediately at that exact wavelength. Dashed boundaries show the New-candidate analysis range; Display range reframes every subplot without changing candidate data.
+      analysis_detail_velocity:
+        text: Compare the current region's lines on a shared velocity axis. Display range reframes every subplot and page without changing the line analysis ranges.
+    doc.sectionByScope:
+      identify: identify_velocity
+
+- target: objectName:velocityPlotInfo
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Velocity plot info
+    doc.descByScopeKey:
+      identify:
+        text: Shows the target line, redshift, and observed wavelength for the active Velocity Plot.
+      analysis_detail_velocity:
+        text: Shows the current region and line context for the active Velocity Plot.
+    doc.sectionByScope:
+      identify: identify_velocity
+
+- target: objectName:velocityDisplayHalfWidthSpinBox
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Display range
+    doc.descByScopeKey:
+      identify:
+        text: Set the symmetric view range shared by every Identify Velocity Plot subplot and page. This display-only value does not change New-candidate range, temporary lines, grouping, or scientific Undo history.
+      analysis_detail_velocity:
+        text: Set the symmetric view range shared by every Velocity Plot subplot and page. This display-only value does not change line analysis ranges or scientific Undo history.
+    doc.sectionByScope:
+      identify: identify_velocity
+
+- target: objectName:velocityDisplayHalfWidthLabel
+  props:
+    doc.include: false
+
+- target: objectName:velocityFitViewToAnalysisRangesButton
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Fit view to analysis ranges
+    doc.descByScopeKey:
+      identify:
+        text: Recalculate Display range from New-candidate range. This action changes only the Velocity Plot view.
+      analysis_detail_velocity:
+        text: Recalculate Display range from the current region's line analysis ranges. This action changes only the Velocity Plot view.
+    doc.sectionByScope:
+      identify: identify_velocity
+
+- target: objectName:velocityAnalysisRangeSummary
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Analysis-range summary
+    doc.descByScopeKey:
+      identify:
+        text: Reports the New-candidate analysis range represented by the dashed boundaries. Edit the value in the setup header of the Identify side panel.
+      analysis_detail_velocity:
+        text: Reports the current line analysis ranges represented by dashed boundaries.
+    doc.sectionByScope:
+      identify: identify_velocity
+
+- target: objectName:velocityDisplayRangeStatus
+  props:
+    doc.include: false
+
+- target: objectName:velocityPlotCreateButton
+  props:
+    doc.include: true
+    doc.scope: identify
+    doc.labelKey:
+      text: Add selected lines to temporary list
+    doc.descKey:
+      text: Add temporary lines for the selected velocity slices; use the side panel's Register action to save them to confirmed regions.
+    doc.section: identify_velocity
+
+- target: objectName:velocityPlotExitButton
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Back to Spectrum
+    doc.descByScopeKey:
+      identify:
+        text: Return to the standard spectrum view and re-enable wavelength controls.
+      analysis_detail_velocity:
+        text: Close the Velocity Plot and return to the standard spectrum view.
+    doc.sectionByScope:
+      identify: identify_velocity
+
+- target: objectName:velocitySubplotSelection
+  props:
+    doc.include: true
+    doc.scope: identify
+    doc.labelKey:
+      text: Subplot selector
+    doc.descKey:
+      text: Toggle whether the subplot’s slice will be promoted into the final grouping.
+    doc.section: identify_velocity
+
+- target: objectName:velocityPlotPrevPage
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Previous page
+    doc.descKey:
+      text: When more than six slices are available, move back to the earlier subplot page.
+    doc.sectionByScope:
+      identify: identify_velocity
+
+- target: objectName:velocityPlotNextPage
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Next page
+    doc.descKey:
+      text: When more than six slices are available, advance to the next subplot page.
+    doc.sectionByScope:
+      identify: identify_velocity
+
+- target: objectName:velocityPlotPageLabel
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Page status
+    doc.descKey:
+      text: Indicates the current subplot page and the total number of pages.
+    doc.sectionByScope:
+      identify: identify_velocity
+
+- target: class:CosmologyDialog
+  props:
+    doc.summaryKey:
+      text: Adjust the ΛCDM parameters used to compute comoving distance and lookback time in the analysis.
+    doc.operationsHeadingKey:
+      text: Key Operations
+    doc.operations:
+      - text: Editing H₀, Ωm, or ΩΛ immediately recomputes Ωk and the flatness indicator.
+      - text: Press Apply Planck2018 to reset the fields to the Planck 2018 recommended values.
+      - text: Press OK to save the settings and apply them to the main window.
+    doc.notesHeadingKey:
+      text: Notes & Caveats
+    doc.notes:
+      - text: Entered values are stored in the user settings and restored on the next launch.
+      - text: When Ωm + ΩΛ exceeds 1, Ωk shows the sign of the curvature.
+
+- target: objectName:cosmologyDescription
+  props:
+    doc.include: false
+
+- target: objectName:spin_h0
+  props:
+    doc.descKey:
+      text: Specify the Hubble constant H₀ in the range 50.0–100.0 km/s/Mpc. Step 0.1, default 67.4.
+
+- target: objectName:spin_omega_m
+  props:
+    doc.descKey:
+      text: Enter the matter density Ωm in the range 0.000–1.000. Changing it updates Ωk.
+
+- target: objectName:spin_omega_lambda
+  props:
+    doc.descKey:
+      text: Set the dark-energy density ΩΛ in the range 0.000–1.000. It feeds into the Ωk calculation.
+
+- target: objectName:defaultsButton
+  props:
+    doc.descKey:
+      text: Apply the Planck 2018 recommended parameters (67.4, 0.315, 0.685) to the fields.
+
+- target: objectName:okButton
+  props:
+    doc.descKey:
+      text: Save the current settings and close the dialog.
+
+- target: objectName:cancelButton
+  props:
+    doc.descKey:
+      text: Discard the changes and close the dialog.
+
+- target: class:LanguageSettingsDialog
+  props:
+    doc.summaryKey:
+      text: Switch the display language of the whole application and check the wording in the preview.
+    doc.operationsHeadingKey:
+      text: Key Operations
+    doc.operations:
+      - text: Choosing the JA 日本語 / EN English radio button updates the preview to that language.
+      - text: Press OK to apply the selected language immediately.
+      - text: Press Cancel to close without changing anything.
+    doc.notesHeadingKey:
+      text: Notes & Caveats
+    doc.notes:
+      - text: Loading resources can take a few seconds after changing the language.
+
+- target: objectName:radio_ja
+  props:
+    doc.descKey:
+      text: Switch the user interface to Japanese.
+
+- target: objectName:radio_en
+  props:
+    doc.descKey:
+      text: Switch the user interface to English.
+
+- target: objectName:previewSampleButton
+  props:
+    doc.descKey:
+      text: Show a sample of how menus and buttons appear in the selected language.
+
+
+- target: class:ObservationDataDialog
+  props:
+    doc.summaryKey:
+      text: Specify the FITS files for the observed flux and error and load them into the project.
+    doc.operationsHeadingKey:
+      text: Key Operations
+    doc.operations:
+      - text: Select the flux FITS file with the Browse... button.
+      - text: Select the error FITS file as well if needed.
+      - text: Press OK to validate the selected files and load them into the project.
+    doc.notesHeadingKey:
+      text: Notes & Caveats
+    doc.notes:
+      - text: The supported extension is .fits.
+      - text: The error file is optional, but providing it enables uncertainty-aware analysis.
+
+- target: objectName:fluxPathEdit
+  props:
+    doc.descKey:
+      text: Enter the path of the FITS file containing the observed flux. Browse... also opens a file picker.
+
+- target: objectName:fluxOrganizeButton
+  props:
+    doc.descKey:
+      text: Choose the flux FITS file from a file dialog.
+
+- target: objectName:errorPathEdit
+  props:
+    doc.descKey:
+      text: Specify the path of the FITS file containing the observed error. When omitted, the data is treated as having no error.
+
+- target: objectName:errorOrganizeButton
+  props:
+    doc.descKey:
+      text: Choose the error FITS file from a file dialog.
+
+
+- target: class:ResolutionDialog
+  props:
+    doc.summaryKey:
+      text: Set the instrument's spectral resolution R and choose how it is applied to model calculations.
+    doc.operationsHeadingKey:
+      text: Key Operations
+    doc.operations:
+      - text: Enter the instrument's resolution in the Spectral Resolution R field.
+      - text: Turning on Apply Instrument Resolution convolves the resolution into candidate detection in Identify mode and model calculations in Analysis Region Detail.
+      - text: Press OK to confirm the value, or Skip to keep the existing setting.
+    doc.notesHeadingKey:
+      text: Notes & Caveats
+    doc.notes:
+      - text: The valid range is 10–100000; values outside it show an error.
+
+- target: objectName:resolutionSpin
+  props:
+    doc.descKey:
+      text: Specify the resolution R = λ/Δλ in the range 10–100000. Up to two decimal places are accepted.
+
+- target: objectName:applyResolutionCheckbox
+  props:
+    doc.descKey:
+      text: When checked, the instrument resolution is convolved into the analysis model. When unchecked, the value is stored but not applied.
+
+- target: objectName:skipButton
+  props:
+    doc.descKey:
+      text: Close the dialog without changing the setting.
+
+
+- target: class:PresetListDialog
+  props:
+    doc.summaryKey:
+      text: Manage absorption-line presets and choose which lines should be identified and fitted together.
+    doc.operationsHeadingKey:
+      text: Key Operations
+    doc.operations:
+      - text: Selecting a preset in the left list shows its composition on the right.
+      - text: Edit presets with the New / Duplicate / Rename / Delete buttons.
+      - text: Add lines with Add Line and remove them with Remove Selected.
+      - text: Select two or more rows and use Link selected lines to create a link group; select a linked row and use Unlink to remove its group.
+      - text: Review database-derived link suggestions and use Apply all to accept every valid suggestion.
+      - text: Share presets as JSON files with Import... / Export....
+    doc.notesHeadingKey:
+      text: Notes & Caveats
+    doc.notes:
+      - text: Built-in presets cannot be edited; duplicate one and save it as a custom preset.
+      - text: A link group contains at least two lines of the same ion, and each line can belong to only one link group.
+      - text: To change a link group's members, unlink the group and then link the intended rows again.
+      - text: Link suggestions are not applied automatically.
+
+- target: objectName:presetListView
+  props:
+    doc.labelKey:
+      text: Preset list
+    doc.descKey:
+      text: The available presets. Selecting one updates the details and the state of the edit buttons.
+
+- target: objectName:presetNewButton
+  props:
+    doc.descKey:
+      text: Create an empty preset ready for any line composition.
+
+- target: objectName:presetDuplicateButton
+  props:
+    doc.descKey:
+      text: Duplicate the selected preset into an editable copy.
+
+- target: objectName:presetRenameButton
+  props:
+    doc.descKey:
+      text: Rename the preset. Only custom presets can be edited.
+
+- target: objectName:presetDeleteButton
+  props:
+    doc.descKey:
+      text: Delete the selected custom preset.
+
+- target: objectName:presetImportButton
+  props:
+    doc.descKey:
+      text: Load a preset JSON file and add it to the current list.
+
+- target: objectName:presetExportButton
+  props:
+    doc.descKey:
+      text: Export the selected preset as JSON.
+
+- target: objectName:presetLineTable
+  props:
+    doc.labelKey:
+      text: Line species list
+    doc.descKey:
+      text: Lists the preset's absorption lines and shows their link-group membership in the Link column. Wavelengths, f-values, and link labels are read-only.
+
+- target: objectName:presetAddLineButton
+  props:
+    doc.descKey:
+      text: Open the absorption-line database search dialog and add new absorption lines to the preset.
+
+- target: objectName:presetRemoveLineButton
+  props:
+    doc.descKey:
+      text: Remove the absorption lines selected in the table from the preset.
+
+- target: objectName:presetAddTieGroupButton
+  props:
+    doc.descKey:
+      text: Create a link group from two or more selected lines of the same ion.
+
+- target: objectName:presetRemoveTieGroupButton
+  props:
+    doc.descKey:
+      text: Remove every link group containing one of the selected rows. The lines remain in the preset.
+
+- target: objectName:presetSuggestionBar
+  props:
+    doc.labelKey:
+      text: Suggested links
+    doc.descKey:
+      text: Shows link groups suggested from multiplets in the line database. Suggestions remain pending until applied.
+
+- target: objectName:presetApplySuggestionsButton
+  props:
+    doc.descKey:
+      text: Apply all currently valid link suggestions to the custom preset.
+
+- target: objectName:presetBaselineCombo
+  props:
+    doc.labelKey:
+      text: Anchor line
+    doc.descKey:
+      text: Choose the preset's anchor line. When set, it is selected as the default anchor in Identify mode.
+
+- target: objectName:presetButtonBox
+  props:
+    doc.include: false
+
+- target: class:LineSelectionDialog
+  props:
+    doc.summaryKey:
+      text: Search the absorption-line database for lines and bring them into presets or Identify mode.
+    doc.operationsHeadingKey:
+      text: Key Operations
+    doc.operations:
+      - text: Narrow down the candidates with filters for keyword, element, ionisation stage, and wavelength range.
+      - text: Select a line in the result list and check its transition data and f-value in the detail preview on the right.
+      - text: Organise the additions in the selected list and press Add Lines to apply them to the calling preset.
+    doc.notesHeadingKey:
+      text: Additional Notes
+    doc.notes:
+      - text: Lines already in the preset are tagged as selected, and duplicate additions are prevented automatically.
+      - text: Selecting or clearing any member of a multiplet applies the same state to every member. When opened from preset management, an explicitly selected multiplet is also proposed as a preset link group.
+
+- target: objectName:filterWarningLabel
+  props:
+    doc.labelKey:
+      text: Filter warning
+    doc.descKey:
+      text: A warning shown when the filter conditions conflict, such as an invalid wavelength range. It hides automatically once the conditions are fixed.
+
+- target: objectName:filterKeywordEdit
+  props:
+    doc.labelKey:
+      text: Keyword
+    doc.descKey:
+      text: Enter an element symbol, line ID, transition name, or similar for partial-match search.
+
+- target: objectName:filterElementCombo
+  props:
+    doc.labelKey:
+      text: Element
+    doc.descKey:
+      text: Filter candidates by element in atomic-number order. Type an element symbol to select it from the suggestions; an empty field removes the restriction.
+
+- target: objectName:filterStageCombo
+  props:
+    doc.labelKey:
+      text: Ionisation stage
+    doc.descKey:
+      text: Specify the ionisation stage for the selected element. Changing the element updates the available stages.
+
+- target: objectName:filterWavelengthMin
+  props:
+    doc.include: false
+
+- target: objectName:filterWavelengthMax
+  props:
+    doc.include: false
+
+- target: objectName:filterWavelengthRange
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Wavelength range
+    doc.descKey:
+      text: Enter the minimum and maximum within 0–50000 Å to narrow the searched wavelength band. An empty field removes the limit on that side.
+
+- target: objectName:clearFiltersButton
+  props:
+    doc.descKey:
+      text: Reset all entered filter conditions and return the search results to the initial state.
+
+- target: objectName:resultSummaryLabel
+  props:
+    doc.include: false
+
+- target: objectName:resultHelperLabel
+  props:
+    doc.include: false
+
+- target: objectName:lineResultTable
+  props:
+    doc.labelKey:
+      text: Search results
+    doc.descKey:
+      text: Shows the absorption-line candidates with wavelength, type, f-value, and more. Click a column header to change the sort order.
+
+- target: objectName:linePreview
+  props:
+    doc.labelKey:
+      text: Detail preview
+    doc.descKey:
+      text: Review the selected line's transition levels, oscillator strength, references, and other details as text.
+
+- target: objectName:selectionSummaryLabel
+  props:
+    doc.include: false
+
+- target: objectName:selectionList
+  props:
+    doc.labelKey:
+      text: Selected lines
+    doc.descKey:
+      text: Lists the lines scheduled for addition; select unwanted ones to remove them.
+
+- target: objectName:selectionListContainer
+  props:
+    doc.include: true
+    doc.labelKey:
+      text: Selection area
+    doc.descKey:
+      text: The area that lists the selected lines. Guidance text is shown while nothing is selected.
+
+- target: objectName:selectionPlaceholderLabel
+  props:
+    doc.labelKey:
+      text: Selected Line List
+    doc.descKey:
+      text: The area where the selected line species are shown.
+
+- target: objectName:selectionRemoveButton
+  props:
+    doc.descKey:
+      text: Remove the line species highlighted in the selected list.
+
+- target: objectName:selectionClearButton
+  props:
+    doc.descKey:
+      text: Clear the selected list at once when you want to start over.
+
+- target: objectName:selectionDestinationInfo
+  props:
+    doc.descKey:
+      text: When opened from Identify mode, shows the current absorption-region name and wavelength range.
+
+- target: objectName:selectionDestinationCombo
+  props:
+    doc.labelKey:
+      text: Destination
+    doc.descKey:
+      text: Choose the region to add the lines to, or specify creating a new region.
+
+- target: objectName:lineSelectionApplyButton
+  props:
+    doc.descKey:
+      text: Add the selected lines to the calling preset and close the dialog.
+
+- target: objectName:lineSelectionCancelButton
+  props:
+    doc.descKey:
+      text: Close the dialog without applying the search results.
+
+- target: class:CloseProjectDialog
+  props:
+    doc.windowTitleKey:
+      text: Close Project
+    doc.summaryKey:
+      text: Confirm what happens to unsaved changes before the current project is closed.
+    doc.operationsHeadingKey:
+      text: Key Operations
+    doc.operations:
+      - text: Press Save to write the project to disk and then close it.
+      - text: Press Don't Save to close the project and lose the unsaved changes.
+      - text: Press Cancel to keep working in the current project.
+    doc.notesHeadingKey:
+      text: Notes & Caveats
+    doc.notes:
+      - text: The dialog only appears while the project has unsaved changes; otherwise the project closes straight away.
+
+- target: objectName:closeProjectMessage
+  props:
+    doc.descKey:
+      text: State that the current project has unsaved changes and ask whether to save them.
+
+- target: objectName:closeProjectDetail
+  props:
+    doc.descKey:
+      text: Show the name of the project that is about to be closed.
+
+- target: objectName:closeProjectGuidance
+  props:
+    doc.descKey:
+      text: Explain that closing returns to Start mode and that the project can be reopened from File > Open Project.
+
+- target: objectName:closeProjectCancelButton
+  props:
+    doc.labelKey:
+      text: Cancel
+    doc.descKey:
+      text: Keep the project open and leave it unchanged.
+
+- target: objectName:closeProjectDontSaveButton
+  props:
+    doc.labelKey:
+      text: Don't Save
+    doc.descKey:
+      text: Discard the unsaved changes and close the project.
+
+- target: objectName:closeProjectSaveButton
+  props:
+    doc.labelKey:
+      text: Save
+    doc.descKey:
+      text: Save the project, then close it and return to Start mode.

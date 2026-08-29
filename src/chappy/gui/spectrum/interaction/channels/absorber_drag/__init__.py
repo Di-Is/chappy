@@ -1,0 +1,1 @@
+"""Absorber drag interaction channel."""

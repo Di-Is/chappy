@@ -1,0 +1,42 @@
+pre-commit:
+  parallel: true
+  commands:
+    ruff-fmt-check:
+      glob: "*.py"
+      run: ruff format --check {staged_files}
+    ruff-check:
+      glob: "*.py"
+      run: ruff check {staged_files}
+    typos:
+      file_types:
+        - text
+      run: typos {staged_files}
+    structure-guard:
+      run: uv run python scripts/structure_guard.py
+
+pre-push:
+  parallel: false
+  commands:
+    i18n-qt-catalog:
+      glob: "*.{py,yaml,yml}"
+      run: uv run python scripts/i18n_qt_check.py src/chappy --qm-output /tmp/chappy_ja.qm --expected-qm src/chappy/i18n/qt/chappy_ja.qm
+    i18n-manual-bridge-sync:
+      glob: "*.{py,yaml,yml}"
+      run: uv run python scripts/i18n_manual_annotations_bridge.py --check
+    i18n-manual-catalog:
+      glob: "*.{py,yaml,yml}"
+      run: uv run python scripts/i18n_qt_check.py docs/user_manual/src/chappy_user_manual_generator --ts-input docs/user_manual/src/chappy_user_manual_generator/i18n/manual_ja.ts --qm-output /tmp/manual_ja.qm --expected-qm docs/user_manual/src/chappy_user_manual_generator/i18n/manual_ja.qm
+    type-check:
+      glob: "*.{py,pyi}"
+      run: uv run mypy src/
+    import-boundaries:
+      glob: "*.{py,pyi}"
+      run: uv run lint-imports
+    consistency-audit:
+      glob: "*.{py,pyi}"
+      run: uv run python scripts/consistency_audit.py
+    test:
+      glob: "*.{py,pyi}"
+      run: uv run pytest -n 8
+      env:
+        QT_QPA_PLATFORM: offscreen

@@ -1,0 +1,28 @@
+[project]
+name = "chappy_user_manual_generator"
+version = "0.0.1"
+description = "User manual generation toolkit for Chappy"
+authors = [{ name = "Di-Is" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "chappy",
+    "markdown>=3.6",
+]
+
+[project.scripts]
+chappy-user-manual = "chappy_user_manual_generator.__main__:main"
+
+[build-system]
+requires = ["uv_build>=0.9.2,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+chappy = { path = "../..", editable = true }
+
+[dependency-groups]
+dev = [
+    "mdformat>=0.7.22",
+    "pymarkdownlnt>=0.9.32",
+]

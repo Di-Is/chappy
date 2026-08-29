@@ -1,0 +1,90 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+*.py[cod]
+*$py.class
+*.so
+.Python
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+share/python-wheels/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+htmlcov/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+.claude/worktrees/
+*.fits
+!sample_data/*.fits
+*.xml
+profile.stats
+.lefthook/
+
+# mise
+.mise.local.toml
+
+.env
+unused_code_report.json
+*.build
+*.dist
+*.onefile-build
+
+# image
+*.png
+*.jpg
+*.jpeg
+.uv/
+
+# Release-time bundled user manual (generated, shipped in wheels only)
+src/chappy/manual/

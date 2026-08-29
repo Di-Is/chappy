@@ -1,0 +1,410 @@
+"""Coverage checks tying TutorialCompletion/FitOutcome enums to their consumers.
+
+Separate from test_tutorial_chapter_semantics.py, which asserts per-step
+target/text facts: these tests instead guard the enum-vs-resolver drift the
+step-gating design explicitly warns about (docs/task/onboarding-tutorial/
+step-gating-requirements.md) -- a step referencing a TutorialCompletion
+nobody resolves, an unused TutorialCompletion member, or a FitOutcome missing
+from FIT_OUTCOME_NOTE_SOURCES that would KeyError inside
+MainWindow._tutorial_region_fit_note.
+"""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from chappy.core.components.optimize import FitOutcome
+from chappy.core.presets import METAL_LINES_PRESET_ID, Preset, PresetTieGroup
+from chappy.gui.common.tutorial import (
+    COMPLETION_NOTE_SOURCES,
+    FIT_OUTCOME_NOTE_SOURCES,
+    TutorialCompletion,
+)
+from chappy.gui.modes.identify.presets.preset_store import IdentifyPresetStore
+from chappy.gui.protocols.intent_types import PanIntent, ZoomRectIntent
+from chappy.gui.shell.composition import create_main_window
+from chappy.gui.shell.dependencies import ShellDependencies
+from chappy.gui.shell.main_window import _SAMPLE_RESOLVING_POWER, _find_sample_spectrum_pair
+from chappy.gui.shell.tutorial_chapters import build_full_walkthrough_chapters
+from chappy.infrastructure.composition import create_default_infrastructure_dependencies
+
+if TYPE_CHECKING:
+    from chappy.gui.shell.main_window import MainWindow
+
+
+def _required_completions() -> set[TutorialCompletion]:
+    return {
+        step.requires
+        for chapter in build_full_walkthrough_chapters()
+        for step in chapter.steps
+        if step.requires is not None
+    }
+
+
+def test_every_tutorial_completion_member_is_used_by_a_walkthrough_step() -> None:
+    """No TutorialCompletion member is dead: each gates at least one real step."""
+    assert _required_completions() == set(TutorialCompletion)
+
+
+def _main_window(qtbot) -> MainWindow:
+    dependencies = create_default_infrastructure_dependencies(translate_presets=str)
+    window = create_main_window(
+        ShellDependencies(
+            project_io_usecase=dependencies.project_io_usecase,
+            atomic_data=dependencies.atomic_repository,
+            preset_store=IdentifyPresetStore(dependencies.preset_store),
+            optimize_model_addition_usecase=dependencies.optimize_model_addition_usecase,
+        )
+    )
+    qtbot.addWidget(window)
+    return window
+
+
+def test_every_step_requires_condition_has_a_main_window_resolver(qtbot) -> None:
+    """No walkthrough step references a condition MainWindow leaves unresolved."""
+    window = _main_window(qtbot)
+
+    resolvers = window._tutorial_completion_checks()
+
+    assert _required_completions() <= resolvers.keys()
+
+
+def test_identify_gates_follow_the_preset_and_reference_line_selection(qtbot) -> None:
+    """The identify gates must open only once C IV 1548 is the active reference line."""
+    window = _main_window(qtbot)
+    resolvers = window._tutorial_completion_checks()
+    preset_selected = resolvers[TutorialCompletion.METAL_LINES_PRESET_SELECTED]
+    reference_is_civ1548 = resolvers[TutorialCompletion.REFERENCE_LINE_IS_CIV1548]
+
+    window.preset_store.set_current_preset(METAL_LINES_PRESET_ID)
+
+    assert preset_selected()
+    assert not reference_is_civ1548()
+
+    window.preset_store.set_baseline(METAL_LINES_PRESET_ID, _civ1548_line_id(window))
+
+    assert reference_is_civ1548()
+
+
+def _civ1548_line_id(window: MainWindow) -> str:
+    preset = window.preset_store.get_preset(METAL_LINES_PRESET_ID)
+    assert preset is not None
+    for line_id in preset.line_ids:
+        line = window._atomic_data.get_line_by_id(line_id)
+        if line is not None and line.species == "C IV" and round(line.wavelength_angstrom) == 1548:
+            return line_id
+    msg = "The Metal Lines preset must contain C IV 1548."
+    raise AssertionError(msg)
+
+
+def test_fit_outcome_note_sources_cover_every_fit_outcome() -> None:
+    """Every FitOutcome member has a note so _tutorial_region_fit_note cannot KeyError."""
+    assert set(FIT_OUTCOME_NOTE_SOURCES) == set(FitOutcome)
+
+
+def test_every_noted_condition_has_a_main_window_note_resolver(qtbot) -> None:
+    """Each note source is reachable: MainWindow resolves every noted condition."""
+    window = _main_window(qtbot)
+
+    assert set(COMPLETION_NOTE_SOURCES) <= window._tutorial_completion_notes().keys()
+
+
+def _species_line_ids(window: MainWindow, species: str, count: int) -> list[str]:
+    line_ids = [
+        line.line_id for line in window._atomic_data.search_lines() if line.species == species
+    ][:count]
+    assert len(line_ids) == count
+    return line_ids
+
+
+def _tutorial_preset(window: MainWindow, *, fe2: int, mg2: int) -> Preset:
+    return Preset(
+        id="tutorial-note-test",
+        name="Tutorial note test",
+        source="custom",
+        line_ids=[
+            *_species_line_ids(window, "Fe II", fe2),
+            *_species_line_ids(window, "Mg II", mg2),
+        ],
+    )
+
+
+def _preset_lines_note(qtbot, monkeypatch, *, fe2: int, mg2: int) -> str | None:
+    window = _main_window(qtbot)
+    preset = _tutorial_preset(window, fe2=fe2, mg2=mg2)
+    monkeypatch.setattr(window, "_current_tutorial_preset", lambda: preset)
+    return window._tutorial_completion_notes()[TutorialCompletion.PRESET_HAS_TUTORIAL_LINES]()
+
+
+def test_preset_lines_note_reports_the_missing_species_counts(qtbot, monkeypatch) -> None:
+    """A preset short of Mg II explains the gate with its live counts."""
+    note = _preset_lines_note(qtbot, monkeypatch, fe2=4, mg2=0)
+
+    assert note == COMPLETION_NOTE_SOURCES[TutorialCompletion.PRESET_HAS_TUTORIAL_LINES].format(
+        fe2_count=4, mg2_count=0
+    )
+
+
+def test_preset_lines_note_reports_surplus_lines_that_also_hold_the_gate(
+    qtbot, monkeypatch
+) -> None:
+    """The exact-count gate also closes on surplus lines, and the note says so."""
+    note = _preset_lines_note(qtbot, monkeypatch, fe2=4, mg2=3)
+
+    assert note is not None
+    assert "Mg II 3" in note
+
+
+def test_preset_lines_note_disappears_once_the_gate_opens(qtbot, monkeypatch) -> None:
+    """No note is shown while the tutorial lines are exactly in place."""
+    assert _preset_lines_note(qtbot, monkeypatch, fe2=4, mg2=2) is None
+
+
+def _fe2_single_group_met(
+    window: MainWindow, monkeypatch, tie_groups: list[PresetTieGroup]
+) -> bool:
+    preset = _tutorial_preset(window, fe2=4, mg2=2)
+    preset.tie_groups = tie_groups
+    preset.line_ids.extend(
+        line_id
+        for group in tie_groups
+        for line_id in group.line_ids
+        if line_id not in preset.line_ids
+    )
+    monkeypatch.setattr(window, "_current_tutorial_preset", lambda: preset)
+    return window._tutorial_completion_checks()[TutorialCompletion.PRESET_FE2_SINGLE_GROUP]()
+
+
+def test_fe2_single_group_gate_opens_while_the_mg2_link_is_kept(qtbot, monkeypatch) -> None:
+    """The step tells the user to keep the automatic Mg II link, so it cannot hold the gate."""
+    window = _main_window(qtbot)
+    fe2_line_ids = _species_line_ids(window, "Fe II", 4)
+    mg2_line_ids = _species_line_ids(window, "Mg II", 2)
+
+    assert _fe2_single_group_met(
+        window,
+        monkeypatch,
+        [
+            PresetTieGroup(uid="fe2", line_ids=tuple(fe2_line_ids)),
+            PresetTieGroup(uid="mg2", line_ids=tuple(mg2_line_ids)),
+        ],
+    )
+
+
+def test_fe2_single_group_gate_stays_shut_while_fe2_spans_two_links(qtbot, monkeypatch) -> None:
+    """Two Fe II multiplets are the state the step exists to merge."""
+    window = _main_window(qtbot)
+    fe2_line_ids = _species_line_ids(window, "Fe II", 4)
+
+    assert not _fe2_single_group_met(
+        window,
+        monkeypatch,
+        [
+            PresetTieGroup(uid="fe2-lower", line_ids=tuple(fe2_line_ids[:2])),
+            PresetTieGroup(uid="fe2-upper", line_ids=tuple(fe2_line_ids[2:])),
+        ],
+    )
+
+
+def test_fe2_single_group_gate_stays_shut_while_one_fe2_line_is_left_out(
+    qtbot, monkeypatch
+) -> None:
+    """A link covering only three Fe II lines is not the shared link the step asks for."""
+    window = _main_window(qtbot)
+    fe2_line_ids = _species_line_ids(window, "Fe II", 4)
+    mg2_line_ids = _species_line_ids(window, "Mg II", 2)
+
+    assert not _fe2_single_group_met(
+        window,
+        monkeypatch,
+        [
+            PresetTieGroup(uid="fe2", line_ids=tuple(fe2_line_ids[:3])),
+            PresetTieGroup(uid="mg2", line_ids=tuple(mg2_line_ids)),
+        ],
+    )
+
+
+def test_fe2_single_group_gate_stays_shut_once_the_mg2_link_is_destroyed(
+    qtbot, monkeypatch
+) -> None:
+    """Step 8 also asserts the Mg II link, which nothing later in the tour re-checks."""
+    window = _main_window(qtbot)
+    fe2_line_ids = _species_line_ids(window, "Fe II", 4)
+
+    assert not _fe2_single_group_met(
+        window, monkeypatch, [PresetTieGroup(uid="fe2", line_ids=tuple(fe2_line_ids))]
+    )
+
+
+def test_fe2_single_group_gate_stays_shut_while_mg2_spans_two_links(qtbot, monkeypatch) -> None:
+    """Split Mg II lines would each register as their own region, which the step forbids."""
+    window = _main_window(qtbot)
+    fe2_line_ids = _species_line_ids(window, "Fe II", 4)
+    mg2_line_ids = _species_line_ids(window, "Mg II", 2)
+    other_line_ids = _species_line_ids(window, "C IV", 2)
+
+    assert not _fe2_single_group_met(
+        window,
+        monkeypatch,
+        [
+            PresetTieGroup(uid="fe2", line_ids=tuple(fe2_line_ids)),
+            PresetTieGroup(uid="mg2-a", line_ids=(mg2_line_ids[0], other_line_ids[0])),
+            PresetTieGroup(uid="mg2-b", line_ids=(mg2_line_ids[1], other_line_ids[1])),
+        ],
+    )
+
+
+def test_fe2_single_group_gate_stays_shut_while_a_link_mixes_in_a_foreign_line(
+    qtbot, monkeypatch
+) -> None:
+    """An Fe II line linked to anything else is not the four-line link the step asks for."""
+    window = _main_window(qtbot)
+    fe2_line_ids = _species_line_ids(window, "Fe II", 4)
+    mg2_line_ids = _species_line_ids(window, "Mg II", 2)
+    other_line_id = _species_line_ids(window, "C IV", 1)[0]
+
+    assert not _fe2_single_group_met(
+        window,
+        monkeypatch,
+        [
+            PresetTieGroup(uid="fe2", line_ids=tuple(fe2_line_ids)),
+            PresetTieGroup(uid="stray", line_ids=(fe2_line_ids[0], other_line_id)),
+            PresetTieGroup(uid="mg2", line_ids=tuple(mg2_line_ids)),
+        ],
+    )
+
+
+def _window_with_sample(qtbot, monkeypatch) -> MainWindow:
+    monkeypatch.setenv("CHAPPY_DOC_AUTO_DISCARD", "1")
+    window = _main_window(qtbot)
+    sample_pair = _find_sample_spectrum_pair()
+    assert sample_pair is not None, "bundled sample spectrum is missing"
+    flux_path, error_path = sample_pair
+    window._require_project_session().open_sample_data(
+        str(flux_path), str(error_path), resolving_power=_SAMPLE_RESOLVING_POWER
+    )
+    return window
+
+
+def _absorber_in_view(window: MainWindow) -> bool:
+    return window._tutorial_completion_checks()[TutorialCompletion.MG2_ABSORBER_IN_VIEW]()
+
+
+def test_absorber_gate_stays_shut_while_the_mg2_pair_is_off_screen(qtbot, monkeypatch) -> None:
+    """A view elsewhere in the spectrum cannot satisfy the step that stages the absorber."""
+    window = _window_with_sample(qtbot, monkeypatch)
+    assert window.data_control_panel is not None
+
+    window.data_control_panel.wavelength_range_applied.emit(4700.0, 4800.0)
+
+    assert not _absorber_in_view(window)
+
+
+def test_absorber_gate_stays_shut_while_only_one_trough_is_framed(qtbot, monkeypatch) -> None:
+    """The next step names both troughs, so half the pair is not enough."""
+    window = _window_with_sample(qtbot, monkeypatch)
+    assert window.data_control_panel is not None
+
+    window.data_control_panel.wavelength_range_applied.emit(4935.0, 4970.0)
+
+    assert not _absorber_in_view(window)
+
+
+def test_absorber_gate_opens_from_the_wavelength_fields(qtbot, monkeypatch) -> None:
+    """The route the step names as quickest must open the gate."""
+    window = _window_with_sample(qtbot, monkeypatch)
+    assert window.data_control_panel is not None
+
+    window.data_control_panel.wavelength_range_applied.emit(4900.0, 4970.0)
+
+    assert _absorber_in_view(window)
+
+
+def test_absorber_gate_opens_from_a_rectangle_zoom(qtbot, monkeypatch) -> None:
+    """Dragging a rectangle is one of the routes the first chapter taught."""
+    window = _window_with_sample(qtbot, monkeypatch)
+    spectrum_view = window.view_stack.spectrum_view
+    assert spectrum_view is not None
+
+    spectrum_view.coordinator.handle_navigation_intent(
+        ZoomRectIntent(min_wavelength=4900.0, max_wavelength=4970.0)
+    )
+
+    assert _absorber_in_view(window)
+
+
+def test_absorber_gate_opens_from_panning(qtbot, monkeypatch) -> None:
+    """Arrow-key and scroll panning must reach the same goal as typing the range."""
+    window = _window_with_sample(qtbot, monkeypatch)
+    assert window.data_control_panel is not None
+    spectrum_view = window.view_stack.spectrum_view
+    assert spectrum_view is not None
+    window.data_control_panel.wavelength_range_applied.emit(4990.0, 5060.0)
+    assert not _absorber_in_view(window)
+
+    spectrum_view.coordinator.handle_navigation_intent(PanIntent(fraction=-1.0))
+
+    assert _absorber_in_view(window)
+
+
+def _register_region(
+    window: MainWindow, species: str, rest_wavelengths: tuple[float, ...], *, redshift: float
+) -> None:
+    project = window.current_project
+    assert project is not None
+    line_ids = []
+    for rest_wavelength in rest_wavelengths:
+        observed = rest_wavelength * (1.0 + redshift)
+        line = project.add_absorption_line(
+            species=species,
+            rest_wavelength=rest_wavelength,
+            center_z=redshift,
+            window_kms=200.0,
+            multiplet_label=species,
+            transition_name=f"{species} {rest_wavelength:.0f}",
+            oscillator_strength=0.1,
+            gamma_value=1.0e8,
+            lambda_range=(observed - 3.0, observed + 3.0),
+        )
+        line_ids.append(line.line_id)
+    project.create_region_with_lines(line_ids)
+
+
+_ABSORBER_REDSHIFT = 0.7627
+_FE2_REST_WAVELENGTHS = (2382.8, 2600.2, 2586.6, 2374.5)
+_MG2_REST_WAVELENGTHS = (2796.4, 2803.5)
+
+
+def _fe2_and_mg2_regions_exist(window: MainWindow) -> bool:
+    return window._tutorial_completion_checks()[TutorialCompletion.FE2_AND_MG2_REGIONS_EXIST]()
+
+
+def test_registration_gate_opens_on_the_two_regions_the_step_promises(qtbot, monkeypatch) -> None:
+    """The step's expected text names a 4-line Fe II region and a 2-line Mg II region."""
+    window = _window_with_sample(qtbot, monkeypatch)
+    _register_region(window, "Fe II", _FE2_REST_WAVELENGTHS, redshift=_ABSORBER_REDSHIFT)
+    _register_region(window, "Mg II", _MG2_REST_WAVELENGTHS, redshift=_ABSORBER_REDSHIFT)
+
+    assert _fe2_and_mg2_regions_exist(window)
+
+
+def test_registration_gate_stays_shut_when_only_mg2_was_registered(qtbot, monkeypatch) -> None:
+    """A pre-existing region plus Mg II alone reached two regions and hid the missing Fe II."""
+    window = _window_with_sample(qtbot, monkeypatch)
+    _register_region(window, "C IV", (1548.2, 1550.8), redshift=2.0764)
+    _register_region(window, "Mg II", _MG2_REST_WAVELENGTHS, redshift=_ABSORBER_REDSHIFT)
+
+    assert window._confirmed_tutorial_region_count() >= 2
+    assert not _fe2_and_mg2_regions_exist(window)
+
+
+def test_registration_gate_stays_shut_while_fe2_split_into_single_line_regions(
+    qtbot, monkeypatch
+) -> None:
+    """Unlinked Fe II lines register one region each, which the step's text forbids."""
+    window = _window_with_sample(qtbot, monkeypatch)
+    for rest_wavelength in _FE2_REST_WAVELENGTHS:
+        _register_region(window, "Fe II", (rest_wavelength,), redshift=_ABSORBER_REDSHIFT)
+    _register_region(window, "Mg II", _MG2_REST_WAVELENGTHS, redshift=_ABSORBER_REDSHIFT)
+
+    assert not _fe2_and_mg2_regions_exist(window)

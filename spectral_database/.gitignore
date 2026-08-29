@@ -1,0 +1,5 @@
+.coverage
+.benchmarks
+.ruff_cache
+.uv-cache
+htmlcov

@@ -1,0 +1,1 @@
+"""Mask selection interaction channel."""

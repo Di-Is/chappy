@@ -1,0 +1,95 @@
+exclude = []
+indent-width = 4
+line-length = 99
+target-version = "py312"
+
+[lint]
+fixable = ["ALL"]
+unfixable = []
+ignore = [
+  # ...: To avoid conflicts with the ruff formatter
+  # Ref. https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+  "W191",
+  "E111",
+  "E114",
+  "E117",
+  "D206",
+  "Q000",
+  "Q001",
+  "Q002",
+  "Q003",
+  "COM812",
+  "COM819",
+  "ISC001",
+  # subprocess-without-shell-equals-true: Due to the high false positive rate
+  # Ref. https://github.com/astral-sh/ruff/issues/4045
+  "S603",
+  # pandas-use-of-dot-values: Because over-detection is observed for variables other than pandas.Dataframe
+  # Ref. https://github.com/astral-sh/ruff/issues/6432
+  "PD011",
+  # line-too-long: Some parts, such as comments, are not formatted in ruff's formatter, and whether or not they are formatted is not important.
+  "E501",
+  # line-contains-todo/missing-todo-link: too high management cost
+  "FIX002",
+  "TD003",
+  # ambiguous-unicode-character-string/docstring/comment: To miss-detect hiragana and katakana
+  "RUF001",
+  "RUF002",
+  "RUF003",
+  # boolean-positional-value-in-call: Hevey meintenance cost
+  "FBT",
+  # undocumented-public-init: Not informative
+  "D107",
+  # TODO(Di-Is): Temporarily ignored
+  "C901",
+  "PLR2004",
+  "PLR0912",
+  "PLR0915",
+  "SLF001",
+]
+select = ["ALL"]
+
+[lint.isort]
+split-on-trailing-comma = false
+
+[lint.pydocstyle]
+convention = "google"
+
+[lint.per-file-ignores]
+"scripts/analyze_protocols.py" = ["N802"]  # AST visitor methods use camelCase
+"**/interfaces/*.py" = ["ANN401"]  # Any type is OK for interface kwargs
+"src/chappy/gui/spectrum/spectrum_event_dispatcher.py" = [
+  "N802",
+]  # Qt event methods
+"src/chappy/gui/spectrum/spectrum_view.py" = ["N802"]  # Qt event methods
+"__init__.py" = ["E402"]
+"**/docs/*" = ["INP001"]
+"tests/*" = ["ALL"]
+"**/tests/*" = ["S101", "INP001"]
+
+[lint.pep8-naming]
+ignore-names = [
+  "dragEnterEvent",
+  "dropEvent",
+  "closeEvent",
+  "eventFilter",
+  "keyPressEvent",
+  "setFocus",
+  "setData",
+  "isVisible",
+  "setVisible",
+  "NodeVisitor",
+  "isValid",
+]
+
+[lint.pylint]
+max-returns = 8
+max-args = 8
+
+[format]
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+indent-style = "space"
+line-ending = "auto"
+quote-style = "double"
+skip-magic-trailing-comma = true

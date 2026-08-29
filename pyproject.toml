@@ -1,0 +1,432 @@
+[project]
+name = "chappy"
+version = "0.1.0"
+description = "chappy: Code for Handling Absorption Profiles with PYthon (absorption-line analysis client)"
+requires-python = ">=3.12"
+authors = [{ name = "Di-Is", email = "rohoxbox@gmail.com" }]
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+urls = { Homepage = "https://github.com/Di-Is/qso-chappy", Issues = "https://github.com/Di-Is/qso-chappy/issues" }
+dependencies = [
+  "PySide6>=6.11.1",
+  "PyYAML>=6.0.0",
+  "astropy>=7.1.0",
+  "h5py>=3.11.0",
+  "matplotlib>=3.8.0",
+  "numpy>=1.26.0",
+  "python-json-logger>=2.0.0",
+  "scipy>=1.11.0",
+]
+
+[project.gui-scripts]
+chappy = "chappy.__main__:main"
+
+[dependency-groups]
+dev = [
+  "import-linter>=2.6",
+  "markdown>=3.10",
+  "mypy>=1.17.0",
+  "pyscn>=1.1.1",
+  "pytest>=7.4.0",
+  "pytest-benchmark>=5.1.0",
+  "pytest-cov>=4.1.0",
+  "pytest-qt>=4.2.0",
+  "pytest-xdist>=3.8.0",
+  "ruff==0.15.16",
+  "types-pyyaml>=6.0.12.20250915",
+  "vulture>=2.14",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.19,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__",
+  "if self.debug:",
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError",
+  "if TYPE_CHECKING:",
+]
+
+[tool.importlinter]
+root_package = "chappy"
+include_external_packages = true
+unmatched_ignore_imports_alerting = "warn"
+
+[[tool.importlinter.contracts]]
+id = "core-no-gui-plotting"
+name = "Core must not import GUI or plotting"
+type = "forbidden"
+source_modules = ["chappy.core"]
+forbidden_modules = ["chappy.gui", "chappy.plotting"]
+
+[[tool.importlinter.contracts]]
+id = "core-no-pyside6"
+name = "Core must not import PySide6"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.core"]
+forbidden_modules = ["PySide6"]
+
+[[tool.importlinter.contracts]]
+id = "core-no-application-infrastructure"
+name = "Core must not import application or infrastructure layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.core"]
+forbidden_modules = ["chappy.application", "chappy.infrastructure"]
+
+[[tool.importlinter.contracts]]
+id = "plotting-no-gui"
+name = "Plotting must not import GUI"
+type = "forbidden"
+source_modules = ["chappy.plotting"]
+forbidden_modules = ["chappy.gui"]
+
+[[tool.importlinter.contracts]]
+id = "plotting-no-pyside6"
+name = "Plotting must not import PySide6"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.plotting"]
+forbidden_modules = ["PySide6"]
+
+[[tool.importlinter.contracts]]
+id = "plotting-no-i18n"
+name = "Plotting must not import i18n"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.plotting"]
+forbidden_modules = ["chappy.i18n"]
+
+[[tool.importlinter.contracts]]
+id = "plotting-no-editing-mode"
+name = "Plotting must not import editing mode state"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.plotting"]
+forbidden_modules = ["chappy.core.editing_mode"]
+
+[[tool.importlinter.contracts]]
+id = "core-no-resource-config-persistence"
+name = "Core must not import resource/config persistence modules"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.core"]
+forbidden_modules = ["os", "csv", "json", "hashlib"]
+
+[[tool.importlinter.contracts]]
+id = "optimize-application-no-ui"
+name = "Optimize application must not import UI layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.application.optimize"]
+forbidden_modules = ["PySide6", "chappy.gui", "chappy.plotting"]
+
+[[tool.importlinter.contracts]]
+id = "spectrum-application-no-ui"
+name = "Spectrum application must not import UI layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.application.spectrum"]
+forbidden_modules = ["PySide6", "chappy.gui", "chappy.plotting"]
+
+[[tool.importlinter.contracts]]
+id = "identify-application-no-ui"
+name = "Identify application must not import UI layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.application.identify"]
+forbidden_modules = ["PySide6", "chappy.gui", "chappy.plotting"]
+
+[[tool.importlinter.contracts]]
+id = "history-application-no-ui"
+name = "History application must not import UI layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.application.history"]
+forbidden_modules = ["PySide6", "chappy.gui", "chappy.plotting"]
+
+[[tool.importlinter.contracts]]
+id = "line-selection-application-no-ui"
+name = "Line selection application must not import UI layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.application.line_selection"]
+forbidden_modules = ["PySide6", "chappy.gui", "chappy.plotting"]
+
+[[tool.importlinter.contracts]]
+id = "presentation-no-ui"
+name = "Presentation must not import UI layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.presentation"]
+forbidden_modules = ["PySide6", "chappy.gui", "chappy.plotting"]
+
+[[tool.importlinter.contracts]]
+id = "presentation-no-application"
+name = "Presentation must not import application layer"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.presentation"]
+forbidden_modules = ["chappy.application"]
+
+[[tool.importlinter.contracts]]
+id = "presentation-no-i18n"
+name = "Presentation must not import i18n"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.presentation"]
+forbidden_modules = ["chappy.i18n"]
+
+[[tool.importlinter.contracts]]
+id = "presentation-no-matplotlib"
+name = "Presentation must not import matplotlib"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.presentation"]
+forbidden_modules = ["matplotlib"]
+
+[[tool.importlinter.contracts]]
+id = "presentation-identify-no-application"
+name = "Identify presentation must not import application layer"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.presentation.identify"]
+forbidden_modules = ["chappy.application"]
+
+[[tool.importlinter.contracts]]
+id = "gui-history-no-modes"
+name = "GUI history must not import mode packages"
+type = "forbidden"
+source_modules = ["chappy.gui.history"]
+forbidden_modules = ["chappy.gui.modes"]
+
+[[tool.importlinter.contracts]]
+id = "gui-modes-common-no-ui"
+name = "Mode common contracts must not import UI layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.modes.common"]
+forbidden_modules = [
+  "PySide6",
+  "chappy.gui.common",
+  "chappy.plotting",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-common-no-workflow-deps"
+name = "GUI common widgets must not import workflow layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.common"]
+forbidden_modules = [
+  "chappy.application",
+  "chappy.infrastructure",
+  "chappy.gui.modes",
+  "chappy.gui.shell",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-modes-no-cross-mode-imports"
+name = "Mode packages must not depend on each other"
+type = "independence"
+modules = [
+  "chappy.gui.modes.analysis",
+  "chappy.gui.modes.continuum",
+  "chappy.gui.modes.identify",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-modes-analysis-no-shell-spectrum-concrete"
+name = "Analysis mode must not import shell or spectrum concrete modules"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.modes.analysis"]
+forbidden_modules = [
+  "chappy.gui.shell",
+  "chappy.gui.spectrum",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-spectrum-no-mode-imports"
+name = "Spectrum package must not import mode packages"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.spectrum"]
+forbidden_modules = ["chappy.gui.modes"]
+
+[[tool.importlinter.contracts]]
+id = "gui-spectrum-velocity-no-workflow-deps"
+name = "Spectrum velocity widgets must not import workflow layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.spectrum.velocity"]
+forbidden_modules = [
+  "chappy.application",
+  "chappy.infrastructure",
+  "chappy.gui.modes",
+  "chappy.gui.shell",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-spectrum-interaction-no-mode-shell-view-concrete"
+name = "Spectrum interaction must not import workflow layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.spectrum.interaction"]
+forbidden_modules = [
+  "chappy.application",
+  "chappy.infrastructure",
+  "chappy.gui.modes",
+  "chappy.gui.shell",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-spectrum-interaction-channels-no-input-or-qt"
+name = "Spectrum interaction channels must not import input adapters or Qt"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.spectrum.interaction.channels"]
+forbidden_modules = [
+  "PySide6",
+  "chappy.gui.spectrum.interaction.input",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-spectrum-input-routing-no-editing-mode"
+name = "Spectrum input routing must not import editing mode state"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.spectrum.interaction.input.routing"]
+forbidden_modules = ["chappy.core.editing_mode"]
+
+[[tool.importlinter.contracts]]
+id = "gui-spectrum-input-controllers-no-editing-mode"
+name = "Spectrum input controllers must not import editing mode state"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.spectrum.interaction.input.controllers"]
+forbidden_modules = ["chappy.core.editing_mode"]
+
+[[tool.importlinter.contracts]]
+id = "gui-spectrum-input-owner-ports-inner"
+name = "Spectrum input owner ports must stay inner"
+type = "forbidden"
+allow_indirect_imports = false
+source_modules = ["chappy.gui.spectrum.interaction.input.owner_ports"]
+forbidden_modules = [
+  "PySide6",
+  "chappy.gui.spectrum.spectrum_view",
+  "chappy.gui.spectrum.spectrum_interaction_facade",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-spectrum-interaction-support-inner"
+name = "Spectrum interaction support must stay inner"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.spectrum.interaction.support"]
+forbidden_modules = [
+  "PySide6",
+  "chappy.gui.protocols",
+  "chappy.gui.spectrum.interaction.input",
+  "chappy.gui.spectrum.interaction.channels",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-modes-identify-no-shared-ui-concrete"
+name = "Identify mode must not import shell or spectrum concrete modules"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.modes.identify"]
+forbidden_modules = [
+  "chappy.gui.shell",
+  "chappy.gui.spectrum",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-mode-panels-no-direct-application"
+name = "Mode panels must not directly import application layer"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = [
+  "chappy.gui.modes.analysis.overview.panel",
+  "chappy.gui.modes.identify.panel.panel",
+  "chappy.gui.modes.identify.panel.temporary_section",
+  "chappy.gui.modes.identify.panel.confirmed_section",
+  "chappy.gui.modes.analysis.region_detail.panel",
+  "chappy.gui.modes.analysis.region_detail.mask.mask_panel",
+  "chappy.gui.modes.analysis.region_detail.views.header_view",
+  "chappy.gui.modes.analysis.region_detail.views.actions_view",
+  "chappy.gui.modes.analysis.region_detail.views.advanced_settings_view",
+]
+forbidden_modules = ["chappy.application"]
+
+[[tool.importlinter.contracts]]
+id = "gui-mode-lifecycles-no-ui"
+name = "Mode lifecycles must not import UI layers"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = [
+  "chappy.gui.modes.analysis.lifecycle",
+  "chappy.gui.modes.continuum.lifecycle",
+  "chappy.gui.modes.identify.lifecycle",
+]
+forbidden_modules = [
+  "PySide6",
+  "chappy.gui.common",
+  "chappy.plotting",
+]
+
+[[tool.importlinter.contracts]]
+id = "gui-shell-actions-no-mode-concrete"
+name = "Shell actions must not import mode concrete modules"
+type = "forbidden"
+allow_indirect_imports = true
+source_modules = ["chappy.gui.shell.actions"]
+forbidden_modules = ["chappy.gui.modes"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+no_implicit_reexport = true
+namespace_packages = true
+plugins = ["numpy.typing.mypy_plugin"]
+
+[[tool.mypy.overrides]]
+module = ["scipy.*"]
+ignore_missing_imports = true
+
+# Benchmarks are opt-in:
+# uv run pytest tests/benchmarks -n 0 --benchmark-enable --benchmark-only
+[tool.pytest.ini_options]
+addopts = [
+  "-n",
+  "4",
+  "--dist=worksteal",
+  "--benchmark-disable",
+  "--ignore=tests/benchmarks",
+]
+minversion = "7.0"
+pythonpath = ["src", "docs/user_manual/src"]
+testpaths = ["tests"]
+
+[tool.vulture]
+ignore_names = [
+  "dragEnterEvent",
+  "dragLeaveEvent",
+  "dragMoveEvent",
+  "dropEvent",
+  "startDrag",
+]

@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  build-release:
+    name: Build Release Package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+
+    - name: Set up Python
+      run: uv python install ${{ env.PYTHON_VERSION }}
+
+    - name: Install Qt runtime libraries and screenshot fonts
+      run: |
+        sudo apt-get update
+        sudo apt-get install --no-install-recommends -y libegl1 libgl1 libxkbcommon0 libdbus-1-3 fonts-noto-cjk
+
+    - name: Install dependencies
+      run: |
+        uv venv
+        uv sync --all-extras
+
+    - name: Generate user manual (ja/en)
+      env:
+        CHAPPY_BUILD_VERSION: ${{ github.ref_name }}
+      run: |
+        uv run --project docs/user_manual -m chappy_user_manual_generator --language ja --qt-platform offscreen
+        uv run --project docs/user_manual -m chappy_user_manual_generator --language en --qt-platform offscreen
+
+    - name: Bundle manual into package
+      run: |
+        mkdir -p src/chappy/manual
+        cp -R docs/user_manual/dist/html_ja docs/user_manual/dist/html_en src/chappy/manual/
+
+    - name: Build package
+      run: uv build
+
+    - name: Verify manual is bundled in wheel
+      run: |
+        unzip -l dist/*.whl | grep -q "chappy/manual/html_ja/index.html"
+        unzip -l dist/*.whl | grep -q "chappy/manual/html_en/index.html"
+
+    - name: Create GitHub Release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh release create "${{ github.ref_name }}" dist/* --generate-notes

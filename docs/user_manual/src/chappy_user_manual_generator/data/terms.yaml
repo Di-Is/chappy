@@ -1,0 +1,372 @@
+terms:
+  - key: velocity_window
+    label:
+      ja: 速度ウィンドウ
+      en: Velocity Window
+    definition:
+      ja: スペクトルを速度空間で表示する際の左右対称な窓幅（±km/s）。ラインごとの値は構造編集のツリー見出しに表示されます。フィットに使う範囲は「ライン解析範囲」で設定します。
+      en: Symmetric velocity span (±km/s) used when viewing spectra in velocity space. Each line's value is shown inline in the Analysis Structure tree; the interval used for fitting is set by the Line Analysis Range.
+    aliases:
+      ja: [速度窓]
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: display
+    stage: 2
+
+  - key: line_analysis_half_width
+    label:
+      ja: ライン解析範囲
+      en: Line Analysis Range
+    definition:
+      ja: Analysis Region Detailで各ラインの解析に使用する、ライン中心から左右対称の速度範囲（±km/s）。モデル成分の中心を含む最小値より狭くはできません。
+      en: The symmetric velocity interval (±km/s) around a line centre that Analysis Region Detail uses; it cannot be narrower than the minimum needed to include every model-component centre.
+    aliases:
+      ja: [解析範囲]
+      en: [Analysis range]
+    do_not_use:
+      ja: [速度ウィンドウ, ライン解析半幅]
+      en: [Velocity Window, Line Analysis Half-width]
+    category: analyze
+    stage: 5
+
+  - key: new_candidate_analysis_half_width
+    label:
+      ja: 新規候補の解析範囲
+      en: New-candidate Analysis Range
+    definition:
+      ja: 同定モードで次の Shift プレビューと、これから追加する候補に使用する、中心から左右対称の速度範囲（±km/s）。既存の一時ライン、束ね結果、速度プロットの表示範囲は変更しません。
+      en: The symmetric velocity interval (±km/s) used by the next Shift preview and candidates added afterward in Identify mode; it does not change existing temporary lines, grouping, or the Velocity Plot display range.
+    aliases:
+      ja: [新規候補の範囲]
+      en: [New-candidate range]
+    do_not_use:
+      ja: [速度ウィンドウ, 新規候補の解析半幅]
+      en: [Velocity Window, New-candidate Analysis Half-width]
+    category: identify
+    stage: 4
+
+  - key: velocity_display_half_width
+    label:
+      ja: 速度表示範囲
+      en: Velocity Display Range
+    definition:
+      ja: 速度プロットの全サブプロットと全ページに共通する、左右対称の表示範囲（±km/s）。プロジェクト、解析範囲、科学操作のUndo履歴は変更しません。
+      en: The symmetric view range (±km/s) shared by every Velocity Plot subplot and page; it does not change the project, analysis ranges, or scientific Undo history.
+    aliases:
+      ja: [表示範囲]
+      en: [Display range]
+    do_not_use:
+      ja: [速度ウィンドウ, 速度表示半幅]
+      en: [Velocity Window, Velocity Display Half-width]
+    category: display
+    stage: 5
+
+  - key: velocity_plot
+    label:
+      ja: 速度プロット
+      en: Velocity Plot
+    definition:
+      ja: 基準線に対する速度を横軸にとってスペクトルを表示するビュー。線の同定や候補確認に用います。
+      en: A view that shows the spectrum against velocity relative to a reference line; used for identification and review.
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: [速度プロット]
+      en: []
+    category: display
+    stage: 2
+
+  - key: absorption_line
+    label:
+      ja: 吸収線
+      en: Absorption Line
+    definition:
+      ja: 背景光が特定の波長で弱く見える線状の特徴（原子・イオンの遷移に対応）。アプリでは候補から追加・削除して同定を確定できます。
+      en: A dip in the spectrum at specific wavelengths caused by atomic or ionic transitions.
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: detect
+    stage: 4
+
+  - key: spectral_line
+    label:
+      ja: スペクトル線
+      en: Spectral Line
+    definition:
+      ja: 吸収線または輝線の総称。アプリでは主に吸収線の同定に用います。
+      en: A general term for absorption or emission lines; in this app it usually refers to absorption lines.
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: detect
+    stage: 4
+
+  - key: absorption_group
+    label:
+      ja: 領域
+      en: Region
+    definition:
+      ja: 同時に解析するラインをまとめた単位。解析の基本単位です。
+      en: The unit that groups lines analyzed together; the basic unit of analysis.
+    aliases:
+      ja: [領域]
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: objects
+    stage: 6
+
+  - key: absorption_system
+    label:
+      ja: ライン
+      en: Line
+    definition:
+      ja: 同一の天体・速度場に由来する複数の吸収線を一つの対象として扱ったもの。アプリではラインの作成・編集・確定ができ、Analysis Region Detailで作成する吸収線コンポーネントを格納します。
+      en: A set of absorption lines originating from the same physical system or velocity field. Stores absorption-line components created in Analysis Region Detail.
+    aliases:
+      ja: [ライン]
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: objects
+    stage: 6
+
+  - key: absorption_component
+    label:
+      ja: 吸収線コンポーネント
+      en: Absorption Component
+    definition:
+      ja: 吸収線プロファイルを記述するパラメータ集合（列密度、ドップラー幅、中心速度など）。アプリではフィットや固定・解放、初期値の設定ができます。
+      en: A parameter set that describes line profiles (e.g., column density, Doppler b, central velocity).
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: [モデル]
+      en: [Model]
+    category: analyze
+    stage: 5
+    weight: 20
+
+  - key: absorption_profile
+    label:
+      ja: 吸収線プロファイル
+      en: Absorption Line Profile
+    definition:
+      ja: 吸収線の形状を表す関数。アプリでは Voigt などのプロファイルを用いてモデル化します。
+      en: A function describing the shape of an absorption line; modeled with profiles such as Voigt.
+    aliases:
+      ja: [ラインプロファイル]
+      en: [Line Profile]
+    do_not_use:
+      ja: []
+      en: []
+    category: analyze
+    stage: 5
+    weight: 10
+
+  - key: continuum
+    label:
+      ja: 連続光
+      en: Continuum
+    definition:
+      ja: 吸収線を除いた背景となる連続的な成分。アプリでは制御点を追加・移動して形状を調整できます。
+      en: The baseline spectrum without line features; edited via control points.
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: prep_common
+    stage: 3
+
+  - key: mask
+    label:
+      ja: マスク
+      en: Mask
+    definition:
+      ja: フィットや表示から除外する波長/速度の範囲。
+      en: Wavelength/velocity ranges excluded from fitting or display.
+    aliases:
+      ja: [除外領域]
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: analyze
+    stage: 5
+    weight: 99
+
+  - key: candidate_table
+    label:
+      ja: 候補テーブル
+      en: Candidate Table
+    definition:
+      ja: 自動検出などで得られた候補線の一覧。閾値や条件で絞り込みます。
+      en: A list of detected candidate lines; filterable by thresholds.
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: detect
+    stage: 4
+
+  - key: temporary_system
+    label:
+      ja: 一時ライン
+      en: Temporary Line
+    definition:
+      ja: 同定モードで作成される、スペクトル線種とスペクトル上の吸収領域（波長範囲）を紐づけたもの。未確定の状態で、同定モードの確定操作（領域への配属）を経てラインになります。
+      en: Created in Identification mode; pairs with a Line and links line species to wavelength ranges of absorption regions on the spectrum.
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: objects
+    stage: 6
+
+  - key: resolution
+    label:
+      ja: 分解能
+      en: Spectral Resolution
+    definition:
+      ja: 装置の波長分解能（R = λ/Δλ）。アプリでは分解能の設定がモデル計算に反映されます。
+      en: Instrumental spectral resolving power (R = λ/Δλ) applied in modelling.
+    aliases:
+      ja: []
+      en: [Resolution]
+    do_not_use:
+      ja: []
+      en: []
+    category: settings
+    stage: 7
+
+  - key: cosmology_parameters
+    label:
+      ja: 宇宙論パラメータ
+      en: Cosmology Parameters
+    definition:
+      ja: 吸収体との距離計算に使用する宇宙論パラメータ。H0（ハッブル定数）等を設定します。
+      en: Cosmological parameters used to compute the distance to absorbers; e.g., H0 (Hubble constant).
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: settings
+    stage: 7
+
+  - key: project
+    label:
+      ja: プロジェクト
+      en: Project
+    definition:
+      ja: 作業内容や設定を保存する単位のファイル。
+      en: A file that stores your work and settings.
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: data
+    stage: 1
+
+  - key: observed_data
+    label:
+      ja: 観測データ
+      en: Observed Data
+    definition:
+      ja: 観測で得たスペクトルの元データ。観測フラックスと観測誤差の FITS ファイルを指します。アプリではこれらの FITS を読み込み、プロジェクトに関連付けます。
+      en: "The measured spectral data: FITS files for observed flux and observed uncertainty."
+    aliases:
+      ja: [観測フラックス, 観測誤差]
+      en: [Observed Flux, Observed Error]
+    do_not_use:
+      ja: []
+      en: []
+    category: data
+    stage: 1
+
+  - key: spectrum
+    label:
+      ja: スペクトル
+      en: Spectrum
+    definition:
+      ja: ここでの「スペクトル」は横軸が波長の波長スペクトルを指します。アプリでは波長スペクトルを表示し、拡大・縮小して確認できます。
+      en: "In this manual, 'spectrum' refers to a wavelength spectrum (wavelength on the x-axis): flux as a function of wavelength."
+    aliases:
+      ja: [波長スペクトル]
+      en: [Wavelength Spectrum]
+    do_not_use:
+      ja: []
+      en: []
+    category: data
+    stage: 1
+
+  - key: multiplet
+    label:
+      ja: マルチプレット
+      en: Multiplet
+    definition:
+      ja: スペクトル線種のうち、E1 遷移で複数の波長に分かれるものの総称。例えば C IV は 1548.204 Å と 1550.781 Å の二本の線からなるマルチプレットです。複数の線を一緒に表示・フィットするかどうかは、プリセットで設定した連結グループと、プロジェクトに保存されたライン同士の連結関係によって決まります。
+      en: "A general term for spectral line species that split into multiple wavelengths due to E1 transitions. For example, C IV consists of two lines at 1548.204 Å and 1550.781 Å. Whether lines are displayed and fitted together is determined by the preset link groups and the links saved between project lines."
+    aliases:
+      ja: []
+      en: []
+    do_not_use:
+      ja: []
+      en: []
+    category: data
+    stage: 1
+
+  - key: preset_link_group
+    label:
+      ja: 連結グループ
+      en: Preset Link Group
+    definition:
+      ja: プリセット内の複数のラインを一緒に扱うための設定です。連結グループのラインを基準に候補を追加すると、グループ内のラインが一時ラインとしてまとめて作成されます。登録すると、ライン同士の連結関係も保存されます。Analysis Region Detailで連結されたラインにモデルを追加すると、各ラインのコンポーネントが作成され、初期状態では赤方偏移、カラム密度、b パラメータ、被覆率が共有されます。
+      en: "A setting that makes multiple preset lines act together. Adding a candidate from a linked line creates temporary lines for the whole group. Registering saves both the lines and their link. When a model is added in Analysis Region Detail, a component is created for each linked line; redshift, column density, b parameter, and covering factor are shared by default."
+    aliases:
+      ja: [リンクグループ]
+      en: [Link Group]
+    do_not_use:
+      ja: []
+      en: []
+    category: data
+    stage: 1
+    weight: 11
+
+  - key: guided_tutorial
+    label:
+      ja: ガイド付きチュートリアル
+      en: Guided Tutorial
+    definition:
+      ja: 同梱のサンプルスペクトルを使い、コーチマーク（吹き出しとハイライト）で操作を順に案内する機能です。初回起動時に自動で開始を提案し、［ヘルプ］>［チュートリアル］からいつでも再開できます。
+      en: A coach-mark walkthrough that highlights one widget at a time and guides you through the analysis workflow on the bundled sample spectrum. It is offered automatically on first launch and can be started again from [Help] > [Tutorial].
+    aliases:
+      ja: [チュートリアルツアー, ガイドツアー]
+      en: [Tutorial Tour, Guided Tour]
+    do_not_use:
+      ja: []
+      en: []
+    category: settings
+    stage: 0

@@ -1,0 +1,25 @@
+[tasks.launch-d]
+run = "uv run chappy --log-level DEBUG sample_data/J033106-382404_f.fits --error-file sample_data/J033106-382404_e.fits"
+
+[tasks.launch]
+run = "uv run chappy sample_data/J033106-382404_f.fits --error-file sample_data/J033106-382404_e.fits"
+
+[tasks.loc]
+description = "Show source files with the most lines (top N, default 10)"
+usage = 'arg "count" default="10" help="Number of files to show"'
+run = '''
+find src -type f -name '*.py' -exec wc -l {} + \
+  | sort -rn \
+  | grep -v ' total$' \
+  | head -n "$usage_count"
+'''
+
+[env]
+_.file = { path = ".env", redact = true }
+# QT_MAC_DISABLE_FOREGROUND_APPLICATION_TRANSFORM = 1
+
+[tools]
+opencode = "latest"
+ruff = "0.15.16"
+typos = "1.47.1"
+uv = "0.11.19"

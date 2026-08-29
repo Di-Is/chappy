@@ -1,0 +1,32 @@
+[default]
+extend-ignore-re = [
+    # UUIDs and hash values in CSV files
+    "[0-9a-f]{16}",
+    # NumPy type hints
+    "NDArray",
+    # Quantum orbital notation (e.g., 3s2.3p.nd, 4s.np)
+    "\\.n[spdfg]\\b",
+]
+
+[files]
+extend-exclude = ["*.qm", "*.fits"]
+
+[type.qm]
+extend-glob = ["*.qm"]
+check-file = false
+
+[type.fits]
+extend-glob = ["*.fits"]
+check-file = false
+
+[default.extend-identifiers]
+# Domain-specific abbreviations
+THR = "THR"
+arange = "arange"
+delt = "delt"
+
+[default.extend-words]
+# Spreadsheet-style tie set labels (A..Z, AA, AB, ..., BA, ...)
+BA = "BA"
+# Chemical element symbol for neodymium (Nd)
+ND = "ND"
