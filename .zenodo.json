@@ -1,0 +1,28 @@
+{
+  "upload_type": "software",
+  "title": "chappy: Code for Handling Absorption Profiles with PYthon",
+  "description": "<p>chappy is a desktop application for analysing absorption lines in quasar spectra. It loads spectroscopic data in FITS format, fits the continuum interactively, models absorption lines with Voigt profiles to estimate column density, Doppler parameter and radial velocity, optimises those parameters automatically, and identifies which element or ion produced a feature. The interface is available in Japanese and English.</p>",
+  "creators": [
+    {
+      "name": "Di-Is"
+    }
+  ],
+  "license": "mit",
+  "access_right": "open",
+  "keywords": [
+    "astronomy",
+    "quasar",
+    "absorption lines",
+    "spectroscopy",
+    "Voigt profile",
+    "spectral analysis",
+    "PySide6"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Di-Is/qso-chappy",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

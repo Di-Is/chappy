@@ -5,6 +5,7 @@
 [![CI](https://github.com/Di-Is/qso-chappy/actions/workflows/ci.yml/badge.svg)](https://github.com/Di-Is/qso-chappy/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://www.python.org/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22162939.svg)](https://doi.org/10.5281/zenodo.22162939)
 
 遠くのクェーサーから届いた光は、地球に着くまでに宇宙空間のガス雲をいくつも通り抜けてきます。
 その途中で特定の波長だけが吸収され、スペクトルには「吸収線」という暗い筋が刻まれます。
@@ -60,6 +61,16 @@ Python を自分でインストールする必要はありません。必要な 
 
 MIT License — 研究・教育・改変・再配布のいずれにも自由にお使いいただけます。
 詳細は [LICENSE](LICENSE) を参照してください。
+
+## 引用
+
+研究成果で chappy を利用した場合は、以下の DOI を引用してください。
+このリンクは常に最新バージョンを指します。
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22162939.svg)](https://doi.org/10.5281/zenodo.22162939)
+
+書誌情報は [CITATION.cff](CITATION.cff) にまとめてあります。
+GitHub のリポジトリ右側「Cite this repository」から各種形式で取得できます。
 
 ## このプロジェクトについて
 

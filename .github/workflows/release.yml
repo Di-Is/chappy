@@ -39,21 +39,26 @@ jobs:
         uv run --project docs/user_manual -m chappy_user_manual_generator --language ja --qt-platform offscreen
         uv run --project docs/user_manual -m chappy_user_manual_generator --language en --qt-platform offscreen
 
-    - name: Bundle manual into package
+    - name: Verify tag matches project version
       run: |
-        mkdir -p src/chappy/manual
-        cp -R docs/user_manual/dist/html_ja docs/user_manual/dist/html_en src/chappy/manual/
+        version="$(uv run python -c 'import tomllib,pathlib;print(tomllib.loads(pathlib.Path("pyproject.toml").read_text())["project"]["version"])')"
+        if [ "${{ github.ref_name }}" != "v${version}" ]; then
+          echo "Tag ${{ github.ref_name }} does not match project version ${version}." >&2
+          exit 1
+        fi
 
-    - name: Build package
-      run: uv build
+    - name: Build distribution zip
+      run: uv run python scripts/build_dist_zip.py
 
-    - name: Verify manual is bundled in wheel
+    - name: Verify distribution zip contents
       run: |
-        unzip -l dist/*.whl | grep -q "chappy/manual/html_ja/index.html"
-        unzip -l dist/*.whl | grep -q "chappy/manual/html_en/index.html"
+        unzip -l dist/*.zip | grep -q "docs/user_manual/dist/html_ja/index.html"
+        unzip -l dist/*.zip | grep -q "docs/user_manual/dist/html_en/index.html"
+        unzip -l dist/*.zip | grep -q "LICENSE"
+        unzip -l dist/*.zip | grep -q "README.md"
 
     - name: Create GitHub Release
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh release create "${{ github.ref_name }}" dist/* --generate-notes
+        gh release create "${{ github.ref_name }}" dist/*.zip --generate-notes

@@ -5,6 +5,7 @@
 [![CI](https://github.com/Di-Is/qso-chappy/actions/workflows/ci.yml/badge.svg)](https://github.com/Di-Is/qso-chappy/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://www.python.org/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22162939.svg)](https://doi.org/10.5281/zenodo.22162939)
 
 Light from a distant quasar passes through countless clouds of gas on its way to Earth.
 Along the way, specific wavelengths are absorbed, leaving dark features — absorption lines — in the spectrum.
@@ -64,6 +65,16 @@ See [CONTRIBUTING.en.md](CONTRIBUTING.en.md) for development setup and coding co
 
 MIT License — free to use, modify, and redistribute for research, education, or any other purpose.
 See [LICENSE](LICENSE) for details.
+
+## Citing chappy
+
+If you use chappy in your research, please cite it via the DOI below.
+The link always resolves to the latest version.
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22162939.svg)](https://doi.org/10.5281/zenodo.22162939)
+
+Bibliographic metadata lives in [CITATION.cff](CITATION.cff), and GitHub's
+"Cite this repository" panel can export it in the format you need.
 
 ## About this project
 
