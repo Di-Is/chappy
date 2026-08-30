@@ -311,6 +311,109 @@ def test_dialog_hide_advances_the_dialog_hidden_step_back_to_main(qtbot: QtBot) 
     controller.stop()
 
 
+def test_back_to_consumed_dialog_shown_step_restores_closed_source(qtbot: QtBot) -> None:
+    """Back from inside an open dialog must close it so the opener can fire again."""
+    host = _shown_host(qtbot)
+    open_button = QPushButton("Open", host)
+    open_button.setObjectName("mainOpenButton")
+    open_button.show()
+    controller = _controller(host, _dialog_transition_chapter("mainOpenButton", "probeDialog"))
+    controller.start()
+    dialog, _button = _modal_dialog(host)
+    dialog.setObjectName("probeDialog")
+    dialog.show()
+    qtbot.waitUntil(lambda: controller._step_index == 1)
+
+    assert controller._bubble is not None
+    controller._bubble.back_requested.emit()
+
+    qtbot.waitUntil(lambda: not dialog.isVisible())
+    assert controller._step_index == 0
+    dialog.show()
+    qtbot.waitUntil(lambda: controller._step_index == 1)
+    controller.stop()
+
+
+def test_back_to_consumed_dialog_hidden_step_reopens_dialog(qtbot: QtBot) -> None:
+    """Back after a close must reopen the retained dialog so Close can fire again."""
+    host = _shown_host(qtbot)
+    open_button = QPushButton("Open", host)
+    open_button.setObjectName("mainOpenButton")
+    open_button.show()
+    controller = _controller(host, _dialog_transition_chapter("mainOpenButton", "probeDialog"))
+    controller.start()
+    dialog, _button = _modal_dialog(host)
+    dialog.setObjectName("probeDialog")
+    dialog.show()
+    qtbot.waitUntil(lambda: controller._step_index == 1)
+    controller._advance()
+    dialog.hide()
+    qtbot.waitUntil(lambda: controller._step_index == 3)
+
+    assert controller._bubble is not None
+    controller._bubble.back_requested.emit()
+
+    qtbot.waitUntil(dialog.isVisible)
+    assert controller._step_index == 2
+    dialog.hide()
+    qtbot.waitUntil(lambda: controller._step_index == 3)
+    controller.stop()
+
+
+def test_back_across_chapter_reopens_consumed_dialog_hidden_source(qtbot: QtBot) -> None:
+    """The preset-close shape remains replayable after entering the next chapter."""
+    host = _shown_host(qtbot)
+    dialog_step = TutorialStep(
+        targets=(_target(_DIALOG_BUTTON_NAME),),
+        action_source="Close the dialog",
+        expected_source="The dialog closes",
+        advance=AdvanceTrigger.DIALOG_HIDDEN,
+        advance_dialog="probeDialog",
+    )
+    chapters = (
+        TutorialChapter(
+            chapter_id="dialog_chapter",
+            title_source="Dialog chapter",
+            destination=TutorialDestination(mode=EditingMode.IDENTIFY),
+            steps=(dialog_step,),
+        ),
+        TutorialChapter(
+            chapter_id="next_chapter",
+            title_source="Next chapter",
+            destination=TutorialDestination(mode=EditingMode.IDENTIFY),
+            steps=(
+                TutorialStep(
+                    targets=(), action_source="Continue", expected_source="The tour continues"
+                ),
+            ),
+        ),
+    )
+    controller = TutorialTourController(
+        host,
+        chapters=chapters,
+        switch_mode=lambda _mode: None,
+        switch_analysis_surface=lambda _surface: True,
+        switch_analysis_panel=lambda _panel: True,
+    )
+    controller.start()
+    dialog, _button = _modal_dialog(host)
+    dialog.setObjectName("probeDialog")
+    dialog.show()
+    qtbot.waitExposed(dialog)
+    _wait_for_overlay_window(qtbot, controller, dialog)
+    dialog.hide()
+    qtbot.waitUntil(lambda: controller._current_chapter().chapter_id == "next_chapter")
+
+    assert controller._bubble is not None
+    controller._bubble.back_requested.emit()
+
+    qtbot.waitUntil(dialog.isVisible)
+    assert controller._current_chapter().chapter_id == "dialog_chapter"
+    assert controller._step_index == 0
+    _wait_for_overlay_window(qtbot, controller, dialog)
+    controller.stop()
+
+
 def test_unrelated_dialog_show_does_not_advance_a_dialog_shown_step(qtbot: QtBot) -> None:
     """Only the dialog named by the step may drive the transition."""
     host = _shown_host(qtbot)

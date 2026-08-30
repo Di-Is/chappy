@@ -28,16 +28,14 @@ The interface is available in Japanese and English.
 
 ## Getting started
 
-1. Get the latest build from [Releases](https://github.com/Di-Is/qso-chappy/releases)
+1. Download the latest zip file from [Releases](https://github.com/Di-Is/qso-chappy/releases) and extract it anywhere you like
 2. Follow the steps in [INSTALL.en.md](INSTALL.en.md)
 
 You do not need to install Python yourself — the required Python version and dependencies are
 downloaded automatically on first launch.
 
 **A tutorial starts automatically the first time you launch the app.**
-A sample quasar spectrum (Q0329-385, observed with VLT/UVES) is bundled, so you can walk through
-loading data and fitting an absorption line without preparing your own observations.
-You can restart the tutorial at any time from **Help > Tutorial**.
+A sample quasar spectrum is bundled, so you can try it right away without preparing your own data.
 
 ## Learning the interface
 
@@ -47,7 +45,7 @@ The manual ships with the release package and opens in whichever language the in
 ## Requirements
 
 - Windows / macOS / Linux
-- Python 3.12 or later (installed automatically; no prior setup needed)
+- Python 3.12 or later
 
 ## Getting help
 

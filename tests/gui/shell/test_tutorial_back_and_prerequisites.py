@@ -197,6 +197,58 @@ def test_back_onto_mode_change_step_restores_its_wait_state(qtbot) -> None:
     assert controller._current_chapter().chapter_id == "analysis"
 
 
+def test_back_to_leading_mode_change_restores_the_previous_chapter_destination(qtbot) -> None:
+    host = QWidget()
+    qtbot.addWidget(host)
+    calls: list[object] = []
+    chapters = (
+        _chapter(
+            "analysis_detail",
+            destination=TutorialDestination(
+                mode=EditingMode.ANALYSIS,
+                surface=AnalysisOperationSurface.REGION_DETAIL,
+                panel=AnalysisOperationPanel.DETAIL,
+            ),
+            steps=(_step(),),
+        ),
+        _chapter(
+            "preset_build",
+            destination=TutorialDestination(),
+            steps=(
+                TutorialStep(
+                    targets=(),
+                    action_source="Click Identify",
+                    expected_source="Identify opens",
+                    advance=AdvanceTrigger.MODE_CHANGE,
+                    advance_mode=EditingMode.IDENTIFY,
+                ),
+                _step(),
+            ),
+        ),
+    )
+    controller = _controller(host, chapters, calls=calls)
+
+    controller.start()
+    controller._advance()
+    controller.notify_mode_changed(EditingMode.IDENTIFY)
+    assert controller._step_index == 1
+
+    controller._go_back()
+
+    assert controller._current_chapter().chapter_id == "preset_build"
+    assert controller._step_index == 0
+    assert calls == [
+        EditingMode.ANALYSIS,
+        AnalysisOperationSurface.REGION_DETAIL,
+        AnalysisOperationPanel.DETAIL,
+        EditingMode.ANALYSIS,
+        AnalysisOperationSurface.REGION_DETAIL,
+        AnalysisOperationPanel.DETAIL,
+    ]
+    assert controller._bubble is not None
+    assert not controller._bubble._next_button.isEnabled()
+
+
 def test_unmet_prerequisite_shows_warning_before_applying_destination(qtbot) -> None:
     host = QWidget()
     qtbot.addWidget(host)

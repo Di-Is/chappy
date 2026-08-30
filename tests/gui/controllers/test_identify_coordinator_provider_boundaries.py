@@ -107,14 +107,14 @@ def test_invalid_history_recorder_provider_fails_fast() -> None:
         coordinator._identify_candidate_history_recorder()
 
 
-def test_invalid_mode_state_provider_fails_fast() -> None:
+def test_invalid_current_mode_provider_fails_fast() -> None:
     """A non-mode-state object should not be accepted through a cast boundary."""
     window = _MainWindow()
     window.mode_state_store = object()
     coordinator = _coordinator_with_main_window(window)
 
     with pytest.raises(TypeError, match="Identify mode state store"):
-        coordinator._identify_registration_mode_state()
+        coordinator._current_editing_mode()
 
 
 def test_tutorial_sigma_override_refreshes_without_writing_saved_settings() -> None:

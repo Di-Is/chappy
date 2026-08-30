@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import math
-from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol
 
@@ -19,8 +17,6 @@ from chappy.application.identify import (
     RegistrationOutcome,
 )
 from chappy.core.absorption_display import format_region_display
-from chappy.core.constants import LIGHT_SPEED_KMS
-from chappy.core.editing_mode import FittingGroupCollection, FittingGroupSummary
 from chappy.core.velocity_ranges import DEFAULT_IDENTIFY_MULTIPLET_GROUPING_TOLERANCE
 from chappy.gui.modes.identify.application_adapters import (
     candidate_line_to_snapshot,
@@ -29,27 +25,13 @@ from chappy.gui.modes.identify.application_adapters import (
 from chappy.gui.modes.identify.registration_controller import IdentifyRegistrationResult
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Mapping, Sequence
+    from collections.abc import Callable, Iterable, Sequence
     from contextlib import AbstractContextManager
 
     from chappy.application.history import AbsorptionRegionSnapshot
     from chappy.core.absorption.models import AbsorptionLine, AbsorptionRegion
-    from chappy.core.change_set import ChangeSet
     from chappy.core.identify_state import CandidateLine, IdentifySessionState, RegionPreview
     from chappy.core.spectroscopy_project import SpectroscopyProject
-
-
-class IdentifyRegistrationModeStatePort(Protocol):
-    """Mode state operations required after registration."""
-
-    @property
-    def fitting_groups(self) -> Mapping[str, FittingGroupSummary]:
-        """Return current fitting group summaries."""
-        ...
-
-    def set_fitting_groups(self, groups: FittingGroupCollection) -> ChangeSet:
-        """Replace fitting group summaries."""
-        ...
 
 
 class IdentifyRegistrationHistoryRecorder(Protocol):
@@ -106,7 +88,6 @@ class IdentifyRegistrationWorkflowPorts:
 
     project_provider: Callable[[], SpectroscopyProject | None]
     session_provider: Callable[[], IdentifySessionState]
-    mode_state_provider: Callable[[], IdentifyRegistrationModeStatePort | None]
     history_recorder_provider: Callable[[], IdentifyRegistrationHistoryRecorder | None]
     primary_members_provider: Callable[[], dict[str, tuple[str, ...]]]
     messages_provider: Callable[[], IdentifyRegistrationWorkflowMessages]
@@ -245,8 +226,7 @@ class IdentifyRegistrationWorkflow:
             if (line := project.find_absorption_line(line_id)) is not None
         ]
         run_postcommit_actions_isolated(
-            lambda: self._synchronise_model_region_links(project, sync_lines),
-            lambda: self._synchronise_mode_groups(project, sync_lines),
+            lambda: self._synchronise_model_region_links(project, sync_lines)
         )
 
         message = self._registration_status_message(project, result.outcome, messages)
@@ -315,93 +295,6 @@ class IdentifyRegistrationWorkflow:
         for line in lines:
             if line.model_ids:
                 project.assign_line_models_to_region(line)
-
-    def _synchronise_mode_groups(
-        self, project: SpectroscopyProject, lines: Iterable[AbsorptionLine]
-    ) -> None:
-        """Keep optimise-mode fitting groups aligned with identify results."""
-        mode_state_store = self._ports.mode_state_provider()
-        if mode_state_store is None:
-            return
-
-        grouped: defaultdict[str, list[tuple[AbsorptionRegion, AbsorptionLine]]] = defaultdict(
-            list
-        )
-
-        for line in lines:
-            absorption_region = (
-                project.find_absorption_region(line.region_id)
-                if line.region_id
-                else project.ensure_absorption_unassigned_region()
-            )
-            if absorption_region is None:
-                continue
-
-            grouped[absorption_region.region_id].append((absorption_region, line))
-
-        if not grouped:
-            return
-
-        existing_groups = dict(mode_state_store.fitting_groups)
-
-        for group_name, members in grouped.items():
-            wavelengths_min: list[float] = []
-            wavelengths_max: list[float] = []
-            absorber_names: list[str] = []
-            system_ids: list[str] = []
-            absorber_group = members[0][0]
-
-            for _region, line in members:
-                system_ids.append(line.line_id)
-                low, high = self._line_wavelength_range(line)
-                wavelengths_min.append(low)
-                wavelengths_max.append(high)
-                for model_id in line.model_ids:
-                    component = project.find_absorber_component(model_id)
-                    if component is not None:
-                        absorber_names.append(component.name)
-
-            entry = FittingGroupSummary(
-                name=group_name,
-                group_id=absorber_group.region_id,
-                system_ids=tuple(system_ids),
-                absorber_names=tuple(sorted(set(absorber_names))),
-                wavelength_min=min(wavelengths_min),
-                wavelength_max=max(wavelengths_max),
-                color=absorber_group.display_color,
-            )
-
-            existing_groups[group_name] = entry
-
-        mode_state_store.set_fitting_groups(existing_groups)
-
-    def _line_wavelength_range(self, line: AbsorptionLine) -> tuple[float, float]:
-        """Return an observed wavelength window for optimisation previews."""
-        if line.lambda_range and len(line.lambda_range) == 2:
-            low, high = line.lambda_range
-            return (min(low, high), max(low, high))
-
-        observed = line.observed_wavelength()
-        if not math.isfinite(observed) or observed <= 0:
-            msg = f"Invalid observed wavelength for absorption line {line.line_id}: {observed}"
-            raise ValueError(msg)
-
-        session = self._ports.session_provider()
-        window_kms = (
-            abs(line.window_kms)
-            if line.window_kms
-            else session.new_candidate_analysis_half_width.kms
-        )
-        if not math.isfinite(window_kms) or window_kms <= 0:
-            return (observed, observed)
-
-        delta = abs(observed * (window_kms / LIGHT_SPEED_KMS))
-        if not math.isfinite(delta) or delta <= 0:
-            return (observed, observed)
-
-        start = observed - delta
-        end = observed + delta
-        return (min(start, end), max(start, end))
 
     def _get_region_display_name(
         self, project: SpectroscopyProject, region: AbsorptionRegion

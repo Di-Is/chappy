@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QT_TRANSLATE_NOOP
@@ -13,6 +14,31 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 _EXPORTER_CONTEXT = "ManualExporter"
+_TUTORIAL_CONTEXT = "Tutorial"
+
+
+@dataclass(frozen=True, slots=True)
+class _WalkthroughSummary:
+    button_source: str
+    coverage_source: str
+    chapter_count: int
+
+
+@dataclass(frozen=True, slots=True)
+class _ChapterSummary:
+    chapter_id: str
+    title_source: str
+    included_source: str
+    learn_source: str
+    has_prerequisite: bool
+
+
+@dataclass(frozen=True, slots=True)
+class _PrerequisiteSummary:
+    chapter_id: str
+    chapter_source: str
+    needs_source: str
+
 
 PAGE_RELATIVE_PATH = "reference/tutorial.md"
 
@@ -67,23 +93,23 @@ _WALKTHROUGH_COLUMN = QT_TRANSLATE_NOOP("ManualExporter", "Dialog Button")
 _COVERAGE_COLUMN = QT_TRANSLATE_NOOP("ManualExporter", "Coverage")
 _CHAPTER_COUNT_COLUMN = QT_TRANSLATE_NOOP("ManualExporter", "Chapters")
 _WALKTHROUGHS = (
-    (
+    _WalkthroughSummary(
         QT_TRANSLATE_NOOP("ManualExporter", "[Try the Essential Workflow]"),
         QT_TRANSLATE_NOOP(
             "ManualExporter",
             "The minimal loop: load data, identify one absorption system, fit it, save the"
             " project.",
         ),
-        "5",
+        5,
     ),
-    (
+    _WalkthroughSummary(
         QT_TRANSLATE_NOOP("ManualExporter", "[Explore All Features]"),
         QT_TRANSLATE_NOOP(
             "ManualExporter",
             "Everything in the essential workflow plus building a custom preset, the velocity"
             " plot, merging regions, tying ions together, and continuum correction.",
         ),
-        "10",
+        10,
     ),
 )
 
@@ -100,7 +126,8 @@ _LEARN_COLUMN = QT_TRANSLATE_NOOP("ManualExporter", "What You Learn")
 _BOTH_WALKTHROUGHS = QT_TRANSLATE_NOOP("ManualExporter", "Essential and Full")
 _FULL_ONLY = QT_TRANSLATE_NOOP("ManualExporter", "Full only")
 _CHAPTERS = (
-    (
+    _ChapterSummary(
+        "getting_started",
         QT_TRANSLATE_NOOP("ManualExporter", "Getting Started"),
         _BOTH_WALKTHROUGHS,
         QT_TRANSLATE_NOOP(
@@ -109,8 +136,10 @@ _CHAPTERS = (
             " undo/redo, typing an exact wavelength range, [Auto Adjust], [Reset View], and"
             " where to open your own data instead.",
         ),
+        False,
     ),
-    (
+    _ChapterSummary(
+        "identify",
         QT_TRANSLATE_NOOP("ManualExporter", "Identifying Absorption Systems"),
         _BOTH_WALKTHROUGHS,
         QT_TRANSLATE_NOOP(
@@ -118,16 +147,20 @@ _CHAPTERS = (
             'Selecting the built-in "Metal Lines" preset, choosing a reference line, marking'
             " a candidate absorption system on the spectrum, and confirming it as a region.",
         ),
+        False,
     ),
-    (
+    _ChapterSummary(
+        "analysis",
         QT_TRANSLATE_NOOP("ManualExporter", "Reviewing Analysis Readiness"),
         _BOTH_WALKTHROUGHS,
         QT_TRANSLATE_NOOP(
             "ManualExporter",
             "Selecting the confirmed region in Analysis Overview and reading its fit readiness.",
         ),
+        True,
     ),
-    (
+    _ChapterSummary(
+        "analysis_detail",
         QT_TRANSLATE_NOOP("ManualExporter", "Fitting a Region in Detail"),
         _BOTH_WALKTHROUGHS,
         QT_TRANSLATE_NOOP(
@@ -135,8 +168,10 @@ _CHAPTERS = (
             "Opening Analysis Region Detail, adding a fit component to a line, running the"
             " optimizer, and reading the fit outcome.",
         ),
+        True,
     ),
-    (
+    _ChapterSummary(
+        "preset_build",
         QT_TRANSLATE_NOOP("ManualExporter", "Building a Custom Preset"),
         _FULL_ONLY,
         QT_TRANSLATE_NOOP(
@@ -144,8 +179,10 @@ _CHAPTERS = (
             "Creating a named preset, adding Fe II and Mg II lines to it, linking and"
             " unlinking lines into tie groups, and choosing its reference line.",
         ),
+        False,
     ),
-    (
+    _ChapterSummary(
+        "velocity_identify",
         QT_TRANSLATE_NOOP("ManualExporter", "Identifying with the Velocity Plot"),
         _FULL_ONLY,
         QT_TRANSLATE_NOOP(
@@ -153,35 +190,46 @@ _CHAPTERS = (
             "Selecting the custom preset, moving to a second, hidden absorption system in the"
             " sample, and using the velocity plot to identify and confirm it.",
         ),
+        True,
     ),
-    (
+    _ChapterSummary(
+        "analysis_structure",
         QT_TRANSLATE_NOOP("ManualExporter", "Merging Regions"),
         _FULL_ONLY,
         QT_TRANSLATE_NOOP(
             "ManualExporter",
-            "Opening Analysis Structure for a region and merging it with another so a single"
-            " region spans more than one ion species.",
+            "Opening Analysis Structure for two regions, merging them so one region spans more"
+            " than one ion species, splitting the Mg II multiplet back out, and re-merging the"
+            " regions.",
         ),
+        True,
     ),
-    (
+    _ChapterSummary(
+        "joint_fit",
         QT_TRANSLATE_NOOP("ManualExporter", "Tying Ions and Fitting Together"),
         _FULL_ONLY,
         QT_TRANSLATE_NOOP(
             "ManualExporter",
-            "Adding a fit component to one ion, tying its redshift to another ion in the same"
-            " region, and running a joint fit across both.",
+            "Building three-component models for both ions, tying their main components'"
+            " redshift together, running a joint fit, and fixing the saturated Mg II logN"
+            " before fitting again.",
         ),
+        True,
     ),
-    (
+    _ChapterSummary(
+        "continuum",
         QT_TRANSLATE_NOOP("ManualExporter", "Correcting the Continuum"),
         _FULL_ONLY,
         QT_TRANSLATE_NOOP(
             "ManualExporter",
             "Switching to Continuum mode and running [Auto Estimate] to fit the continuum"
-            " around the spectrum.",
+            " around the spectrum, adding and moving a control point, deleting a point, and"
+            " undoing those edits.",
         ),
+        False,
     ),
-    (
+    _ChapterSummary(
+        "save",
         QT_TRANSLATE_NOOP("ManualExporter", "Saving Your Work"),
         _BOTH_WALKTHROUGHS,
         QT_TRANSLATE_NOOP(
@@ -189,6 +237,7 @@ _CHAPTERS = (
             "Saving the project, and a recap of the load, identify, review, fit, and save"
             " loop just completed.",
         ),
+        False,
     ),
 )
 
@@ -198,28 +247,33 @@ _PREREQUISITES_INTRO = QT_TRANSLATE_NOOP(
     "Five chapters open only after earlier chapters have left the project in the state they"
     " need. When a chapter's prerequisite is unmet, the tour shows a warning bubble instead of"
     " that chapter's first step, offering [Back] to return to the previous step or [Continue"
-    " anyway] to skip straight past the chapter.",
+    " anyway] to ignore the prerequisite and start that chapter from its first step.",
 )
 _PREREQ_CHAPTER_COLUMN = QT_TRANSLATE_NOOP("ManualExporter", "Chapter")
 _PREREQ_CONDITION_COLUMN = QT_TRANSLATE_NOOP("ManualExporter", "Needs")
 _PREREQUISITES = (
-    (
+    _PrerequisiteSummary(
+        "analysis",
         QT_TRANSLATE_NOOP("ManualExporter", "Reviewing Analysis Readiness"),
         QT_TRANSLATE_NOOP("ManualExporter", "At least one confirmed absorption region."),
     ),
-    (
+    _PrerequisiteSummary(
+        "analysis_detail",
         QT_TRANSLATE_NOOP("ManualExporter", "Fitting a Region in Detail"),
         QT_TRANSLATE_NOOP("ManualExporter", "At least one confirmed absorption region."),
     ),
-    (
+    _PrerequisiteSummary(
+        "velocity_identify",
         QT_TRANSLATE_NOOP("ManualExporter", "Identifying with the Velocity Plot"),
         QT_TRANSLATE_NOOP("ManualExporter", "A custom preset created in an earlier chapter."),
     ),
-    (
+    _PrerequisiteSummary(
+        "analysis_structure",
         QT_TRANSLATE_NOOP("ManualExporter", "Merging Regions"),
         QT_TRANSLATE_NOOP("ManualExporter", "At least two confirmed absorption regions."),
     ),
-    (
+    _PrerequisiteSummary(
+        "joint_fit",
         QT_TRANSLATE_NOOP("ManualExporter", "Tying Ions and Fitting Together"),
         QT_TRANSLATE_NOOP("ManualExporter", "A region that combines two or more ion species."),
     ),
@@ -233,9 +287,10 @@ _CONTROLS_INTRO = QT_TRANSLATE_NOOP(
 )
 _CONTROL_COLUMN = QT_TRANSLATE_NOOP("ManualExporter", "Control")
 _EFFECT_COLUMN = QT_TRANSLATE_NOOP("ManualExporter", "Effect")
+_CONTROL_LABEL_FORMAT = QT_TRANSLATE_NOOP("ManualExporter", "[{label}]")
 _CONTROLS = (
     (
-        "[Next]",
+        QT_TRANSLATE_NOOP("Tutorial", "Next"),
         QT_TRANSLATE_NOOP(
             "ManualExporter",
             "Advances to the next step. On a step that checks for a specific action (for"
@@ -246,7 +301,7 @@ _CONTROLS = (
         ),
     ),
     (
-        "[Back]",
+        QT_TRANSLATE_NOOP("Tutorial", "Back"),
         QT_TRANSLATE_NOOP(
             "ManualExporter",
             "Returns to the previous step, or to the previous chapter's last step at a"
@@ -254,7 +309,7 @@ _CONTROLS = (
         ),
     ),
     (
-        "[Exit Tour]",
+        QT_TRANSLATE_NOOP("Tutorial", "Exit Tour"),
         QT_TRANSLATE_NOOP(
             "ManualExporter",
             "Closes the tour immediately, keeping whatever the tour has done to the project so"
@@ -262,7 +317,7 @@ _CONTROLS = (
         ),
     ),
     (
-        "[What is this?]",
+        QT_TRANSLATE_NOOP("Tutorial", "What is this?"),
         QT_TRANSLATE_NOOP(
             "ManualExporter",
             "Shown only on steps that carry background information beyond the instruction"
@@ -318,7 +373,8 @@ def export_tutorial_guide(*, out_dir: Path) -> Path:
         [tr(_WALKTHROUGH_COLUMN), tr(_COVERAGE_COLUMN), tr(_CHAPTER_COUNT_COLUMN)]
     )
     walkthrough_table.extend(
-        (tr(button), tr(coverage), count) for button, coverage, count in _WALKTHROUGHS
+        (tr(row.button_source), tr(row.coverage_source), str(row.chapter_count))
+        for row in _WALKTHROUGHS
     )
     lines.extend(walkthrough_table.lines())
 
@@ -327,19 +383,35 @@ def export_tutorial_guide(*, out_dir: Path) -> Path:
         [tr(_NUMBER_COLUMN), tr(_CHAPTER_COLUMN), tr(_INCLUDED_COLUMN), tr(_LEARN_COLUMN)]
     )
     chapters_table.extend(
-        (str(number), tr(title), tr(included), tr(learn))
-        for number, (title, included, learn) in enumerate(_CHAPTERS, 1)
+        (
+            str(number),
+            tr(chapter.title_source),
+            tr(chapter.included_source),
+            tr(chapter.learn_source),
+        )
+        for number, chapter in enumerate(_CHAPTERS, 1)
     )
     lines.extend(chapters_table.lines())
 
     lines.extend(["", f"## {tr(_PREREQUISITES_HEADING)}", "", tr(_PREREQUISITES_INTRO)])
     prereq_table = MarkdownTableBuilder([tr(_PREREQ_CHAPTER_COLUMN), tr(_PREREQ_CONDITION_COLUMN)])
-    prereq_table.extend((tr(chapter), tr(needs)) for chapter, needs in _PREREQUISITES)
+    prereq_table.extend(
+        (tr(prerequisite.chapter_source), tr(prerequisite.needs_source))
+        for prerequisite in _PREREQUISITES
+    )
     lines.extend(prereq_table.lines())
 
     lines.extend(["", f"## {tr(_CONTROLS_HEADING)}", "", tr(_CONTROLS_INTRO)])
     controls_table = MarkdownTableBuilder([tr(_CONTROL_COLUMN), tr(_EFFECT_COLUMN)])
-    controls_table.extend((control, tr(effect)) for control, effect in _CONTROLS)
+    controls_table.extend(
+        (
+            tr(_CONTROL_LABEL_FORMAT).format(
+                label=translate_manual_text(_TUTORIAL_CONTEXT, control_source)
+            ),
+            tr(effect),
+        )
+        for control_source, effect in _CONTROLS
+    )
     lines.extend(controls_table.lines())
 
     lines.extend(["", f"## {tr(_ENDING_HEADING)}", ""])

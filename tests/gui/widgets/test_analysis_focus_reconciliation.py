@@ -15,10 +15,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import QTreeWidget
 
 from chappy.core.absorption.models import AbsorptionLine, AbsorptionRegion
+from chappy.core.change_set import ChangeSet
+from chappy.core.events import RegionTopologyChanged
 from chappy.core.spectroscopy_project import SpectroscopyProject
 from chappy.gui.modes.analysis.region_detail.editor import OptimizeEditor
 from chappy.gui.modes.analysis.region_detail.panel import RegionDetailPanel
@@ -32,12 +33,6 @@ if TYPE_CHECKING:
     from pytestqt.qtbot import QtBot
 
     from chappy.gui.modes.common.analysis_navigation import AnalysisRegionFocusPort
-
-
-class _ModeState(QObject):
-    """Minimal mode-state double exposing the signal the panel wires on construction."""
-
-    group_removed = Signal(str)
 
 
 @pytest.fixture
@@ -54,7 +49,7 @@ def panel(qtbot: QtBot, analysis_focus: AnalysisRegionFocusPort) -> RegionDetail
     widget = RegionDetailPanel(
         optimize_editor=editor,
         analysis_focus=analysis_focus,
-        mode_state=_ModeState(),
+        mode_state=object(),
         model_addition_usecase=NoOpModelAdditionUseCase(),
         parameter_mutation_usecase=parameter_mutation_usecase,
         tie_set_edit_usecase=tie_set_edit_usecase,
@@ -157,10 +152,10 @@ def test_project_switch_promotes_new_projects_own_region(
     assert analysis_focus.focused_region_id() == "region-9"
 
 
-def test_focused_region_deletion_promotes_remaining_region(
+def test_focused_region_deletion_leaves_focus_recovery_to_shell(
     panel: RegionDetailPanel, analysis_focus: AnalysisFocusRecorder
 ) -> None:
-    """Deleting the focused region clears canonical focus and reconciliation repromotes it."""
+    """Detail refreshes its selector without owning canonical focus recovery."""
     project = _two_region_project()
     panel.set_project(project)
     panel.reconcile_focus_with_selector()
@@ -168,13 +163,13 @@ def test_focused_region_deletion_promotes_remaining_region(
 
     del project.absorption_regions["region-1"]
     del project.absorption_lines["line-1"]
-    panel.handle_mode_group_removed("region-1")
+    project.model.publish_storage_changes(
+        ChangeSet.of(RegionTopologyChanged(removed_region_ids=("region-1",)))
+    )
 
-    assert analysis_focus.focused_region_id() == "region-2"
-    # The panel's own deletion path must clear focus without touching the
-    # surface (P1 regression): it must go through the surface-preserving
-    # variant, never the surface-clearing one.
-    assert analysis_focus.clear_focus_only_if_calls == ["region-1"]
+    assert analysis_focus.focused_region_id() == "region-1"
+    assert panel._group_selection_controller.current_group_id() == "region-2"  # noqa: SLF001
+    assert analysis_focus.clear_focus_only_if_calls == []
     assert analysis_focus.clear_focus_if_calls == []
 
 
@@ -189,10 +184,12 @@ def test_non_focused_region_deletion_leaves_canonical_focus_untouched(
 
     del project.absorption_regions["region-2"]
     del project.absorption_lines["line-2"]
-    panel.handle_mode_group_removed("region-2")
+    project.model.publish_storage_changes(
+        ChangeSet.of(RegionTopologyChanged(removed_region_ids=("region-2",)))
+    )
 
     assert analysis_focus.focused_region_id() == "region-1"
-    assert analysis_focus.clear_focus_only_if_calls == ["region-2"]
+    assert analysis_focus.clear_focus_only_if_calls == []
     assert analysis_focus.clear_focus_if_calls == []
 
 

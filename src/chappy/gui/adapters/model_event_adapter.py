@@ -14,6 +14,7 @@ from chappy.core.events import (
     MasksChanged,
     ModelUpdated,
     ModelUpdateProgress,
+    RegionTopologyChanged,
 )
 
 if TYPE_CHECKING:
@@ -28,6 +29,7 @@ class SpectrumModelEventAdapter(QObject):
     component_added = Signal(ModelComponent)
     component_removed = Signal(ModelComponent)
     masks_changed = Signal()
+    region_topology_changed = Signal(RegionTopologyChanged)
 
     def __init__(self, model: SpectrumModel, parent: QObject | None = None) -> None:
         """Initialize an adapter for a spectrum model.
@@ -41,7 +43,13 @@ class SpectrumModelEventAdapter(QObject):
         self._component_cache: dict[str, ModelComponent] = {
             component.id: component for component in model.components
         }
+        self._applying_region_topology_change = False
         self._model.events.subscribe(self.apply)
+
+    @property
+    def applying_region_topology_change(self) -> bool:
+        """Return whether the current change set contains a topology event."""
+        return self._applying_region_topology_change
 
     def close(self) -> None:
         """Detach this adapter from the model."""
@@ -53,34 +61,42 @@ class SpectrumModelEventAdapter(QObject):
         Args:
             change_set: Domain changes emitted by the model.
         """
-        for event in change_set:
-            if isinstance(event, ComponentAdded):
-                component = self._model.get_component_by_id(event.component_id)
-                if component is None:
+        self._applying_region_topology_change = change_set.contains(RegionTopologyChanged)
+        try:
+            for event in change_set:
+                if isinstance(event, ComponentAdded):
+                    component = self._model.get_component_by_id(event.component_id)
+                    if component is None:
+                        continue
+                    self._component_cache[event.component_id] = component
+                    self.component_added.emit(component)
                     continue
-                self._component_cache[event.component_id] = component
-                self.component_added.emit(component)
-                continue
 
-            if isinstance(event, ComponentRemoved):
-                component = self._component_cache.pop(event.component_id, None)
-                if component is not None:
-                    self.component_removed.emit(component)
-                continue
-
-            if isinstance(event, ComponentChanged):
-                component = self._model.get_component_by_id(event.component_id)
-                if component is None:
+                if isinstance(event, ComponentRemoved):
+                    component = self._component_cache.pop(event.component_id, None)
+                    if component is not None:
+                        self.component_removed.emit(component)
                     continue
-                self._component_cache[event.component_id] = component
-                continue
 
-            if isinstance(event, MasksChanged):
-                self.masks_changed.emit()
-                continue
+                if isinstance(event, ComponentChanged):
+                    component = self._model.get_component_by_id(event.component_id)
+                    if component is None:
+                        continue
+                    self._component_cache[event.component_id] = component
+                    continue
 
-            if isinstance(event, ModelUpdateProgress):
-                continue
+                if isinstance(event, MasksChanged):
+                    self.masks_changed.emit()
+                    continue
 
-            if isinstance(event, ModelUpdated):
-                self.model_changed.emit()
+                if isinstance(event, RegionTopologyChanged):
+                    self.region_topology_changed.emit(event)
+                    continue
+
+                if isinstance(event, ModelUpdateProgress):
+                    continue
+
+                if isinstance(event, ModelUpdated):
+                    self.model_changed.emit()
+        finally:
+            self._applying_region_topology_change = False

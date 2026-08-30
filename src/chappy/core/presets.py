@@ -251,7 +251,7 @@ class PresetImportError(RuntimeError):
 class PresetStore:
     """Pure in-memory repository for absorption line presets."""
 
-    MAX_PRESETS = 50
+    MAX_PRESETS = 100
     DEFAULT_MATCH_TOLERANCE = 0.02
 
     def __init__(self, atomic_data: AtomicLineData, *, translate: TranslateFunc) -> None:

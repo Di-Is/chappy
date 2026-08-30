@@ -230,6 +230,11 @@ class _StubMainWindow(SimpleNamespace):
         self.open_project = lambda: None
         self.save_project = lambda: None
 
+    @property
+    def confirmed_line_overlay_region_id(self) -> str | None:
+        """Keep confirmed overlays unscoped in generic mode-shell tests."""
+        return None
+
 
 class _IdentifyVelocityRuntime:
     """Minimal identify runtime accepted by shell tests."""

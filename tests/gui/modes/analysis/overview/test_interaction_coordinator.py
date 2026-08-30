@@ -42,7 +42,7 @@ class _Panel:
         self.clear_count += 1
 
     def refresh(self) -> None:
-        """Record a panel refresh."""
+        """Record an unexpected legacy panel refresh without failing incidentally."""
         self.refresh_count += 1
 
     def group_entry(self, _identifier: str) -> None:
@@ -62,13 +62,13 @@ class _Panel:
 
 
 @dataclass
-class _RefreshFailurePanel(_Panel):
-    """Panel double whose refresh observer fails after a scientific commit."""
+class _ClearFailurePanel(_Panel):
+    """Panel double whose selection-clear observer fails after a commit."""
 
-    def refresh(self) -> None:
-        """Record and inject one refresh failure."""
-        self.refresh_count += 1
-        raise RuntimeError("injected panel refresh failure")
+    def clear_selection(self) -> None:
+        """Record and inject one selection-clear failure."""
+        self.clear_count += 1
+        raise RuntimeError("injected panel clear failure")
 
 
 @dataclass
@@ -163,7 +163,6 @@ def _coordinator(
         history_recorder_provider=lambda: None,
         focus_range_callback=lambda start, end: focus_calls.append((start, end)),
         status_callback=lambda _message, _timeout, _undo_hint: None,
-        data_changed_callback=lambda: None,
         delete_confirmation=lambda _impact, _project: True,
         unlink_confirmation=lambda _impact, _project: True,
         context_menu_parent=parent,
@@ -288,13 +287,11 @@ def test_delete_confirmation_cancel_preserves_all_scientific_and_ui_state(qtbot:
     qtbot.addWidget(parent)
     confirmed_impacts: list[object] = []
     history_provider_calls: list[None] = []
-    data_changed_calls: list[None] = []
     ports = OrganizeInteractionPorts(
         project_provider=lambda: project,
         history_recorder_provider=lambda: history_provider_calls.append(None),
         focus_range_callback=lambda _start, _end: None,
         status_callback=lambda _message, _timeout, _undo_hint: None,
-        data_changed_callback=lambda: data_changed_calls.append(None),
         delete_confirmation=lambda impact, _project: confirmed_impacts.append(impact) or False,
         unlink_confirmation=lambda _impact, _project: True,
         context_menu_parent=parent,
@@ -316,10 +313,8 @@ def test_delete_confirmation_cancel_preserves_all_scientific_and_ui_state(qtbot:
     assert getattr(impact, "removed_region_ids") == ("region",)
     assert getattr(impact, "removed_line_ids") == ("line-1",)
     assert history_provider_calls == []
-    assert data_changed_calls == []
     assert coordinator.selection == (["region"], [])
     assert panel.clear_count == 0
-    assert panel.refresh_count == 0
     assert (
         project.modified,
         tuple(project.absorption_regions),
@@ -344,13 +339,11 @@ def test_unlink_confirmation_cancel_preserves_all_scientific_and_ui_state(qtbot:
     qtbot.addWidget(parent)
     confirmed_impacts: list[object] = []
     history_provider_calls: list[None] = []
-    data_changed_calls: list[None] = []
     ports = OrganizeInteractionPorts(
         project_provider=lambda: project,
         history_recorder_provider=lambda: history_provider_calls.append(None),
         focus_range_callback=lambda _start, _end: None,
         status_callback=lambda _message, _timeout, _undo_hint: None,
-        data_changed_callback=lambda: data_changed_calls.append(None),
         delete_confirmation=lambda _impact, _project: True,
         unlink_confirmation=lambda impact, _project: confirmed_impacts.append(impact) or False,
         context_menu_parent=parent,
@@ -370,10 +363,8 @@ def test_unlink_confirmation_cancel_preserves_all_scientific_and_ui_state(qtbot:
     assert len(confirmed_impacts) == 1
     assert getattr(confirmed_impacts[0], "changed_line_ids") == ("blue", "red")
     assert history_provider_calls == []
-    assert data_changed_calls == []
     assert coordinator.selection == ([], ["blue"])
     assert panel.clear_count == 0
-    assert panel.refresh_count == 0
     assert (
         project.modified,
         tuple(
@@ -402,7 +393,6 @@ def test_unlink_no_change_stops_before_confirmation_and_history(qtbot: QtBot) ->
         history_recorder_provider=lambda: history_provider_calls.append(None),
         focus_range_callback=lambda _start, _end: None,
         status_callback=lambda _message, _timeout, _undo_hint: None,
-        data_changed_callback=lambda: None,
         delete_confirmation=lambda _impact, _project: True,
         unlink_confirmation=lambda _impact, _project: confirmation_calls.append(None) or True,
         context_menu_parent=parent,
@@ -422,21 +412,18 @@ def test_unlink_no_change_stops_before_confirmation_and_history(qtbot: QtBot) ->
     assert confirmation_calls == []
     assert history_provider_calls == []
     assert panel.clear_count == 0
-    assert panel.refresh_count == 0
 
 
-def test_confirmed_unlink_commits_and_refreshes_immediately(qtbot: QtBot) -> None:
-    """Confirmed unlink clears the system links and updates the organize surface once."""
+def test_confirmed_unlink_commits_and_clears_interaction_state(qtbot: QtBot) -> None:
+    """Confirmed unlink leaves refresh to topology observers and clears interaction state."""
     project = _linked_project()
     parent = QWidget()
     qtbot.addWidget(parent)
-    data_changed_calls: list[None] = []
     ports = OrganizeInteractionPorts(
         project_provider=lambda: project,
         history_recorder_provider=lambda: None,
         focus_range_callback=lambda _start, _end: None,
         status_callback=lambda _message, _timeout, _undo_hint: None,
-        data_changed_callback=lambda: data_changed_calls.append(None),
         delete_confirmation=lambda _impact, _project: True,
         unlink_confirmation=lambda _impact, _project: True,
         context_menu_parent=parent,
@@ -456,24 +443,20 @@ def test_confirmed_unlink_commits_and_refreshes_immediately(qtbot: QtBot) -> Non
     assert project.absorption_lines["red"].multiplet_ids == []
     assert coordinator.selection == ([], [])
     assert panel.clear_count == 1
-    assert panel.refresh_count == 1
     assert panel.unlink_enabled is False
-    assert data_changed_calls == [None]
 
 
-def test_postcommit_refresh_failure_does_not_skip_other_observers(qtbot: QtBot) -> None:
-    """A broken panel refresh cannot suppress data and status notifications after commit."""
+def test_postcommit_clear_failure_does_not_skip_other_observers(qtbot: QtBot) -> None:
+    """A broken selection clear cannot suppress state and status observers after commit."""
     project = _linked_project()
     parent = QWidget()
     qtbot.addWidget(parent)
-    data_changed_calls: list[None] = []
     status_messages: list[str] = []
     ports = OrganizeInteractionPorts(
         project_provider=lambda: project,
         history_recorder_provider=lambda: None,
         focus_range_callback=lambda _start, _end: None,
         status_callback=lambda message, _timeout, _undo_hint: status_messages.append(message),
-        data_changed_callback=lambda: data_changed_calls.append(None),
         delete_confirmation=lambda _impact, _project: True,
         unlink_confirmation=lambda _impact, _project: True,
         context_menu_parent=parent,
@@ -484,7 +467,7 @@ def test_postcommit_refresh_failure_does_not_skip_other_observers(qtbot: QtBot) 
         ),
         ports=ports,
     )
-    panel = _RefreshFailurePanel()
+    panel = _ClearFailurePanel()
     coordinator.set_panel(panel)
     coordinator.handle_selection([], ["blue"])
 
@@ -494,6 +477,4 @@ def test_postcommit_refresh_failure_does_not_skip_other_observers(qtbot: QtBot) 
     assert project.absorption_lines["red"].multiplet_ids == []
     assert coordinator.selection == ([], [])
     assert panel.clear_count == 1
-    assert panel.refresh_count == 1
-    assert data_changed_calls == [None]
     assert status_messages[-1] == "Unlinked 2 lines from the system."

@@ -85,7 +85,6 @@ from chappy.gui.modes.identify.workflows.detection_workflow import (
 )
 from chappy.gui.modes.identify.workflows.registration_workflow import (
     IdentifyRegistrationHistoryRecorder,
-    IdentifyRegistrationModeStatePort,
     IdentifyRegistrationWorkflow,
     IdentifyRegistrationWorkflowMessages,
     IdentifyRegistrationWorkflowPorts,
@@ -234,7 +233,6 @@ class IdentifyModeCoordinator(QObject):
             IdentifyRegistrationWorkflowPorts(
                 project_provider=lambda: self._project,
                 session_provider=lambda: self._session,
-                mode_state_provider=self._identify_registration_mode_state,
                 history_recorder_provider=self._identify_registration_history_recorder,
                 primary_members_provider=self._primary_members,
                 messages_provider=self._registration_workflow_messages,
@@ -337,16 +335,6 @@ class IdentifyModeCoordinator(QObject):
         if isinstance(recorder, IdentifyHistoryRecorder):
             return recorder
         msg = "Identify history recorder does not implement the required recorder port."
-        raise TypeError(msg)
-
-    def _identify_registration_mode_state(self) -> IdentifyRegistrationModeStatePort | None:
-        """Return a validated mode-state port when configured."""
-        mode_state_store = self._shell_ports.mode_state_provider()
-        if mode_state_store is None:
-            return None
-        if isinstance(mode_state_store, IdentifyModeStateProvider):
-            return mode_state_store
-        msg = "Identify mode state store does not implement the required mode-state port."
         raise TypeError(msg)
 
     def set_panel(self, panel: IdentifySidePanel | None) -> None:
@@ -497,7 +485,10 @@ class IdentifyModeCoordinator(QObject):
         mode_state_store = self._shell_ports.mode_state_provider()
         if mode_state_store is None:
             return None
-        return mode_state_store.current_mode
+        if isinstance(mode_state_store, IdentifyModeStateProvider):
+            return mode_state_store.current_mode
+        msg = "Identify mode state store does not implement the required mode-state port."
+        raise TypeError(msg)
 
     def _collect_current_lines(self) -> list[AtomicLine]:
         if self._preset_controller is None:
@@ -751,6 +742,8 @@ class IdentifyModeCoordinator(QObject):
         result = self._registration_controller.register(selected_ids)
         if result is not None and self._panel is not None:
             self._panel.show_registration_feedback(result.message)
+            if result.outcome is not None:
+                self._panel.reveal_confirmed_regions(result.outcome.affected_region_ids)
         if (
             result is not None
             and result.outcome is not None

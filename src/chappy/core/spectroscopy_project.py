@@ -430,6 +430,10 @@ class SpectroscopyProject:
         """Return region lines when the region exists, otherwise None."""
         return self._absorption.find_lines_for_region(region_id)
 
+    def region_model_ids(self, region_id: str) -> tuple[str, ...]:
+        """Return unique component IDs referenced by a region in stable order."""
+        return self._absorption.region_model_ids(region_id)
+
     def is_region_needs_optimization(self, region_id: str) -> bool:
         """Return whether any absorption line in the region needs optimization.
 

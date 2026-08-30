@@ -21,7 +21,7 @@ from chappy.gui.application_font import configure_application_font
 from chappy.gui.modes.identify.presets.preset_store import IdentifyPresetStore
 from chappy.gui.shell.composition import create_shell_runtime
 from chappy.gui.shell.dependencies import ShellDependencies
-from chappy.gui.theme import apply_dark_palette, get_application_stylesheet
+from chappy.gui.theme import apply_application_theme
 from chappy.i18n import QtTranslatorInstaller, get_language_switcher
 from chappy.infrastructure.composition import create_default_infrastructure_dependencies
 from chappy.logging_config import configure_logging
@@ -131,12 +131,7 @@ def main() -> int:
     app.setOrganizationName("chappy")
     app.setOrganizationDomain("chappy.astronomy")
 
-    # Native macOS style lays widgets out with Aqua layout-item rects (smaller
-    # than the painted rect), which makes QSS-painted widgets overlap; Fusion
-    # uses the widget rect and renders identically to offscreen test runs.
-    app.setStyle("Fusion")
-    apply_dark_palette(app)
-    app.setStyleSheet(get_application_stylesheet())
+    apply_application_theme(app)
 
     configure_application_font(app)
 

@@ -50,8 +50,9 @@ class TutorialCompletion(Enum):
     RECT_ZOOM_APPLIED = auto()
     METAL_LINES_PRESET_SELECTED = auto()
     REFERENCE_LINE_IS_CIV1548 = auto()
+    CIV_ABSORBER_IN_VIEW = auto()
     CONFIRMED_REGION_EXISTS = auto()
-    EDITABLE_PRESET_EXISTS = auto()
+    NEW_TUTORIAL_PRESET_SELECTED = auto()
     PRESET_HAS_TUTORIAL_LINES = auto()
     PRESET_FE2_UNLINKED = auto()
     PRESET_FE2_SINGLE_GROUP = auto()
@@ -65,8 +66,13 @@ class TutorialCompletion(Enum):
     MONO_ION_REGIONS_RESTORED = auto()
     REGION_DETAIL_OPENED = auto()
     REGION_HAS_COMPONENT = auto()
+    TUTORIAL_MULTI_ION_REGION_OPENED = auto()
+    FE2_COMPONENT_EXISTS = auto()
+    MG2_COMPONENT_EXISTS = auto()
+    FE2_AND_MG2_HAVE_THREE_COMPONENTS = auto()
     CROSS_ION_Z_TIE_EXISTS = auto()
     REGION_FIT_APPLIED = auto()
+    MG2_LOGN_FIXED_AND_REFIT_APPLIED = auto()
 
 
 FIT_OUTCOME_NOTE_SOURCES: dict[FitOutcome, str] = {
@@ -110,11 +116,11 @@ FIT_OUTCOME_NOTE_SOURCES: dict[FitOutcome, str] = {
 
 
 COMPLETION_NOTE_SOURCES: dict[TutorialCompletion, str] = {
-    TutorialCompletion.EDITABLE_PRESET_EXISTS: str(
+    TutorialCompletion.NEW_TUTORIAL_PRESET_SELECTED: str(
         QT_TRANSLATE_NOOP(
             "Tutorial",
-            "No custom preset exists yet. Create one with [New] so it becomes the"
-            " selected preset.",
+            "No new preset from this tour is selected yet. Create one with [New]"
+            " so it becomes the selected preset.",
         )
     ),
     TutorialCompletion.PRESET_HAS_TUTORIAL_LINES: str(
@@ -159,8 +165,16 @@ COMPLETION_NOTE_SOURCES: dict[TutorialCompletion, str] = {
     TutorialCompletion.MG2_ABSORBER_IN_VIEW: str(
         QT_TRANSLATE_NOOP(
             "Tutorial",
-            "The troughs near 4929 and 4942 Å are not fully in view yet. Any"
+            "The troughs near 4929 and 4942 Å are not both in view yet. Any"
             " navigation route brings them on screen; typing 4900 and 4970 into"
+            " the wavelength fields is the quickest.",
+        )
+    ),
+    TutorialCompletion.CIV_ABSORBER_IN_VIEW: str(
+        QT_TRANSLATE_NOOP(
+            "Tutorial",
+            "The troughs near 4763 and 4771 Å are not both in view yet. Any"
+            " navigation route brings them on screen; typing 4755 and 4780 into"
             " the wavelength fields is the quickest.",
         )
     ),
@@ -175,9 +189,9 @@ class TutorialPrerequisite(Enum):
     """
 
     HAS_CONFIRMED_REGION = auto()
-    HAS_CUSTOM_PRESET = auto()
+    HAS_TOUR_CREATED_PRESET = auto()
     HAS_TWO_REGIONS = auto()
-    HAS_MULTI_ION_REGION = auto()
+    HAS_TUTORIAL_MULTI_ION_REGION = auto()
 
 
 PREREQUISITE_WARNING_SOURCES: dict[TutorialPrerequisite, str] = {
@@ -188,9 +202,11 @@ PREREQUISITE_WARNING_SOURCES: dict[TutorialPrerequisite, str] = {
             " none has been registered yet.",
         )
     ),
-    TutorialPrerequisite.HAS_CUSTOM_PRESET: str(
+    TutorialPrerequisite.HAS_TOUR_CREATED_PRESET: str(
         QT_TRANSLATE_NOOP(
-            "Tutorial", "This chapter works on a custom preset, but none has been created yet."
+            "Tutorial",
+            "This chapter works on the custom preset created during this tour,"
+            " but it is not selected or no longer exists.",
         )
     ),
     TutorialPrerequisite.HAS_TWO_REGIONS: str(
@@ -200,11 +216,11 @@ PREREQUISITE_WARNING_SOURCES: dict[TutorialPrerequisite, str] = {
             " than two absorption regions are registered.",
         )
     ),
-    TutorialPrerequisite.HAS_MULTI_ION_REGION: str(
+    TutorialPrerequisite.HAS_TUTORIAL_MULTI_ION_REGION: str(
         QT_TRANSLATE_NOOP(
             "Tutorial",
-            "This chapter works on a region combining two or more ion"
-            " species, but no region combines them yet.",
+            "This chapter works on the merged region containing the six tutorial"
+            " lines, but that region is not available.",
         )
     ),
 }
@@ -402,7 +418,13 @@ class TutorialChapter:
         for step in self.steps:
             if step.operation is None or step.operation.scope == global_scope:
                 continue
-            if step.operation.scope != destination_scope:
+            if step.operation.scope == destination_scope:
+                continue
+            same_analysis_surface = (
+                step.operation.scope.mode is destination_scope.mode is EditingMode.ANALYSIS
+                and step.operation.scope.analysis_surface is destination_scope.analysis_surface
+            )
+            if not same_analysis_surface:
                 msg = (
                     f"chapter {self.chapter_id!r} destination does not match shared "
                     f"operation {step.operation.op_id!r} scope"

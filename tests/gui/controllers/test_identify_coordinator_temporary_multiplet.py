@@ -135,7 +135,6 @@ def _expand_candidate_lines(
         IdentifyRegistrationWorkflowPorts(
             project_provider=lambda: None,
             session_provider=IdentifySessionState,
-            mode_state_provider=lambda: None,
             history_recorder_provider=lambda: None,
             primary_members_provider=lambda: primary_to_members,
             messages_provider=_registration_messages,

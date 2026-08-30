@@ -38,24 +38,11 @@ def _make_atomic_line(
     )
 
 
-class _ModeStateStub:
-    """Mode state object exposing only attributes used in LineSelectionDialog."""
-
-    def __init__(self) -> None:
-        """Initialize a stub with required dialog attributes."""
-        self.fitting_groups: dict[str, object] = {"group-a": object(), "group-b": object()}
-
-
-def _make_valid_stub_mode_state() -> _ModeStateStub:
-    """Create a dialog mode state stub that satisfies required attributes."""
-    return _ModeStateStub()
-
-
 class TestRepresentativeRankFValue:
     """_representative_rank の f-value 優先度テスト."""
 
-    def test_f_value_priority_after_component_index(self) -> None:
-        """f-value は component_index の次に優先される."""
+    def test_f_value_is_top_priority(self) -> None:
+        """f-value が最優先される."""
         # Same component_index (None), different f-values
         line_low_f = _make_atomic_line("low", oscillator_strength=0.3)
         line_high_f = _make_atomic_line("high", oscillator_strength=0.6)
@@ -81,8 +68,8 @@ class TestRepresentativeRankFValue:
         assert sorted_lines[1].line_id == "c"
         assert sorted_lines[2].line_id == "a"
 
-    def test_component_index_takes_precedence_over_f_value(self) -> None:
-        """component_index は f-value より優先される."""
+    def test_f_value_takes_precedence_over_component_index(self) -> None:
+        """f-value は component_index より優先される."""
         line_high_f_no_component = _make_atomic_line(
             "high_no_comp", oscillator_strength=0.9, component_index=None
         )
@@ -93,8 +80,17 @@ class TestRepresentativeRankFValue:
         rank_high_no_comp = LineSelectionPresenter.representative_rank(line_high_f_no_component)
         rank_low_with_comp = LineSelectionPresenter.representative_rank(line_low_f_with_component)
 
-        # Line with component_index should rank first (lower tuple)
-        assert rank_low_with_comp < rank_high_no_comp
+        # Stronger line ranks first even without a component index
+        assert rank_high_no_comp < rank_low_with_comp
+
+    def test_component_index_breaks_f_value_ties(self) -> None:
+        """f-value が同値なら component_index でタイブレーク."""
+        first = _make_atomic_line("first", oscillator_strength=0.4, component_index=1)
+        second = _make_atomic_line("second", oscillator_strength=0.4, component_index=2)
+
+        assert LineSelectionPresenter.representative_rank(
+            first
+        ) < LineSelectionPresenter.representative_rank(second)
 
     def test_same_f_value_sorted_by_wavelength(self) -> None:
         """同じ f-value の場合、wavelength でタイブレーク."""
@@ -115,11 +111,11 @@ class TestRepresentativeRankFValue:
 
         rank = LineSelectionPresenter.representative_rank(line)
 
-        # Should be 4-tuple: (component, -f_value, wavelength, line_id)
+        # Should be 4-tuple: (-f_value, component, wavelength, line_id)
         assert isinstance(rank, tuple)
         assert len(rank) == 4
-        assert rank[0] == 2.0  # component_index
-        assert rank[1] == pytest.approx(-0.416)  # -f_value
+        assert rank[0] == pytest.approx(-0.416)  # -f_value
+        assert rank[1] == 2.0  # component_index
         assert rank[2] == pytest.approx(1215.67)  # wavelength
         assert rank[3] == "test"  # line_id
 
@@ -163,31 +159,10 @@ def test_member_row_checkbox_toggle_selects_whole_multiplet(qapp: object) -> Non
     assert dialog._session.selected_ids == frozenset()
 
 
-def test_line_selection_dialog_rejects_mode_state_without_required_attributes(
-    qapp: object,
-) -> None:
-    """Mode state missing required attributes should fail fast."""
-
-    class _BadModeState:
-        """Object with no relevant mode-state attributes."""
-
-        pass
-
-    with pytest.raises(TypeError, match="LineSelectionDialog"):
-        LineSelectionDialog(mode_state=_BadModeState(), atomic_data=AtomicLineData())
-
-
 def test_line_selection_dialog_requires_atomic_data(qapp: object) -> None:
     """Atomic data is a required composition dependency."""
     with pytest.raises(TypeError, match="atomic_data"):
         LineSelectionDialog()
-
-
-def test_line_selection_dialog_accepts_mode_state_with_required_attributes(qapp: object) -> None:
-    """Mode state with required attributes should be accepted."""
-    mode_state = _make_valid_stub_mode_state()
-    dialog = LineSelectionDialog(mode_state=mode_state, atomic_data=AtomicLineData())
-    assert dialog.mode_state is mode_state
 
 
 def test_lupdate_extracts_line_selection_common_button_sources(tmp_path: Path) -> None:

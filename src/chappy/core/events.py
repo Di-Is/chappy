@@ -65,24 +65,13 @@ class ModeChanged:
 
 
 @dataclass(frozen=True, slots=True)
-class FittingGroupAdded:
-    """Event emitted when a fitting group is added."""
+class RegionTopologyChanged:
+    """Event emitted after one committed absorption-region topology change."""
 
-    group_name: str
-
-
-@dataclass(frozen=True, slots=True)
-class FittingGroupRemoved:
-    """Event emitted when a fitting group is removed."""
-
-    group_name: str
-
-
-@dataclass(frozen=True, slots=True)
-class FittingGroupModified:
-    """Event emitted when a fitting group is modified."""
-
-    group_name: str
+    created_region_ids: tuple[str, ...] = ()
+    removed_region_ids: tuple[str, ...] = ()
+    impacted_surviving_region_ids: tuple[str, ...] = ()
+    changed_surviving_line_ids: tuple[str, ...] = ()
 
 
 type DomainEvent = (
@@ -95,7 +84,5 @@ type DomainEvent = (
     | ComponentEnabledChanged
     | MasksChanged
     | ModeChanged
-    | FittingGroupAdded
-    | FittingGroupRemoved
-    | FittingGroupModified
+    | RegionTopologyChanged
 )

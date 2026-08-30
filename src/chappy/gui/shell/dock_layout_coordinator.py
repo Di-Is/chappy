@@ -7,7 +7,7 @@ import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, cast
 
-from PySide6.QtCore import QObject, Qt, Signal
+from PySide6.QtCore import QObject, Qt
 from PySide6.QtWidgets import (
     QDockWidget,
     QMainWindow,
@@ -129,9 +129,6 @@ class DockLayoutCoordinator(QObject):
     range selectors.
     """
 
-    # Signals
-    organize_data_changed = Signal()  # Emitted after organize operations modify project data
-
     def __init__(
         self,
         main_window: QMainWindow,
@@ -190,7 +187,6 @@ class DockLayoutCoordinator(QObject):
                 history_recorder_provider=self._organize_history_recorder,
                 focus_range_callback=self._focus_wavelength_range,
                 status_callback=self._emit_organize_status,
-                data_changed_callback=self.organize_data_changed.emit,
                 delete_confirmation=lambda impact, project: confirm_structure_delete(
                     self.main_window,
                     impact,
@@ -330,10 +326,6 @@ class DockLayoutCoordinator(QObject):
         organize_panel.refresh()
         if selection is not None:
             organize_panel.restore_selection(selection[0], selection[1])
-
-    def emit_organize_data_changed(self) -> None:
-        """Emit the organize data changed signal."""
-        self.organize_data_changed.emit()
 
     def refresh_optimize_panel_for_history(self, region_id: str | None) -> None:
         """Refresh the optimize panel after a history operation.

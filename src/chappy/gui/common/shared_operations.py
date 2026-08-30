@@ -171,6 +171,22 @@ SHARED_OPERATIONS: tuple[SharedOperation, ...] = (
         ),
     ),
     SharedOperation(
+        op_id="optimize_velocity_shift_click",
+        scope=OperationScope(
+            mode=EditingMode.ANALYSIS,
+            analysis_surface=AnalysisOperationSurface.REGION_DETAIL,
+            analysis_panel=AnalysisOperationPanel.DETAIL,
+        ),
+        target_object_name="velocityPlotContainer",
+        action_source=str(QT_TRANSLATE_NOOP("SharedOperations", "Shift+Click")),
+        expected_source=str(
+            QT_TRANSLATE_NOOP(
+                "SharedOperations",
+                "Add component at velocity position (no line selection required)",
+            )
+        ),
+    ),
+    SharedOperation(
         op_id="optimize_drag_center",
         scope=OperationScope(
             mode=EditingMode.ANALYSIS,

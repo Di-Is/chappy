@@ -100,6 +100,32 @@ def test_compute_confirmed_system_regions_uses_group_color() -> None:
     assert "C IV" in entry["label"]
 
 
+def test_compute_confirmed_line_regions_filters_by_region_id() -> None:
+    first_region = FakeRegion("g1", "#123456")
+    second_region = FakeRegion("g2", "#654321")
+    first_line = FakeLine(
+        "s1",
+        "C IV",
+        rest_wavelength=1548.2,
+        center_z=1.5,
+        window_kms=150.0,
+        region_id=first_region.region_id,
+    )
+    second_line = FakeLine(
+        "s2",
+        "Si IV",
+        rest_wavelength=1393.8,
+        center_z=1.5,
+        window_kms=150.0,
+        region_id=second_region.region_id,
+    )
+    project = DummyProject([first_line, second_line], [first_region, second_region])
+
+    overlays = compute_confirmed_line_regions(project, region_id=second_region.region_id)
+
+    assert [entry["id"] for entry in overlays] == [second_line.line_id]
+
+
 def test_compute_temporary_system_regions_respects_status_palette() -> None:
     pending = FakeTemporaryLine("t1", "Si II", 5000.0, 5005.0, status="pending")
     preview = FakeTemporaryLine("t2", "O VI", 4800.0, 4804.0, status="preview")

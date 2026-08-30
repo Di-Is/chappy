@@ -52,12 +52,7 @@ def test_tutorial_and_manual_reference_the_same_shared_operation_instances() -> 
     ``analysis_toggle_component_profiles`` has no tutorial step either, as the
     tutorial does not currently walk through the component-profiles toggle.
     """
-    manual_only = {
-        "analysis_fit",
-        "analysis_toggle_velocity",
-        "analysis_toggle_component_profiles",
-        "continuum_move_point",
-    }
+    manual_only = {"analysis_toggle_component_profiles", "continuum_move_point"}
     tutorial_op_ids = {step.operation.op_id for step in _steps_with_operation()}
 
     for op_id in SHARED_OPERATION_IDS_IN_USE:
@@ -66,8 +61,28 @@ def test_tutorial_and_manual_reference_the_same_shared_operation_instances() -> 
         assert op_id in tutorial_op_ids, f"{op_id} used by the manual but not by any tutorial step"
 
 
+def test_full_only_chapters_link_every_matching_existing_shared_operation() -> None:
+    chapters = {chapter.chapter_id: chapter for chapter in build_full_walkthrough_chapters()}
+
+    operation_ids = {
+        chapter_id: {
+            step.operation.op_id
+            for step in chapters[chapter_id].steps
+            if step.operation is not None
+        }
+        for chapter_id in ("preset_build", "velocity_identify", "analysis_structure", "joint_fit")
+    }
+
+    assert operation_ids == {
+        "preset_build": set(),
+        "velocity_identify": set(),
+        "analysis_structure": {"analysis_structure_merge", "analysis_structure_split"},
+        "joint_fit": {"analysis_fit", "analysis_toggle_velocity", "optimize_velocity_shift_click"},
+    }
+
+
 def test_shared_operation_target_object_names_exist_on_real_widgets(qtbot) -> None:
-    """Each shared operation's target widget exists in the real main window."""
+    """Each shared operation's target exists in the real window or velocity overlay."""
     dependencies = create_default_infrastructure_dependencies(translate_presets=str)
     window = create_main_window(
         ShellDependencies(
@@ -78,14 +93,18 @@ def test_shared_operation_target_object_names_exist_on_real_widgets(qtbot) -> No
         )
     )
     qtbot.addWidget(window)
+    velocity_overlay = SpectrumVelocityOverlayWidget(window)
+    roots: tuple[QWidget, ...] = (window, velocity_overlay)
 
     for operation in SHARED_OPERATIONS:
         if operation.target_object_name is None:
             continue
-        widget = window.findChild(QWidget, operation.target_object_name)
-        assert widget is not None, (
-            f"{operation.op_id}: no widget named {operation.target_object_name!r}"
+        resolved = any(
+            root.objectName() == operation.target_object_name
+            or root.findChild(QWidget, operation.target_object_name) is not None
+            for root in roots
         )
+        assert resolved, f"{operation.op_id}: no widget named {operation.target_object_name!r}"
 
 
 def test_tutorial_target_object_names_exist_on_real_widgets(qtbot) -> None:

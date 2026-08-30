@@ -105,7 +105,7 @@ def _labels() -> LinePreviewLabels:
     )
 
 
-def test_compute_multiplet_summaries_chooses_highest_f_value_after_component() -> None:
+def test_compute_multiplet_summaries_chooses_highest_f_value() -> None:
     """Representative selection is testable without constructing the dialog."""
     presenter = LineSelectionPresenter()
     weak = _line("weak", wavelength=1216.0, oscillator_strength=0.1)
@@ -114,7 +114,7 @@ def test_compute_multiplet_summaries_chooses_highest_f_value_after_component() -
     summaries = presenter.compute_multiplet_summaries([weak, strong])
 
     assert summaries["m1"].representative_id == "strong"
-    assert summaries["m1"].f_value_min == 0.1
+    assert summaries["m1"].f_value_max == 0.5
 
 
 def test_line_preview_presenter_escapes_user_visible_values() -> None:
@@ -162,6 +162,19 @@ def test_build_row_payloads_marks_representative_and_member() -> None:
     assert by_id["member"].display_name.startswith("  └ ")
     assert by_id["rep"].accessible_text == "Multiplet H I"
     assert by_id["member"].name_tooltip == "whole multiplet"
+
+
+def test_wavelength_sort_key_places_representative_first() -> None:
+    """Wavelength ordering keeps the strongest line at the head of its multiplet."""
+    presenter = LineSelectionPresenter()
+    weak = _line("weak", wavelength=2586.6, oscillator_strength=0.07, component_index=1)
+    strong = _line("strong", wavelength=2600.2, oscillator_strength=0.24, component_index=2)
+    view = _FakeSelectionView()
+
+    payloads = presenter.build_row_payloads([weak, strong], selection=view, labels=_row_labels())
+    ordered = sorted(payloads, key=lambda payload: payload.wavelength_sort_key)
+
+    assert [payload.line_id for payload in ordered] == ["strong", "weak"]
 
 
 def test_build_row_payloads_reports_aggregated_selection() -> None:

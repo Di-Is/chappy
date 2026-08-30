@@ -12,7 +12,6 @@ from chappy.application.identify import (
     AtomicIdentifyRegistrationUseCase,
     BuildRegionPreviewsUseCase,
 )
-from chappy.core.absorption.models import AbsorptionLine
 from chappy.core.history import CommandHistory
 from chappy.core.identify_state import CandidateLineContext, IdentifySessionState
 from chappy.core.spectroscopy_project import SpectroscopyProject
@@ -61,7 +60,6 @@ def _workflow(
         IdentifyRegistrationWorkflowPorts(
             project_provider=lambda: project,
             session_provider=lambda: session,
-            mode_state_provider=lambda: None,
             history_recorder_provider=lambda: history_recorder,
             primary_members_provider=lambda: dict(primary_members or {}),
             messages_provider=_messages,
@@ -253,23 +251,3 @@ def test_expand_multiplet_candidate_lines_deduplicates_members() -> None:
         "member-b",
         "member-c",
     ]
-
-
-def test_line_wavelength_range_rejects_invalid_observed_wavelength() -> None:
-    """Invalid line physics should not become a zero-width range."""
-    workflow = _workflow(IdentifySessionState())
-    line = AbsorptionLine(
-        line_id="invalid-line",
-        species="Invalid",
-        rest_wavelength=0.0,
-        center_z=0.0,
-        window_kms=100.0,
-        multiplet_label="",
-        transition_name="Invalid",
-        oscillator_strength=0.1,
-        gamma_value=1.0,
-        lambda_range=None,
-    )
-
-    with pytest.raises(ValueError, match="Invalid observed wavelength"):
-        workflow._line_wavelength_range(line)

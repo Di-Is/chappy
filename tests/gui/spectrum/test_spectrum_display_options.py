@@ -125,8 +125,10 @@ def _project() -> tuple[SpectroscopyProject, AbsorptionRegion]:
         oscillator_strength=0.19,
         gamma_value=2.64e8,
         lambda_range=(4640.0, 4650.0),
+        model_ids=["abs-1", "abs-2"],
     )
     region = AbsorptionRegion(region_id="region-1", line_ids=["line-1"])
+    project.absorption_regions[region.region_id] = region
     return project, region
 
 

@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from chappy.gui.modes.identify.panel.panel_models import ConfirmedGroupItemPayload
 from chappy.gui.modes.identify.panel.workflow_selection_controller import (
     IdentifyWorkflowSelectionController,
 )
@@ -127,6 +128,22 @@ class IdentifyConfirmedRegionsSection(QWidget):
 
         self._groups_tree.setVisible(bool(self._confirmed_regions))
         self._empty_placeholder.setVisible(not self._confirmed_regions)
+
+    def reveal_regions(self, region_ids: Sequence[str]) -> None:
+        """Select and scroll to the first of the given regions."""
+        wanted = set(region_ids)
+        matched: list[QTreeWidgetItem] = []
+        for index in range(self._groups_tree.topLevelItemCount()):
+            item = self._groups_tree.topLevelItem(index)
+            if item is None:
+                continue
+            payload = self._selection_controller.item_payload(item)
+            if isinstance(payload, ConfirmedGroupItemPayload) and payload.group_id in wanted:
+                matched.append(item)
+        if not matched:
+            return
+        self._groups_tree.setCurrentItem(matched[0])
+        self._groups_tree.scrollToItem(matched[0], QAbstractItemView.ScrollHint.PositionAtTop)
 
     @property
     def has_groups(self) -> bool:

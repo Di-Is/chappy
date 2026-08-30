@@ -1,6 +1,6 @@
-"""Resolve the wavelength range of an optimize fitting group.
+"""Resolve the wavelength range of an Analysis absorption region.
 
-The resolver derives an analysis wavelength range from a fitting group object
+The resolver derives an analysis wavelength range from an absorption region
 without depending on Qt or GUI state. It is given only the absorption line
 lookup it needs rather than the full project document.
 """
@@ -8,22 +8,18 @@ lookup it needs rather than the full project document.
 from __future__ import annotations
 
 import math
-from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING
 
-from chappy.core.absorption.models import AbsorptionRegion
 from chappy.core.constants import LIGHT_SPEED_KMS
-from chappy.core.editing_mode import FittingGroupSummary
 
 if TYPE_CHECKING:
-    from chappy.core.absorption.models import AbsorptionLine
+    from collections.abc import Mapping
 
-GroupPayload = Mapping[str, float | Sequence[float] | str | bool | None]
-RegionCandidate = FittingGroupSummary | GroupPayload | AbsorptionRegion
+    from chappy.core.absorption.models import AbsorptionLine, AbsorptionRegion
 
 
 class OptimizeGroupRangeResolver:
-    """Compute the wavelength range for a fitting group candidate."""
+    """Compute the wavelength range for an absorption region."""
 
     def __init__(self, absorption_lines: Mapping[str, AbsorptionLine]) -> None:
         """Initialize the resolver.
@@ -34,11 +30,11 @@ class OptimizeGroupRangeResolver:
         """
         self._absorption_lines = absorption_lines
 
-    def resolve(self, group: RegionCandidate | None) -> tuple[float, float] | None:
+    def resolve(self, group: AbsorptionRegion | None) -> tuple[float, float] | None:
         """Resolve the wavelength range for the provided group object.
 
         Args:
-            group: Fitting group summary, mapping payload, or absorption region.
+            group: Absorption region.
 
         Returns:
             Wavelength range tuple, or ``None`` when it cannot be resolved.
@@ -46,41 +42,18 @@ class OptimizeGroupRangeResolver:
         if group is None:
             return None
 
-        if isinstance(group, FittingGroupSummary):
-            resolved = group.as_range()
-            if resolved is not None:
-                return resolved
-
-        if isinstance(group, Mapping):
-            mapped_min = self._optional_float(group, "wavelength_min")
-            mapped_max = self._optional_float(group, "wavelength_max")
-            if mapped_min is not None and mapped_max is not None:
-                if mapped_min >= mapped_max:
-                    msg = "Optimize group wavelength_min must be lower than wavelength_max."
-                    raise ValueError(msg)
-                return mapped_min, mapped_max
-
-        if isinstance(group, AbsorptionRegion):
-            return self._derive_absorption_region_range(group)
-
-        if isinstance(group, FittingGroupSummary):
-            return self._derive_absorption_region_range(group)
-
-        return None
+        return self._derive_absorption_region_range(group)
 
     def _derive_absorption_region_range(
-        self, group: FittingGroupSummary | AbsorptionRegion
+        self, group: AbsorptionRegion
     ) -> tuple[float, float] | None:
         """Derive a wavelength range from a region using member line bounds."""
-        if isinstance(group, FittingGroupSummary):
-            line_ids: tuple[str, ...] = group.line_ids
-        else:
-            analysis_range = group.analysis_range
-            if analysis_range is not None:
-                return self._validate_range_pair(
-                    analysis_range, context=f"absorption region '{group.region_id}' analysis_range"
-                )
-            line_ids = tuple(group.line_ids)
+        analysis_range = group.analysis_range
+        if analysis_range is not None:
+            return self._validate_range_pair(
+                analysis_range, context=f"absorption region '{group.region_id}' analysis_range"
+            )
+        line_ids = tuple(group.line_ids)
 
         if not line_ids:
             return None
@@ -135,53 +108,6 @@ class OptimizeGroupRangeResolver:
             raise ValueError(msg)
 
         return float(lower), float(upper)
-
-    @staticmethod
-    def _optional_float(group: GroupPayload, key: str) -> float | None:
-        """Return an optional mapping float or fail for malformed present values."""
-        if key not in group:
-            return None
-        return OptimizeGroupRangeResolver._to_float(group[key], key)
-
-    @staticmethod
-    def _to_float(value: float | str | Sequence[float] | bool | None, key: str) -> float | None:
-        """Convert a mapping value to float.
-
-        Args:
-            value: Mapping field value.
-            key: Field name used in diagnostics.
-
-        Returns:
-            Float value, or None when the field is explicitly absent.
-
-        Raises:
-            TypeError: If the value type cannot represent a scalar float.
-            ValueError: If the value is not finite or cannot be parsed.
-        """
-        if value is None:
-            return None
-        candidate: float | str | None
-        if isinstance(value, Sequence) and not isinstance(value, str | bytes):
-            if not value:
-                msg = f"Optimize group field '{key}' must not be an empty sequence."
-                raise ValueError(msg)
-            candidate = value[0]
-        else:
-            candidate = value
-        if candidate is None:
-            return None
-        if isinstance(candidate, bool):
-            msg = f"Optimize group field '{key}' must be numeric."
-            raise TypeError(msg)
-        try:
-            converted = float(candidate)
-        except (TypeError, ValueError):
-            msg = f"Optimize group field '{key}' must be numeric."
-            raise ValueError(msg) from None
-        if not math.isfinite(converted):
-            msg = f"Optimize group field '{key}' must be finite."
-            raise ValueError(msg)
-        return converted
 
     @staticmethod
     def _validate_range_pair(value: tuple[float, float], *, context: str) -> tuple[float, float]:

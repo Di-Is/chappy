@@ -145,6 +145,10 @@ class AnalysisSurfaceCoordinator:
         if self._navigation.state.focused_region_id != region_id:
             return
         self._navigation.clear_focus_if(region_id)
+        # Structure edits that remove the focused region are performed from the
+        # Overview itself, so evicting that page would close the editor in use.
+        if self._panel_state is not PanelState.REGION_DETAIL:
+            return
         self._commit(policy_for_panel_state(PanelState.OVERVIEW_SUMMARY))
         self._presentation.refresh_overview()
         self._workspace.focus_bottom_page()
@@ -173,10 +177,15 @@ class AnalysisSurfaceCoordinator:
         return False
 
     def _commit(self, policy: AnalysisSurfaceUiPolicy, *, persist_surface: bool = True) -> None:
-        self._policies.apply(policy)
+        previous_panel_state = self._panel_state
+        self._panel_state = policy.panel_state
+        try:
+            self._policies.apply(policy)
+        except Exception:
+            self._panel_state = previous_panel_state
+            raise
         if persist_surface:
             self._navigation.set_surface(policy.surface)
-        self._panel_state = policy.panel_state
 
 
 __all__ = [

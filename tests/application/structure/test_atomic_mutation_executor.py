@@ -28,7 +28,7 @@ from chappy.core.analysis import (
     RegionAnalysisState,
 )
 from chappy.core.change_set import ChangeSet
-from chappy.core.events import ModelInvalidated
+from chappy.core.events import ModelInvalidated, RegionTopologyChanged
 from chappy.core.masking import MaskDefinition
 
 if TYPE_CHECKING:
@@ -477,6 +477,22 @@ def test_revision_matrix(case: _MatrixCase) -> None:
     assert project.model.suppression_depth == 0
 
 
+def test_changed_commit_appends_one_verified_topology_event() -> None:
+    """A changed transaction should expose one topology event as its final change."""
+    case = next(case for case in _MATRIX_CASES if case.name == "merge")
+    project = _Project(case.before)
+
+    execution = _execute_case(project, case)
+
+    assert execution.postcommit_changes.events[-1] == RegionTopologyChanged(
+        created_region_ids=case.delta.created_region_ids,
+        removed_region_ids=case.delta.removed_region_ids,
+        impacted_surviving_region_ids=case.expected_affected,
+        changed_surviving_line_ids=case.delta.changed_surviving_line_ids,
+    )
+    assert len(execution.postcommit_changes.filter(RegionTopologyChanged)) == 1
+
+
 def test_no_change_is_completely_inert() -> None:
     """NoChange should skip all snapshots, mutation, scopes, rebuild, and history."""
     project = _Project({"region": ("line-1",)})
@@ -504,6 +520,7 @@ def test_no_change_is_completely_inert() -> None:
 
     assert not execution.result.changed
     assert not execution.postcommit_changes
+    assert not execution.postcommit_changes.contains(RegionTopologyChanged)
     assert calls == []
     assert project.modified == datetime(2020, 1, 1, tzinfo=UTC)
 
@@ -694,6 +711,32 @@ def test_notification_scope_success_exit_failure_rolls_back_silently() -> None:
     assert after == before
     assert project.model.suppression_depth == 0
     assert project.model.published_notifications == []
+
+
+@pytest.mark.parametrize("stage", ["mutation", "rebuild", "history", "scope-exit"])
+def test_failed_transaction_never_reaches_caller_publish_boundary(stage: str) -> None:
+    """No fallible transaction stage may return a change set for publication."""
+    case = next(case for case in _MATRIX_CASES if case.name == "merge")
+    project = _Project(case.before)
+    if stage == "rebuild":
+        project.fail_stage = "derived"
+    elif stage == "history":
+        project.fail_stage = "history"
+    elif stage == "scope-exit":
+        project.model.fail_scope_exit_calls.add(1)
+
+    def mutate() -> StructureMutationResult[str]:
+        _replace_topology(project, case.after)
+        if stage == "mutation":
+            raise RuntimeError("injected mutation failure")
+        return StructureMutationResult.changed_result(case.name, case.delta)
+
+    published: list[ChangeSet] = []
+    with pytest.raises(RuntimeError, match="injected"):
+        execution = _execute_case(project, case, mutate_override=mutate)
+        published.append(execution.postcommit_changes)
+
+    assert published == []
 
 
 def test_rollback_scope_exit_failure_keeps_original_error_and_restored_state() -> None:

@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from typing import cast
-
 import pytest
 
 from chappy.application.optimize.group_range_resolver import OptimizeGroupRangeResolver
 from chappy.core.absorption.models import AbsorptionLine, AbsorptionRegion
-from chappy.core.editing_mode import FittingGroupSummary
 
 
 def _line(
@@ -36,20 +33,6 @@ def _line(
 def test_none_group_returns_none() -> None:
     """A missing group resolves to None."""
     assert OptimizeGroupRangeResolver({}).resolve(None) is None
-
-
-def test_summary_as_range() -> None:
-    """A fitting summary with explicit bounds resolves directly."""
-    summary = FittingGroupSummary(name="g", wavelength_min=1200.0, wavelength_max=1250.0)
-
-    assert OptimizeGroupRangeResolver({}).resolve(summary) == (1200.0, 1250.0)
-
-
-def test_mapping_payload_wavelength_bounds() -> None:
-    """A mapping payload exposes wavelength_min/max."""
-    payload = {"wavelength_min": 3000.0, "wavelength_max": 3100.0}
-
-    assert OptimizeGroupRangeResolver({}).resolve(payload) == (3000.0, 3100.0)
 
 
 def test_region_uses_analysis_range_when_present() -> None:
@@ -117,25 +100,3 @@ def test_line_without_usable_bounds_fails_fast() -> None:
 
     with pytest.raises(ValueError, match="valid wavelength bounds"):
         OptimizeGroupRangeResolver({"a": line}).resolve(region)
-
-
-def test_mapping_malformed_bounds_fail_fast() -> None:
-    """Malformed mapping payload bounds are internal contract violations."""
-    with pytest.raises(ValueError, match="wavelength_min"):
-        OptimizeGroupRangeResolver({}).resolve({"wavelength_min": "bad", "wavelength_max": 1.0})
-
-    with pytest.raises(TypeError, match="wavelength_min"):
-        OptimizeGroupRangeResolver({}).resolve({"wavelength_min": True, "wavelength_max": 1.0})
-
-    with pytest.raises(ValueError, match="wavelength_min"):
-        OptimizeGroupRangeResolver({}).resolve(
-            {"wavelength_min": cast(list[float], []), "wavelength_max": 1.0}
-        )
-
-    with pytest.raises(ValueError, match="wavelength_min"):
-        OptimizeGroupRangeResolver({}).resolve(
-            {"wavelength_min": float("nan"), "wavelength_max": 1.0}
-        )
-
-    with pytest.raises(ValueError, match="wavelength_min"):
-        OptimizeGroupRangeResolver({}).resolve({"wavelength_min": 2.0, "wavelength_max": 1.0})

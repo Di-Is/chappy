@@ -259,7 +259,6 @@ def _build_registration_workflow(
         IdentifyRegistrationWorkflowPorts(
             project_provider=lambda: project,
             session_provider=lambda: session,
-            mode_state_provider=lambda: None,
             history_recorder_provider=lambda: None,
             primary_members_provider=lambda: {},
             messages_provider=_registration_messages,

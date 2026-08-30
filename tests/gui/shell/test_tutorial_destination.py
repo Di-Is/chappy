@@ -155,6 +155,28 @@ def test_chapter_rejects_shared_operation_outside_destination_scope() -> None:
         )
 
 
+def test_chapter_accepts_shared_operation_after_nested_panel_navigation() -> None:
+    step = TutorialStep(
+        targets=(),
+        action_source="Merge regions",
+        expected_source="Regions merge",
+        operation=get_shared_operation("analysis_structure_merge"),
+    )
+
+    chapter = TutorialChapter(
+        chapter_id="analysis_structure",
+        title_source="Structure",
+        destination=TutorialDestination(
+            mode=EditingMode.ANALYSIS,
+            surface=AnalysisOperationSurface.OVERVIEW,
+            panel=AnalysisOperationPanel.SUMMARY,
+        ),
+        steps=(step,),
+    )
+
+    assert chapter.steps[0].operation is get_shared_operation("analysis_structure_merge")
+
+
 def test_step_rejects_duplicate_target_names() -> None:
     with pytest.raises(ValueError, match="must be unique"):
         TutorialStep(

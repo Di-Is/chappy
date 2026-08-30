@@ -29,11 +29,7 @@ from chappy.core.atomic_data import (
     normalize_element_symbol,
 )
 from chappy.gui.dialog_sizing import enforce_translated_minimum_size
-from chappy.gui.dialogs.line_selection_dialog_builder import (
-    LineSelectionDialogBuilder,
-    _LineSelectionModeStatePort,
-    validate_mode_state,
-)
+from chappy.gui.dialogs.line_selection_dialog_builder import LineSelectionDialogBuilder
 from chappy.gui.theme import Colors
 from chappy.gui.visual_tokens import DialogMetrics
 from chappy.i18n import LanguageSwitcher, get_language_switcher
@@ -118,7 +114,6 @@ class LineSelectionDialog(QDialog):
     def __init__(
         self,
         parent: QWidget | None = None,
-        mode_state: _LineSelectionModeStatePort | None = None,
         *,
         atomic_data: AtomicLineData,
         existing_selection: Iterable[str] | None = None,
@@ -130,7 +125,6 @@ class LineSelectionDialog(QDialog):
         self._language_switcher: LanguageSwitcher = get_language_switcher(self)
 
         self.atomic_data = atomic_data
-        self.mode_state = validate_mode_state(mode_state)
         self._selection_presenter = LineSelectionPresenter()
         self._preview_presenter = LinePreviewPresenter()
         self._filter_evaluator = LineSelectionFilterEvaluator(self.atomic_data)
@@ -165,7 +159,6 @@ class LineSelectionDialog(QDialog):
         self._setup_window()
         widgets = LineSelectionDialogBuilder().build(
             self,
-            mode_state=self.mode_state,
             ok_initially_enabled=bool(self._session.selected_ids),
             sort_column=self._sort_column,
             sort_order=self._sort_order,
@@ -188,7 +181,6 @@ class LineSelectionDialog(QDialog):
         self._remove_selection_button = widgets.remove_selection_button
         self._clear_selection_button = widgets.clear_selection_button
         self._button_box = widgets.button_box
-        self._group_selection_combo = widgets.group_selection_combo
 
         self._set_table_headers()
         self._connect_signals()

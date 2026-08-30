@@ -6,7 +6,14 @@ import numpy as np
 from pytestqt.qtbot import QtBot
 
 from chappy.gui.spectrum.velocity import VelocitySubplotWidget
-from chappy.presentation.velocity import VelocityComponentInfo
+from chappy.presentation.velocity import (
+    VelocityComponentInfo,
+    VelocityCurveSources,
+    VelocityDisplayHalfWidth,
+    VelocitySliceInfo,
+    VelocitySpectrumData,
+    build_velocity_slice_render_input,
+)
 
 _LIVE_SUBPLOTS: list[VelocitySubplotWidget] = []
 
@@ -52,4 +59,54 @@ def test_render_state_reports_residual_presence(qtbot: QtBot) -> None:
 
     assert state.placeholder_visible is False
     assert state.residual_visible is True
+    qtbot.wait(0)
+
+
+def test_applied_render_input_emphasises_the_selected_component_marker(qtbot: QtBot) -> None:
+    """A slice marked as selected upstream draws its marker emphasised."""
+    subplot = VelocitySubplotWidget()
+    _LIVE_SUBPLOTS.append(subplot)
+
+    slice_info = VelocitySliceInfo(
+        rest_wavelength=1215.67,
+        label="Lyα",
+        tie_group_key="",
+        center_z=0.0,
+        analysis_half_width_kms=150.0,
+        components=[
+            VelocityComponentInfo(
+                component_id="abs-1",
+                velocity=-10.0,
+                rest_wavelength=1215.67,
+                label="HI a",
+                color="#1B9E77",
+            ),
+            VelocityComponentInfo(
+                component_id="abs-2",
+                velocity=10.0,
+                rest_wavelength=1215.67,
+                label="HI b",
+                selected=True,
+                color="#D95F02",
+            ),
+        ],
+    )
+    observed = VelocitySpectrumData(
+        wavelength=np.linspace(1215.0, 1216.3, 40, dtype=np.float64),
+        flux=np.ones(40, dtype=np.float64),
+        error=None,
+    )
+
+    subplot.apply_render_input(
+        build_velocity_slice_render_input(
+            slice_info,
+            sources=VelocityCurveSources(observed=observed, model=None),
+            display_half_width=VelocityDisplayHalfWidth(500.0),
+            unit="km/s",
+            optimize_mode=True,
+        ),
+        {},
+    )
+
+    assert subplot.render_state().emphasized_marker_labels == ("HI b",)
     qtbot.wait(0)

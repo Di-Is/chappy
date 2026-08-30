@@ -16,6 +16,7 @@ from PySide6.QtWidgets import QFrame, QScrollArea, QTreeWidgetItem, QVBoxLayout,
 
 from chappy.core.absorption.models import AbsorptionLine, AbsorptionRegion
 from chappy.core.analysis import AnalysisReadiness
+from chappy.gui.adapters.model_event_adapter import SpectrumModelEventAdapter
 from chappy.gui.common.side_panel_section import SidePanelSection
 from chappy.gui.modes.analysis.region_detail.composition import (
     MULTIPLET_REDSHIFT_TOLERANCE,
@@ -122,6 +123,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from chappy.core.components.absorber import AbsorberComponent
+    from chappy.core.events import RegionTopologyChanged
     from chappy.core.spectroscopy_project import SpectroscopyProject
     from chappy.gui.modes.analysis.region_detail.adapters.history_adapter import (
         OptimizeHistoryRecorder,
@@ -168,12 +170,6 @@ class _OptimizeEditorPort(OptimizeFitEditorPort, Protocol):
         ...
 
 
-class _ModeStatePort(Protocol):
-    """Mode state signals required by the Detail panel."""
-
-    group_removed: SignalInstance
-
-
 class RegionDetailPanel(QWidget):
     """Composite side panel for optimize mode (SCR-OPT compliant)."""
 
@@ -195,7 +191,7 @@ class RegionDetailPanel(QWidget):
         *,
         optimize_editor: _OptimizeEditorPort,
         analysis_focus: AnalysisRegionFocusPort,
-        mode_state: _ModeStatePort | None = None,
+        mode_state: object | None = None,
         model_addition_usecase: OptimizeModelAdditionUseCasePort,
         parameter_mutation_usecase: OptimizeParameterMutationUseCase,
         tie_set_edit_usecase: TieSetEditUseCase,
@@ -210,6 +206,7 @@ class RegionDetailPanel(QWidget):
         self.mode_state = mode_state
         self._language_switcher = get_language_switcher(self)
         self._project: SpectroscopyProject | None = None
+        self._topology_event_adapter: SpectrumModelEventAdapter | None = None
         self._install_shortcuts()
 
         self._history_adapter = create_optimize_history_adapter()
@@ -417,7 +414,7 @@ class RegionDetailPanel(QWidget):
             port=model_addition_port, usecase=model_addition_usecase
         )
         self._coordinator = create_optimize_mode_coordinator(
-            panel=self, editor=self.optimize_editor, mode_state=self.mode_state
+            panel=self, editor=self.optimize_editor
         )
         self._coordinator.connect()
         self._restore_advanced_settings_expanded()
@@ -523,6 +520,7 @@ class RegionDetailPanel(QWidget):
 
     def set_project(self, project: SpectroscopyProject | None) -> None:
         had_selection = self._view_state.selected_line_id is not None
+        self._detach_topology_events()
         self._view_state.reset_for_project_change()
         self._project = project
         self._tree_view.tie_label_allocator.reset()
@@ -541,6 +539,11 @@ class RegionDetailPanel(QWidget):
         # ::test_set_project_initializes_widgets_from_region_settings.
         displayed_group_id = self._group_selection_controller.current_group_id()
         self.mask_group_changed.emit(OptimizeMaskGroupChange(group_id=displayed_group_id))
+        if project is not None:
+            self._topology_event_adapter = SpectrumModelEventAdapter(project.model, self)
+            self._topology_event_adapter.region_topology_changed.connect(
+                self._on_region_topology_changed
+            )
         if had_selection:
             self._propagate_selection_cleared()
 
@@ -648,6 +651,37 @@ class RegionDetailPanel(QWidget):
     def _refresh_group_choices(self) -> None:
         self._group_selection_controller.refresh_group_choices(self._project)
 
+    def _detach_topology_events(self) -> None:
+        """Detach the project topology subscription owned by this panel."""
+        if self._topology_event_adapter is None:
+            return
+        self._topology_event_adapter.region_topology_changed.disconnect(
+            self._on_region_topology_changed
+        )
+        self._topology_event_adapter.close()
+        self._topology_event_adapter = None
+
+    def _on_region_topology_changed(self, _event: RegionTopologyChanged) -> None:
+        """Rebuild Detail projections without treating selector defaults as user focus."""
+        project = self._project
+        if project is None:
+            return
+
+        focused_region_id = self.analysis_focus.focused_region_id()
+
+        if self._view_state.drop_vanished_selection(project):
+            self._propagate_selection_cleared()
+        self._refresh_group_choices()
+
+        if focused_region_id is not None and focused_region_id in project.absorption_regions:
+            self._group_selection_controller.render_region(project, focused_region_id)
+            return
+
+        self._rebuild_tree()
+        self._mask_workflow_controller.on_masks_changed()
+        self._update_export_controls()
+        self.mask_group_changed.emit(OptimizeMaskGroupChange(group_id=None))
+
     def _update_export_controls(self) -> None:
         self._group_selection_controller.update_export_controls(self._project)
 
@@ -664,11 +698,6 @@ class RegionDetailPanel(QWidget):
 
     def _on_group_combo_changed(self, index: int) -> None:
         self._group_selection_controller.group_combo_changed(self._project, index)
-
-    def _handle_group_removed(self, group_name: str) -> None:
-        self.analysis_focus.clear_focus_only_if(group_name)
-        self._group_selection_controller.handle_group_removed(self._project)
-        self._group_selection_controller.reconcile_focus_with_selector(self._project)
 
     def _rebuild_tree(self) -> None:
         self._tree_view.clear()
@@ -897,10 +926,6 @@ class RegionDetailPanel(QWidget):
     def handle_editor_fit_completed(self, results: FitResultRawPayload) -> None:
         """Handle editor fit-completed signal routed by the mode coordinator."""
         self._on_fit_completed(results)
-
-    def handle_mode_group_removed(self, group_name: str) -> None:
-        """Handle group removal routed by the mode coordinator."""
-        self._handle_group_removed(group_name)
 
     def _on_export_clicked(self) -> None:
         self._export_workflow_controller.export_current_region()

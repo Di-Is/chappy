@@ -65,7 +65,6 @@ class _DockLayout:
     def __init__(self) -> None:
         """Initialize counters."""
         self.organize_refreshes: list[bool] = []
-        self.organize_data_changes = 0
         self.optimize_refreshes: list[str | None] = []
         self.invalidated_groups: list[str | None] = []
         self.optimize_velocity_plot_refreshes = 0
@@ -74,10 +73,6 @@ class _DockLayout:
     def refresh_organize_panel(self, *, preserve_selection: bool) -> None:
         """Record organize panel refresh."""
         self.organize_refreshes.append(preserve_selection)
-
-    def emit_organize_data_changed(self) -> None:
-        """Record organize data change signal."""
-        self.organize_data_changes += 1
 
     def refresh_optimize_panel_for_history(self, region_id: str | None) -> None:
         """Record optimize panel refresh."""
@@ -95,14 +90,6 @@ class _DockLayout:
         """Record a selected-region wavelength curve refresh."""
         self.optimize_wavelength_refreshes.append(region_id)
         return True
-
-
-def test_refresh_organize_requires_dock_layout_port() -> None:
-    """Organize refresh target requires the dock layout refresh port."""
-    adapter = HistoryRefreshAdapter(_MainWindow())
-
-    with pytest.raises(RuntimeError, match="dock layout refresh port"):
-        adapter.refresh_organize(None)
 
 
 def test_refresh_model_without_project_remains_noop() -> None:

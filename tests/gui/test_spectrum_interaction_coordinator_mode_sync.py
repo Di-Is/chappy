@@ -110,6 +110,11 @@ class _StubMainWindow:
         self.current_project = None
         self.identify_velocity_runtime = _IdentifyVelocityRuntime()
 
+    @property
+    def confirmed_line_overlay_region_id(self) -> str | None:
+        """Keep confirmed overlays unscoped in generic mode-sync tests."""
+        return None
+
 
 class _IdentifyVelocityRuntime:
     """Minimal identify runtime accepted by shell tests."""

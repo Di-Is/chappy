@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, cast
 
 import numpy as np
 import pytest
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QScrollArea, QVBoxLayout
 
 from chappy.core.absorption.models import AbsorptionLine, AbsorptionRegion
@@ -42,8 +42,6 @@ if TYPE_CHECKING:
 
 class _ModeState(QObject):
     """Mode state test double that enables group selection."""
-
-    group_removed = Signal(str)
 
 
 @pytest.fixture

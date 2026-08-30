@@ -34,7 +34,6 @@ class HistoryRefreshTarget(StrEnum):
     MODEL = "model"
     OPTIMIZE_PANEL = "optimize_panel"
     IDENTIFY_PANEL = "identify_panel"
-    ORGANIZE_PANEL = "organize_panel"
     CONTINUUM_EDITOR = "continuum_editor"
     LINE_OVERLAYS = "line_overlays"
     VELOCITY_PLOT = "velocity_plot"

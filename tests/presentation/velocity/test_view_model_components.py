@@ -325,3 +325,81 @@ def test_velocity_view_data_carries_the_error_toggle_without_a_project() -> None
 
     assert data.show_error_spectrum is False
     assert data.component_profiles == ()
+
+
+def _linked_slice_components(
+    *, display_options: SpectrumDisplayOptions, emphasized_component_id: str | None
+) -> list[VelocityComponentInfo]:
+    """Return slice markers for a project whose line owns two coloured absorbers."""
+    project = SpectroscopyProject()
+    wavelength = np.linspace(4640.0, 4650.0, 200, dtype=np.float64)
+    project.model.observed_spectrum = Spectrum(
+        wavelength=wavelength, flux=np.ones_like(wavelength)
+    )
+    first = AbsorberComponent(component_id="abs-1", wavelength=1548.195, redshift=2.0)
+    second = AbsorberComponent(component_id="abs-2", wavelength=1548.195, redshift=2.0)
+    project.model.add_component(first)
+    project.model.add_component(second)
+    project.absorption_lines["line-1"] = AbsorptionLine(
+        line_id="line-1",
+        species="C IV",
+        rest_wavelength=1548.195,
+        center_z=2.0,
+        window_kms=500.0,
+        model_ids=[first.id, second.id],
+        multiplet_label="",
+        transition_name="C IV 1548.2",
+        oscillator_strength=0.19,
+        gamma_value=2.64e8,
+    )
+
+    data = build_velocity_view_data(
+        project,
+        [
+            VelocitySliceInfo(
+                rest_wavelength=1548.195,
+                label="C IV",
+                tie_group_key="",
+                center_z=2.0,
+                line_id="line-1",
+            )
+        ],
+        display_half_width_kms=500.0,
+        include_optimize_overlays=True,
+        display_options=display_options,
+        emphasized_component_id=emphasized_component_id,
+    )
+    return list(data.slices[0].components)
+
+
+def test_velocity_slice_markers_emphasise_the_selected_component() -> None:
+    """The selected component's marker reads emphasised, like the wavelength plot's."""
+    components = _linked_slice_components(
+        display_options=SpectrumDisplayOptions(show_component_profiles=True),
+        emphasized_component_id="abs-2",
+    )
+
+    assert [component.selected for component in components] == [False, True]
+
+
+def test_velocity_slice_markers_share_the_component_curve_colours() -> None:
+    """Marker colours match the profile curves so label and curve read as one component."""
+    components = _linked_slice_components(
+        display_options=SpectrumDisplayOptions(show_component_profiles=True),
+        emphasized_component_id=None,
+    )
+
+    assert [component.color for component in components] == [
+        component_curve_color(0),
+        component_curve_color(1),
+    ]
+
+
+def test_velocity_slice_markers_stay_uncoloured_without_component_profiles() -> None:
+    """With profiles off there is no curve to match, so markers keep the default colour."""
+    components = _linked_slice_components(
+        display_options=SpectrumDisplayOptions(), emphasized_component_id="abs-2"
+    )
+
+    assert [component.color for component in components] == [None, None]
+    assert [component.selected for component in components] == [False, True]

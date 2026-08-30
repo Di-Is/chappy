@@ -59,6 +59,7 @@ ANALYSIS_DETAIL_ROWS: tuple[_RowRenderer, ...] = (
     _shared_row("analysis_toggle_velocity"),
     _shared_row("analysis_toggle_component_profiles"),
     _shared_row("optimize_shift_click"),
+    _shared_row("optimize_velocity_shift_click"),
     _shared_row("optimize_drag_center"),
 )
 

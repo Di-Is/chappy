@@ -52,6 +52,7 @@ from chappy.presentation.organize.tree_presenter import OrganizeTreePresenter
 
 if TYPE_CHECKING:
     from chappy.core.components.base import ModelComponent
+    from chappy.core.events import RegionTopologyChanged
     from chappy.core.spectroscopy_project import SpectroscopyProject
     from chappy.core.spectrum_model import SpectrumModel
     from chappy.gui.modes.common.analysis_navigation import AnalysisOverviewNavigationPort
@@ -403,6 +404,9 @@ class OrganizeSidePanel(QWidget):
             self._model_event_adapter = SpectrumModelEventAdapter(self._model, self)
             self._model_event_adapter.component_added.connect(self._rebuild_from_model)
             self._model_event_adapter.component_removed.connect(self._rebuild_from_model)
+            self._model_event_adapter.region_topology_changed.connect(
+                self._on_region_topology_changed
+            )
 
         self.refresh()
 
@@ -691,6 +695,10 @@ class OrganizeSidePanel(QWidget):
                 self._model_event_adapter.component_added.disconnect(self._rebuild_from_model)
             with suppress(TypeError):
                 self._model_event_adapter.component_removed.disconnect(self._rebuild_from_model)
+            with suppress(TypeError):
+                self._model_event_adapter.region_topology_changed.disconnect(
+                    self._on_region_topology_changed
+                )
             self._model_event_adapter.close()
             self._model_event_adapter = None
         self._model = None
@@ -755,6 +763,18 @@ class OrganizeSidePanel(QWidget):
         )
 
     def _rebuild_from_model(self, _component: ModelComponent) -> None:
+        adapter = self._model_event_adapter
+        if adapter is not None and adapter.applying_region_topology_change:
+            return
+        self.refresh()
+
+    def _on_region_topology_changed(self, event: RegionTopologyChanged) -> None:
+        """Rebuild Overview projections after one committed topology change."""
+        focused_region_id = (
+            self._navigation.state.focused_region_id if self._navigation is not None else None
+        )
+        if focused_region_id in event.removed_region_ids:
+            return
         self.refresh()
 
     def _group_color_pixmap(self, group: _GroupEntry) -> QPixmap:

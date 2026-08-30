@@ -251,8 +251,7 @@ def _identify_result(change_set: ChangeSet) -> HistoryApplyResult:
 def _registration_result(change_set: ChangeSet) -> HistoryApplyResult:
     """Return an identify registration refresh result."""
     return HistoryApplyResult.ok(
-        change_set=change_set,
-        refresh_targets=(HistoryRefreshTarget.IDENTIFY_PANEL, HistoryRefreshTarget.ORGANIZE_PANEL),
+        change_set=change_set, refresh_targets=(HistoryRefreshTarget.IDENTIFY_PANEL,)
     )
 
 

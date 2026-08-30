@@ -82,11 +82,11 @@ def build_short_walkthrough_chapters() -> tuple[TutorialChapter, ...]:
         Chapters of the short guided walkthrough.
     """
     return (
-        _chapter_getting_started(),
+        _chapter_getting_started(full_walkthrough=False),
         _chapter_identify(),
         _chapter_analysis_overview(),
         _chapter_optimize(),
-        _chapter_save(),
+        _chapter_save(full_walkthrough=False),
     )
 
 
@@ -97,7 +97,7 @@ def build_full_walkthrough_chapters() -> tuple[TutorialChapter, ...]:
         Chapters of the full guided walkthrough.
     """
     return (
-        _chapter_getting_started(),
+        _chapter_getting_started(full_walkthrough=True),
         _chapter_identify(),
         _chapter_analysis_overview(),
         _chapter_optimize(),
@@ -106,11 +106,30 @@ def build_full_walkthrough_chapters() -> tuple[TutorialChapter, ...]:
         _chapter_organize(),
         _chapter_joint_fit(),
         _chapter_continuum(),
-        _chapter_save(),
+        _chapter_save(full_walkthrough=True),
     )
 
 
-def _chapter_getting_started() -> TutorialChapter:
+def _chapter_getting_started(*, full_walkthrough: bool) -> TutorialChapter:
+    introduction_source = (
+        str(
+            QT_TRANSLATE_NOOP(
+                "Tutorial",
+                "The bundled sample spectrum of quasar Q0329-385 has been"
+                " loaded. This tour walks you through the full analysis"
+                " workflow using it.",
+            )
+        )
+        if full_walkthrough
+        else str(
+            QT_TRANSLATE_NOOP(
+                "Tutorial",
+                "The bundled sample spectrum of quasar Q0329-385 has been"
+                " loaded. This short tour walks you through identifying and"
+                " fitting one absorption system using it.",
+            )
+        )
+    )
     return TutorialChapter(
         chapter_id="getting_started",
         title_source=str(QT_TRANSLATE_NOOP("Tutorial", "Getting Started")),
@@ -121,14 +140,7 @@ def _chapter_getting_started() -> TutorialChapter:
                     _target("spectrumPlotContainer", TutorialTargetRole.OBSERVE, primary=True),
                     _target("modeButton_IDENTIFY", TutorialTargetRole.CONTEXT),
                 ),
-                action_source=str(
-                    QT_TRANSLATE_NOOP(
-                        "Tutorial",
-                        "The bundled sample spectrum of quasar Q0329-385 has been"
-                        " loaded. This tour walks you through the full analysis"
-                        " workflow using it.",
-                    )
-                ),
+                action_source=introduction_source,
                 expected_source=str(
                     QT_TRANSLATE_NOOP(
                         "Tutorial", "The spectrum is displayed and chappy is in identify mode."
@@ -391,8 +403,22 @@ def _chapter_preset_build() -> TutorialChapter:
     return TutorialChapter(
         chapter_id="preset_build",
         title_source=str(QT_TRANSLATE_NOOP("Tutorial", "Building a Custom Preset")),
-        destination=_IDENTIFY_DESTINATION,
+        destination=_NO_DESTINATION,
         steps=(
+            TutorialStep(
+                targets=(_primary_target("modeButton_IDENTIFY"),),
+                action_source=str(
+                    QT_TRANSLATE_NOOP(
+                        "Tutorial",
+                        "Click [Identify] to build a custom preset for another absorber.",
+                    )
+                ),
+                expected_source=str(
+                    QT_TRANSLATE_NOOP("Tutorial", "Identify mode opens with its preset controls.")
+                ),
+                advance=AdvanceTrigger.MODE_CHANGE,
+                advance_mode=EditingMode.IDENTIFY,
+            ),
             TutorialStep(
                 targets=(_primary_target("identifyManagePresetButton"),),
                 action_source=str(
@@ -439,7 +465,7 @@ def _chapter_preset_build() -> TutorialChapter:
                         "Tutorial", "The new empty preset appears selected in the preset list."
                     )
                 ),
-                requires=TutorialCompletion.EDITABLE_PRESET_EXISTS,
+                requires=TutorialCompletion.NEW_TUTORIAL_PRESET_SELECTED,
             ),
             TutorialStep(
                 targets=(_primary_target("presetAddLineButton"),),
@@ -490,7 +516,7 @@ def _chapter_preset_build() -> TutorialChapter:
                 action_source=str(
                     QT_TRANSLATE_NOOP(
                         "Tutorial",
-                        "Click [OK] to add the selected lines to the preset. If the"
+                        "Click [Add selected lines] to add them to the preset. If the"
                         " dialog closed with lines missing, reopen [Add Line] and"
                         " check the remaining ones.",
                     )
@@ -622,7 +648,7 @@ def _chapter_preset_build() -> TutorialChapter:
 def _chapter_velocity_identify() -> TutorialChapter:
     return TutorialChapter(
         chapter_id="velocity_identify",
-        prerequisite=TutorialPrerequisite.HAS_CUSTOM_PRESET,
+        prerequisite=TutorialPrerequisite.HAS_TOUR_CREATED_PRESET,
         title_source=str(QT_TRANSLATE_NOOP("Tutorial", "Identifying with the Velocity Plot")),
         destination=_IDENTIFY_DESTINATION,
         steps=(
@@ -786,6 +812,25 @@ def _chapter_velocity_identify() -> TutorialChapter:
                     )
                 ),
             ),
+            TutorialStep(
+                targets=(_primary_target("modeButton_ANALYSIS"),),
+                action_source=str(
+                    QT_TRANSLATE_NOOP(
+                        "Tutorial",
+                        "Click [Analysis] to organize the Fe II and Mg II regions"
+                        " you just registered.",
+                    )
+                ),
+                expected_source=str(
+                    QT_TRANSLATE_NOOP(
+                        "Tutorial",
+                        "Analysis mode opens with the new low-redshift regions"
+                        " listed in the overview.",
+                    )
+                ),
+                advance=AdvanceTrigger.MODE_CHANGE,
+                advance_mode=EditingMode.ANALYSIS,
+            ),
         ),
     )
 
@@ -880,6 +925,7 @@ def _chapter_organize() -> TutorialChapter:
                 expected_source=str(
                     QT_TRANSLATE_NOOP("Tutorial", "A single region now holds all six lines.")
                 ),
+                operation=get_shared_operation("analysis_structure_merge"),
                 requires=TutorialCompletion.MULTI_ION_REGION_EXISTS,
             ),
             TutorialStep(
@@ -901,6 +947,7 @@ def _chapter_organize() -> TutorialChapter:
                         " original two regions are back.",
                     )
                 ),
+                operation=get_shared_operation("analysis_structure_split"),
                 requires=TutorialCompletion.MONO_ION_REGIONS_RESTORED,
             ),
             TutorialStep(
@@ -923,24 +970,45 @@ def _chapter_organize() -> TutorialChapter:
                         " would also undo any of these edits.",
                     )
                 ),
+                operation=get_shared_operation("analysis_structure_merge"),
                 requires=TutorialCompletion.MULTI_ION_REGION_EXISTS,
             ),
             TutorialStep(
-                targets=(
-                    _primary_target("organizeSidePanelBackButton"),
-                    _target("analysisOverviewReviewWidget", TutorialTargetRole.OBSERVE),
-                ),
+                targets=(_primary_target("organizeSidePanelBackButton"),),
                 action_source=str(
                     QT_TRANSLATE_NOOP(
-                        "Tutorial",
-                        "When you are done, click [Back to Overview] to return to the summary.",
+                        "Tutorial", "Click [Back to Overview] to leave the region editor."
                     )
                 ),
                 expected_source=str(
                     QT_TRANSLATE_NOOP(
-                        "Tutorial", "The region editor closes and the summary panel returns."
+                        "Tutorial", "The summary panel returns with the merged region listed."
                     )
                 ),
+            ),
+            TutorialStep(
+                targets=(
+                    _target(
+                        "analysisOverviewReviewWidget", TutorialTargetRole.INTERACT, primary=True
+                    ),
+                    _target("analysisOverviewStatusCard", TutorialTargetRole.OBSERVE),
+                    _target("analysisOverviewOpenRegionButton", TutorialTargetRole.INTERACT),
+                ),
+                action_source=str(
+                    QT_TRANSLATE_NOOP(
+                        "Tutorial",
+                        "Select the merged six-line region in the region list,"
+                        " then click [Open region].",
+                    )
+                ),
+                expected_source=str(
+                    QT_TRANSLATE_NOOP(
+                        "Tutorial",
+                        "Region Detail opens with all four Fe II and both Mg II"
+                        " lines in its parameter tree.",
+                    )
+                ),
+                requires=TutorialCompletion.TUTORIAL_MULTI_ION_REGION_OPENED,
                 checkpoint_source=str(
                     QT_TRANSLATE_NOOP(
                         "Tutorial",
@@ -955,35 +1023,65 @@ def _chapter_organize() -> TutorialChapter:
 def _chapter_joint_fit() -> TutorialChapter:
     return TutorialChapter(
         chapter_id="joint_fit",
-        prerequisite=TutorialPrerequisite.HAS_MULTI_ION_REGION,
+        prerequisite=TutorialPrerequisite.HAS_TUTORIAL_MULTI_ION_REGION,
         title_source=str(QT_TRANSLATE_NOOP("Tutorial", "Tying Ions and Fitting Together")),
         destination=_ANALYSIS_DETAIL_DESTINATION,
         steps=(
             TutorialStep(
                 targets=(
-                    _primary_target("analysisDetailRegionSelector"),
+                    _target(
+                        "analysisDetailRegionSelector", TutorialTargetRole.CONTEXT, primary=True
+                    ),
+                    _target("spectrumPlotContainer", TutorialTargetRole.OBSERVE),
                     _target("analysisDetailParameterTree", TutorialTargetRole.OBSERVE),
                 ),
                 action_source=str(
                     QT_TRANSLATE_NOOP(
-                        "Tutorial", "Open the merged region with this region selector."
+                        "Tutorial",
+                        "The region you just opened is shown here; this selector"
+                        " switches to another region without going back.",
                     )
                 ),
                 expected_source=str(
                     QT_TRANSLATE_NOOP(
-                        "Tutorial", "The parameter tree lists all six lines of the merged region."
+                        "Tutorial",
+                        "The spectrum view moves to the region and the panel lists"
+                        " its lines and components.",
                     )
                 ),
             ),
             TutorialStep(
+                targets=(_primary_target("spectrumPlotContainer"),),
+                action_source=str(
+                    QT_TRANSLATE_NOOP(
+                        "Tutorial",
+                        "The combined region is too wide for the wavelength"
+                        " plot to separate the closely spaced troughs you are"
+                        " about to model. Press V (or right-click the spectrum"
+                        " and choose [Show Velocity Plot (V)]).",
+                    )
+                ),
+                expected_source=str(
+                    QT_TRANSLATE_NOOP(
+                        "Tutorial",
+                        "All six lines are stacked vertically on a velocity"
+                        " axis, making their repeated trough structure easier"
+                        " to compare.",
+                    )
+                ),
+                operation=get_shared_operation("analysis_toggle_velocity"),
+                requires=TutorialCompletion.VELOCITY_PLOT_VISIBLE,
+            ),
+            TutorialStep(
                 targets=(
-                    _primary_target("analysisDetailParameterTree"),
-                    _target("analysisDetailAddModelButton", TutorialTargetRole.INTERACT),
+                    _primary_target("velocityPlotContainer"),
+                    _target("analysisDetailParameterTree", TutorialTargetRole.OBSERVE),
                 ),
                 action_source=str(
                     QT_TRANSLATE_NOOP(
                         "Tutorial",
-                        "Select the Fe II 2382 line in the tree and click [Add Component].",
+                        "Shift+click the deepest trough on the Fe II 2382.8"
+                        " slice to place the ion's main component.",
                     )
                 ),
                 expected_source=str(
@@ -1000,20 +1098,23 @@ def _chapter_joint_fit() -> TutorialChapter:
                         "Full sharing (logN included) exists only within one ion"
                         " species: its lines probe the same column density,"
                         " while different ions have physically different ones."
-                        " That is why cross-ion sharing is limited to z (and b).",
+                        " That is why cross-ion sharing is limited to z (and b)."
+                        " Shift+click also starts the component at the clicked"
+                        " velocity, whereas [Add Component] starts it at the"
+                        " redshift frozen during identification.",
                     )
                 ),
-                requires=TutorialCompletion.REGION_HAS_COMPONENT,
+                operation=get_shared_operation("optimize_velocity_shift_click"),
+                requires=TutorialCompletion.FE2_COMPONENT_EXISTS,
             ),
             TutorialStep(
                 targets=(
-                    _primary_target("analysisDetailParameterTree"),
-                    _target("analysisDetailAddModelButton", TutorialTargetRole.INTERACT),
+                    _primary_target("velocityPlotContainer"),
+                    _target("analysisDetailParameterTree", TutorialTargetRole.OBSERVE),
                 ),
                 action_source=str(
                     QT_TRANSLATE_NOOP(
-                        "Tutorial",
-                        "Now select the Mg II 2796 line and click [Add Component] again.",
+                        "Tutorial", "Now Shift+click the deepest trough on the Mg II 2796.4 slice."
                     )
                 ),
                 expected_source=str(
@@ -1021,28 +1122,33 @@ def _chapter_joint_fit() -> TutorialChapter:
                         "Tutorial", "A tied component pair appears under the Mg II lines as well."
                     )
                 ),
-                requires=TutorialCompletion.REGION_HAS_COMPONENT,
+                operation=get_shared_operation("optimize_velocity_shift_click"),
+                requires=TutorialCompletion.MG2_COMPONENT_EXISTS,
             ),
             TutorialStep(
                 targets=(
-                    _primary_target("spectrumPlotContainer"),
+                    _primary_target("velocityPlotContainer"),
                     _target("analysisDetailParameterTree", TutorialTargetRole.OBSERVE),
                 ),
                 action_source=str(
                     QT_TRANSLATE_NOOP(
                         "Tutorial",
-                        "Add the two weaker velocity components as well:"
-                        " Shift+click the two shallow dips just redward of the"
-                        " main trough — once each on a Fe II line and on a"
-                        " Mg II line.",
+                        "On the Fe II 2382.8 and Mg II 2796.4 slices,"
+                        " Shift+click each of the two shallow dips to the right"
+                        " of the deepest trough. Use their alignment across"
+                        " both ions as the guide rather than aiming for exact"
+                        " displayed velocities.",
                     )
                 ),
                 expected_source=str(
                     QT_TRANSLATE_NOOP(
                         "Tutorial",
-                        "Each ion now has three components, mirrored across its multiplet lines.",
+                        "Each ion now has three components, mirrored across all"
+                        " of its multiplet lines.",
                     )
                 ),
+                operation=get_shared_operation("optimize_velocity_shift_click"),
+                requires=TutorialCompletion.FE2_AND_MG2_HAVE_THREE_COMPONENTS,
             ),
             TutorialStep(
                 targets=(_primary_target("analysisDetailParameterTree"),),
@@ -1105,6 +1211,7 @@ def _chapter_joint_fit() -> TutorialChapter:
                         " before fitting.",
                     )
                 ),
+                operation=get_shared_operation("analysis_fit"),
                 requires=TutorialCompletion.REGION_FIT_APPLIED,
             ),
             TutorialStep(
@@ -1144,6 +1251,8 @@ def _chapter_joint_fit() -> TutorialChapter:
                         " Fe II logN ≈ 13.24 and b ≈ 4.9 km/s?",
                     )
                 ),
+                operation=get_shared_operation("analysis_fit"),
+                requires=TutorialCompletion.MG2_LOGN_FIXED_AND_REFIT_APPLIED,
             ),
             TutorialStep(
                 targets=(_primary_target("modeButton_CONTINUUM"),),
@@ -1371,6 +1480,7 @@ def _chapter_identify() -> TutorialChapter:
                         " absorbs the background light at a specific wavelength.",
                     )
                 ),
+                requires=TutorialCompletion.CIV_ABSORBER_IN_VIEW,
             ),
             TutorialStep(
                 targets=(
@@ -1574,6 +1684,7 @@ def _chapter_optimize() -> TutorialChapter:
                         " them to minimize the difference between data and model.",
                     )
                 ),
+                operation=get_shared_operation("analysis_fit"),
                 requires=TutorialCompletion.REGION_FIT_APPLIED,
                 checkpoint_source=str(
                     QT_TRANSLATE_NOOP(
@@ -1586,7 +1697,26 @@ def _chapter_optimize() -> TutorialChapter:
     )
 
 
-def _chapter_save() -> TutorialChapter:
+def _chapter_save(*, full_walkthrough: bool) -> TutorialChapter:
+    conclusion_source = (
+        str(
+            QT_TRANSLATE_NOOP(
+                "Tutorial",
+                "That's the whole workflow: load, identify, review in Analysis,"
+                " fit Region Detail, edit regions as needed, and correct the continuum when"
+                " fit residuals call for it, then save. The same steps"
+                " apply to your own data.",
+            )
+        )
+        if full_walkthrough
+        else str(
+            QT_TRANSLATE_NOOP(
+                "Tutorial",
+                "That's the core workflow: load, identify, review in Analysis,"
+                " fit Region Detail, then save. The same steps apply to your own data.",
+            )
+        )
+    )
     return TutorialChapter(
         chapter_id="save",
         title_source=str(QT_TRANSLATE_NOOP("Tutorial", "Saving Your Work")),
@@ -1617,15 +1747,7 @@ def _chapter_save() -> TutorialChapter:
             ),
             TutorialStep(
                 targets=(),
-                action_source=str(
-                    QT_TRANSLATE_NOOP(
-                        "Tutorial",
-                        "That's the whole workflow: load, identify, review in Analysis,"
-                        " fit Region Detail, edit regions as needed, and correct the continuum when"
-                        " fit residuals call for it, then save. The same steps"
-                        " apply to your own data.",
-                    )
-                ),
+                action_source=conclusion_source,
                 expected_source=str(
                     QT_TRANSLATE_NOOP(
                         "Tutorial", "You can restart this tour anytime from Help > Tutorial."

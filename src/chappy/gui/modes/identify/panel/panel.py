@@ -230,6 +230,10 @@ class IdentifySidePanel(QWidget):
         if had_groups != self._confirmed_section.has_groups:
             self._apply_layout_for_content_state()
 
+    def reveal_confirmed_regions(self, region_ids: Sequence[str]) -> None:
+        """Bring just-registered regions into view in the confirmed section."""
+        self._confirmed_section.reveal_regions(region_ids)
+
     @property
     def current_candidates(self) -> tuple[CandidateRow, ...]:
         """Expose the most recently supplied candidate rows."""

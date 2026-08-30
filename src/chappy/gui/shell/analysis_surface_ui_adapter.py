@@ -14,6 +14,7 @@ from chappy.gui.modes.analysis.surface_policy import (
 from chappy.gui.shell.actions.ids import ShellActionId
 from chappy.gui.shell.spectrum_mode_policy import spectrum_interaction_mode_policy
 from chappy.gui.spectrum.policy import (
+    AbsorptionMarkerScope,
     SpectrumInputCapabilities,
     SpectrumPlotPolicy,
     SpectrumPolicy,
@@ -22,7 +23,7 @@ from chappy.gui.spectrum.policy import (
 from chappy.presentation.spectrum import SpectrumPlotDisplayCommand
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Callable, Mapping
     from typing import Protocol
 
     from PySide6.QtGui import QAction
@@ -47,6 +48,7 @@ class AnalysisSurfaceUiPorts:
     bottom_pane: QWidget
     data_control: QWidget
     actions: Mapping[ShellActionId, QAction]
+    refresh_confirmed_line_overlays: Callable[[], None]
 
 
 class AnalysisSurfaceUiAdapter:
@@ -70,6 +72,7 @@ class AnalysisSurfaceUiAdapter:
             self._ports.bottom_pane.setVisible(True)
             self._ports.data_control.setVisible(policy.data_control_visible)
             self._apply_actions(policy)
+            self._ports.refresh_confirmed_line_overlays()
         except Exception:
             if previous is not None:
                 self._ports.spectrum_view.apply_policy(
@@ -133,11 +136,12 @@ def analysis_spectrum_policy(profile: SpectrumProfile) -> SpectrumPolicy:
         ),
         plot_policy=SpectrumPlotPolicy(
             display_command=SpectrumPlotDisplayCommand(
-                use_normalized_observed=True, render_absorption_line_labels=False
+                use_normalized_observed=True, render_absorption_line_labels=True
             ),
             show_model_and_residual=True,
             show_mask_regions=True,
             show_absorption_line_markers=True,
+            absorption_marker_scope=AbsorptionMarkerScope.SELECTED_REGION,
         ),
         cursor_enabled=True,
         fit_model_enabled=True,

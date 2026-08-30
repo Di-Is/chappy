@@ -1221,7 +1221,7 @@ def infer_scope(widget: QWidget) -> str | None:
 
 
 def draw_annotations(
-    window: QMainWindow, items: Iterable[DocItem], out_path: Path, *, scale_width: int
+    window: QMainWindow, items: Sequence[DocItem], out_path: Path, *, scale_width: int
 ) -> None:
     """Draw annotated rectangles and badges."""
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1240,13 +1240,21 @@ def draw_annotations(
     font.setPointSize(10)
     painter.setFont(font)
 
-    for item in items:
-        rect = item.rect
-        scaled_rect = QRect(
-            int(rect.x() * sx), int(rect.y() * sy), int(rect.width() * sx), int(rect.height() * sy)
+    scaled_rects = [
+        QRect(
+            int(item.rect.x() * sx),
+            int(item.rect.y() * sy),
+            int(item.rect.width() * sx),
+            int(item.rect.height() * sy),
         )
+        for item in items
+    ]
+
+    placed_badges: list[QRect] = []
+    for item, scaled_rect in zip(items, scaled_rects, strict=True):
         painter.drawRect(scaled_rect)
-        badge = _annotation_badge_rect(item, scaled_rect)
+        badge = _annotation_badge_rect(scaled_rect, [*scaled_rects, *placed_badges], scaled.rect())
+        placed_badges.append(badge)
         painter.fillRect(badge, Qt.black)
         painter.setPen(Qt.white)
         painter.drawText(badge.adjusted(6, 3, 0, 0), Qt.AlignLeft, str(item.index))
@@ -1256,15 +1264,28 @@ def draw_annotations(
     scaled.save(str(out_path))
 
 
-def _annotation_badge_rect(item: DocItem, scaled_rect: QRect) -> QRect:
-    """Return the badge rectangle without obscuring its annotated content."""
-    badge = QRect(scaled_rect.topLeft(), scaled_rect.topLeft() + QPoint(24, 20))
-    if (
-        item.widget.property("doc.badgePosition") == "outside-left"
-        and badge.width() <= scaled_rect.x()
-    ):
-        badge.moveRight(scaled_rect.left() - 1)
-    return badge
+def _annotation_badge_rect(scaled_rect: QRect, occupied: Sequence[QRect], bounds: QRect) -> QRect:
+    """Return the badge rectangle, placed outside the annotated content when it fits."""
+    inside = QRect(scaled_rect.topLeft(), scaled_rect.topLeft() + QPoint(24, 20))
+
+    left = QRect(inside)
+    left.moveRight(scaled_rect.left() - 1)
+    above = QRect(inside)
+    above.moveBottom(scaled_rect.top() - 1)
+    right = QRect(inside)
+    right.moveLeft(scaled_rect.right() + 1)
+    below = QRect(inside)
+    below.moveTop(scaled_rect.bottom() + 1)
+
+    # An enclosing annotation is the badge's own surroundings, not a collision.
+    blocking = [other for other in occupied if not other.contains(scaled_rect)]
+
+    for candidate in (left, above, right, below):
+        if bounds.contains(candidate) and not any(
+            candidate.intersects(other) for other in blocking
+        ):
+            return candidate
+    return inside
 
 
 def scale_pixmap(pixmap: QPixmap, width: int) -> QPixmap:

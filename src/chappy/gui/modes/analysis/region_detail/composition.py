@@ -119,7 +119,6 @@ if TYPE_CHECKING:
     from chappy.gui.modes.analysis.region_detail.coordinator import (
         OptimizeEditorSignalPort,
         OptimizeModeCoordinatorPort,
-        OptimizeModeStateSignalPort,
     )
     from chappy.gui.modes.analysis.region_detail.editor import OptimizeEditor
     from chappy.gui.modes.analysis.region_detail.group_selection_controller import (
@@ -235,13 +234,10 @@ def create_optimize_confirm_dialog_adapter(parent: QWidget) -> OptimizeConfirmDi
 
 
 def create_optimize_mode_coordinator(
-    *,
-    panel: OptimizeModeCoordinatorPort,
-    editor: OptimizeEditorSignalPort,
-    mode_state: OptimizeModeStateSignalPort | None,
+    *, panel: OptimizeModeCoordinatorPort, editor: OptimizeEditorSignalPort
 ) -> OptimizeModeCoordinator:
     """Create the optimize mode signal coordinator."""
-    return OptimizeModeCoordinator(panel=panel, editor=editor, mode_state=mode_state)
+    return OptimizeModeCoordinator(panel=panel, editor=editor)
 
 
 def create_optimize_export_workflow_controller(

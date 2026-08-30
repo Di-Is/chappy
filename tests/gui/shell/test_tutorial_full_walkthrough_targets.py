@@ -31,7 +31,6 @@ from chappy.gui.shell.main_window import (
     _find_sample_spectrum_pair,
 )
 from chappy.gui.shell.tutorial_chapters import build_full_walkthrough_chapters
-from chappy.gui.spectrum.velocity.overlay_widget import SpectrumVelocityOverlayWidget
 from chappy.infrastructure.composition import create_default_infrastructure_dependencies
 
 if TYPE_CHECKING:
@@ -97,6 +96,13 @@ def _apply_step_advance(
 ) -> None:
     """Perform the user action the step waits for, so the walk moves on."""
     if step.advance is AdvanceTrigger.NEXT_BUTTON:
+        if step.requires is TutorialCompletion.REGION_DETAIL_OPENED:
+            project = window.current_project
+            assert project is not None
+            region_id = window._analysis_navigation.state.focused_region_id
+            if region_id is None or region_id not in project.absorption_regions:
+                region_id = next(iter(project.absorption_regions))
+            assert window.open_analysis_region(region_id)
         controller._advance()
     elif step.advance is AdvanceTrigger.MODE_CHANGE:
         assert step.advance_mode is not None
@@ -116,7 +122,7 @@ def test_unmet_prerequisite_soft_blocks_chapter_on_the_real_window(qtbot, monkey
     _load_sample_with_one_region(window)
     # The default preset store may carry custom presets persisted by earlier
     # real runs on this machine; pin the predicate to keep the walk deterministic.
-    monkeypatch.setattr(MainWindow, "_has_editable_tutorial_preset", lambda _self: False)
+    monkeypatch.setattr(MainWindow, "_tutorial_new_preset_is_selected", lambda _self: False)
     # The walk fakes dialog transitions instead of editing a preset, so the
     # step gates those transitions now respect are stubbed open.
     monkeypatch.setattr(
@@ -128,8 +134,8 @@ def test_unmet_prerequisite_soft_blocks_chapter_on_the_real_window(qtbot, monkey
     checks = window._tutorial_prerequisite_checks()
     assert checks[TutorialPrerequisite.HAS_CONFIRMED_REGION]()
     assert not checks[TutorialPrerequisite.HAS_TWO_REGIONS]()
-    assert not checks[TutorialPrerequisite.HAS_CUSTOM_PRESET]()
-    assert not checks[TutorialPrerequisite.HAS_MULTI_ION_REGION]()
+    assert not checks[TutorialPrerequisite.HAS_TOUR_CREATED_PRESET]()
+    assert not checks[TutorialPrerequisite.HAS_TUTORIAL_MULTI_ION_REGION]()
 
     preset_dialog = PresetListDialog(window, preset_store, atomic_data=atomic_data)
     line_dialog = LineSelectionDialog(preset_dialog, atomic_data=atomic_data)
@@ -160,7 +166,7 @@ def test_unmet_prerequisite_soft_blocks_chapter_on_the_real_window(qtbot, monkey
     assert controller._awaiting_prerequisite
     assert controller._current_chapter().chapter_id == "velocity_identify"
     assert controller._bubble is not None
-    assert "none has been created yet" in controller._bubble._action_label.text()
+    assert "created during this tour" in controller._bubble._action_label.text()
     controller.stop()
 
 
@@ -189,8 +195,9 @@ def test_full_walkthrough_destinations_apply_and_all_targets_resolve(
     preset_dialog = PresetListDialog(window, preset_store, atomic_data=atomic_data)
     line_dialog = LineSelectionDialog(preset_dialog, atomic_data=atomic_data)
     dialogs = {"presetListDialog": preset_dialog, "spectralDatabaseDialog": line_dialog}
-    velocity_overlay = SpectrumVelocityOverlayWidget(window)
-    velocity_overlay.show()
+    spectrum_view = window.view_stack.spectrum_view
+    assert spectrum_view is not None
+    spectrum_view._ensure_velocity_widget()
 
     with caplog.at_level(logging.WARNING, logger=_TOUR_LOGGER):
         window.start_tutorial_full_walkthrough()
@@ -261,8 +268,9 @@ def test_no_interact_target_resolves_to_a_dialog_button_box(qtbot, monkeypatch) 
     preset_dialog = PresetListDialog(window, preset_store, atomic_data=atomic_data)
     line_dialog = LineSelectionDialog(preset_dialog, atomic_data=atomic_data)
     dialogs = {"presetListDialog": preset_dialog, "spectralDatabaseDialog": line_dialog}
-    velocity_overlay = SpectrumVelocityOverlayWidget(window)
-    velocity_overlay.show()
+    spectrum_view = window.view_stack.spectrum_view
+    assert spectrum_view is not None
+    spectrum_view._ensure_velocity_widget()
 
     window.start_tutorial_full_walkthrough()
     controller = window._tutorial_tour

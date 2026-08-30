@@ -12,7 +12,7 @@ from PySide6.QtCore import QObject, Qt, Signal
 import pytest
 
 from chappy.core.atomic_data import AtomicLine, AtomicLineData
-from chappy.core.editing_mode import EditingMode, FittingGroupSummary
+from chappy.core.editing_mode import EditingMode
 from chappy.core.identify_state import IdentifySessionState, CandidateLineContext
 from chappy.core.presets import PresetTieGroup
 from chappy.core.spectroscopy_project import SpectroscopyProject
@@ -147,27 +147,6 @@ class _DummyIdentifyPresetStore:
 class _DummyModeStateStore:
     def __init__(self) -> None:
         self.current_mode = EditingMode.IDENTIFY
-        self._fitting_groups: dict[str, FittingGroupSummary] = {}
-
-    def get_fitting_group(self, name: str) -> FittingGroupSummary:
-        if name not in self._fitting_groups:
-            self._fitting_groups[name] = FittingGroupSummary(
-                name=name,
-                wavelength_min=None,
-                wavelength_max=None,
-                system_ids=(),
-                absorber_names=(),
-            )
-        return self._fitting_groups[name]
-
-    @property
-    def fitting_groups(self) -> dict[str, FittingGroupSummary]:
-        """Return stored fitting groups."""
-        return self._fitting_groups
-
-    def set_fitting_groups(self, groups: dict[str, FittingGroupSummary]) -> None:
-        """Store fitting groups produced by identify registration."""
-        self._fitting_groups = groups
 
 
 class _DummyMainWindow(QObject):
@@ -232,7 +211,6 @@ class _CoordinatorHarness:
     project: SpectroscopyProject
     status: _StatusRecorder
     main_window: _DummyMainWindow
-    mode_state_store: _DummyModeStateStore
     preset_store: _DummyIdentifyPresetStore
 
     @property
@@ -286,7 +264,6 @@ def _build_coordinator(
 
     status = _StatusRecorder()
     coordinator.status_message.connect(status.emit)
-    coordinator._test_mode_state_store = mode_state_store
     coordinator._language_switcher = _DummyLanguageSwitcher()
     coordinator._atomic_data = _DummyAtomicData(lines)
     coordinator._current_preset_id = preset_store.current_preset_id
@@ -296,7 +273,6 @@ def _build_coordinator(
         project=active_project,
         status=status,
         main_window=main_window,
-        mode_state_store=mode_state_store,
         preset_store=preset_store,
     )
 
@@ -594,16 +570,6 @@ def test_registration_creates_absorption_systems() -> None:
     # 仕様書に基づき、同定モードではラインと領域の作成のみ行い、
     # 実際のAbsorberComponent（吸収線コンポーネント）の作成は最適化モードで行う
     assert line.model_ids == []  # コンポーネントは作成されていないはず
-
-    # Optimise mode should receive a fitting group aligned with the absorption region
-    dummy_mode_state_store = harness.mode_state_store
-    fitting_group = dummy_mode_state_store.get_fitting_group(region.region_id)
-    assert fitting_group is not None
-    # モデルが作成されていないので、absorber_namesは空になる
-    assert fitting_group.absorber_names == ()  # モデル未作成なので空
-    assert math.isclose(fitting_group.wavelength_min, lambda_min, rel_tol=0.0, abs_tol=1e-6)
-    assert math.isclose(fitting_group.wavelength_max, lambda_max, rel_tol=0.0, abs_tol=1e-6)
-    assert fitting_group.color == region.display_color
 
 
 def test_multiplet_union_respects_redshift_tolerance() -> None:

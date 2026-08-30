@@ -6,18 +6,14 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 from chappy.gui.modes.identify.detection_controller import IdentifyDetectionOverlayPort
-from chappy.gui.modes.identify.workflows.registration_workflow import (
-    IdentifyRegistrationModeStatePort,
-)
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping
+    from collections.abc import Callable
     from contextlib import AbstractContextManager
 
     from chappy.application.history import AbsorptionRegionSnapshot
     from chappy.application.identify import CandidateLineSnapshot
-    from chappy.core.change_set import ChangeSet
-    from chappy.core.editing_mode import EditingMode, FittingGroupCollection, FittingGroupSummary
+    from chappy.core.editing_mode import EditingMode
     from chappy.core.identify_state import IdentifySessionState
     from chappy.core.spectroscopy_project import SpectroscopyProject
     from chappy.gui.modes.identify.presets.preset_store import IdentifyPresetStore
@@ -27,21 +23,12 @@ if TYPE_CHECKING:
 
 
 @runtime_checkable
-class IdentifyModeStateProvider(IdentifyRegistrationModeStatePort, Protocol):
+class IdentifyModeStateProvider(Protocol):
     """Mode state operations required by identify workflows."""
 
     @property
     def current_mode(self) -> EditingMode:
         """Return the active editing mode."""
-        ...
-
-    @property
-    def fitting_groups(self) -> Mapping[str, FittingGroupSummary]:
-        """Return current fitting group summaries."""
-        ...
-
-    def set_fitting_groups(self, groups: FittingGroupCollection) -> ChangeSet:
-        """Replace fitting group summaries."""
         ...
 
 

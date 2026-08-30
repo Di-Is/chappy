@@ -14,7 +14,7 @@ from chappy.presentation.spectrum import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
+    from collections.abc import Callable, Iterable, Mapping
 
     import numpy as np
     from numpy.typing import NDArray
@@ -45,6 +45,8 @@ class VelocityComponentInfo:
     rest_wavelength: float
     label: str
     tie_label: str | None = None
+    selected: bool = False
+    color: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -186,6 +188,13 @@ def build_velocity_view_data(
         else None
     )
 
+    component_profiles: tuple[VelocityComponentProfile, ...] = ()
+    if display_options.show_component_profiles and observed_spectrum is not None:
+        component_profiles = _build_component_profiles(
+            project, observed_spectrum.wavelength, emphasized_component_id
+        )
+    component_colors = {profile.component_id: profile.color for profile in component_profiles}
+
     enriched_slices = tuple(
         _enrich_slice(
             project,
@@ -193,14 +202,11 @@ def build_velocity_view_data(
             display_half_width_kms=display_half_width_kms,
             include_optimize_overlays=include_optimize_overlays,
             tie_label_resolver=tie_label_resolver,
+            emphasized_component_id=emphasized_component_id,
+            component_colors=component_colors,
         )
         for slice_info in source_slices
     )
-    component_profiles: tuple[VelocityComponentProfile, ...] = ()
-    if display_options.show_component_profiles and observed_spectrum is not None:
-        component_profiles = _build_component_profiles(
-            project, observed_spectrum.wavelength, emphasized_component_id
-        )
 
     return VelocityViewData(
         selection_scope_key=selection_scope_key,
@@ -238,9 +244,17 @@ def _enrich_slice(
     display_half_width_kms: float,
     include_optimize_overlays: bool,
     tie_label_resolver: Callable[[AbsorberComponent], str | None] | None = None,
+    emphasized_component_id: str | None = None,
+    component_colors: Mapping[str, str] | None = None,
 ) -> VelocitySliceInfo:
     """Return a slice enriched with project-derived velocity metadata."""
-    components = _build_components_for_line(project, slice_info, tie_label_resolver)
+    components = _build_components_for_line(
+        project,
+        slice_info,
+        tie_label_resolver,
+        emphasized_component_id=emphasized_component_id,
+        component_colors=component_colors or {},
+    )
     if not include_optimize_overlays:
         return _replace_slice_metadata(
             slice_info, components=components, mask_regions=[], center_lines=[]
@@ -283,6 +297,9 @@ def _build_components_for_line(
     project: VelocityViewProjectPort,
     slice_info: VelocitySliceInfo,
     tie_label_resolver: Callable[[AbsorberComponent], str | None] | None = None,
+    *,
+    emphasized_component_id: str | None = None,
+    component_colors: Mapping[str, str],
 ) -> list[VelocityComponentInfo]:
     """Build velocity component metadata for a slice line."""
     if not slice_info.line_id or slice_info.center_z is None:
@@ -307,6 +324,8 @@ def _build_components_for_line(
                 rest_wavelength=slice_info.rest_wavelength,
                 label=component.name,
                 tie_label=tie_label,
+                selected=component.id == emphasized_component_id,
+                color=component_colors.get(component.id),
             )
         )
     return components

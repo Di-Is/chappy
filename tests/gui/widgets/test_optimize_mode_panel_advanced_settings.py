@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from PySide6.QtCore import QObject, QSettings, Signal
+from PySide6.QtCore import QObject, QSettings
 
 from chappy.application.project_mapper import project_from_document, project_to_document
 from chappy.core.absorption.models import AbsorptionRegion
@@ -59,8 +59,6 @@ def _two_region_project() -> tuple[SpectroscopyProject, AbsorptionRegion, Absorp
 
 class _ModeState(QObject):
     """Mode state test double that enables group selection."""
-
-    group_removed = Signal(str)
 
 
 @pytest.fixture(autouse=True)

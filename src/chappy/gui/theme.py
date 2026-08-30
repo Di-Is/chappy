@@ -866,3 +866,13 @@ def apply_dark_palette(app: QApplication) -> None:
     """Apply the dark palette to the given QApplication instance."""
     palette = create_dark_palette()
     app.setPalette(palette)
+
+
+def apply_application_theme(app: QApplication) -> None:
+    """Apply the base style, dark palette, and stylesheet to the application."""
+    # Native macOS style lays widgets out with Aqua layout-item rects (smaller
+    # than the painted rect), which makes QSS-painted widgets overlap; Fusion
+    # uses the widget rect and renders identically to offscreen test runs.
+    app.setStyle("Fusion")
+    apply_dark_palette(app)
+    app.setStyleSheet(get_application_stylesheet())

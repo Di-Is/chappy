@@ -242,7 +242,7 @@ def test_registration_redo_rejects_created_region_collision_before_mutation() ->
 
 
 def test_registration_postcommit_observer_failure_is_isolated() -> None:
-    """A failed Identify refresh cannot block the later Organize refresh or rollback science."""
+    """A failed Identify refresh cannot misreport committed registration as rolled back."""
     refresh_port = FakeHistoryRefreshPort(
         fail_targets=frozenset({HistoryRefreshTarget.IDENTIFY_PANEL})
     )
@@ -253,7 +253,4 @@ def test_registration_postcommit_observer_failure_is_isolated() -> None:
     assert history.undo().success
 
     assert "created" not in project.absorption_lines
-    assert refresh_port.targets() == (
-        HistoryRefreshTarget.IDENTIFY_PANEL,
-        HistoryRefreshTarget.ORGANIZE_PANEL,
-    )
+    assert refresh_port.targets() == (HistoryRefreshTarget.IDENTIFY_PANEL,)

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import pytest
 from PySide6.QtCore import QPoint, Qt
@@ -268,10 +268,49 @@ def _step_with_text(chapter_id: str, action_fragment: str) -> TutorialStep:
         ),
         (
             "analysis_structure",
-            "When you are done",
+            "Select the merged six-line region",
             (
-                ExpectedTarget("organizeSidePanelBackButton", TutorialTargetRole.INTERACT),
-                ExpectedTarget("analysisOverviewReviewWidget", TutorialTargetRole.OBSERVE),
+                ExpectedTarget("analysisOverviewReviewWidget", TutorialTargetRole.INTERACT),
+                ExpectedTarget("analysisOverviewStatusCard", TutorialTargetRole.OBSERVE),
+                ExpectedTarget("analysisOverviewOpenRegionButton", TutorialTargetRole.INTERACT),
+            ),
+        ),
+        (
+            "joint_fit",
+            "The region you just opened is shown here",
+            (
+                ExpectedTarget("analysisDetailRegionSelector", TutorialTargetRole.CONTEXT),
+                ExpectedTarget("spectrumPlotContainer", TutorialTargetRole.OBSERVE),
+                ExpectedTarget("analysisDetailParameterTree", TutorialTargetRole.OBSERVE),
+            ),
+        ),
+        (
+            "joint_fit",
+            "combined region is too wide",
+            (ExpectedTarget("spectrumPlotContainer", TutorialTargetRole.INTERACT),),
+        ),
+        (
+            "joint_fit",
+            "Shift+click the deepest trough on the Fe II 2382.8 slice",
+            (
+                ExpectedTarget("velocityPlotContainer", TutorialTargetRole.INTERACT),
+                ExpectedTarget("analysisDetailParameterTree", TutorialTargetRole.OBSERVE),
+            ),
+        ),
+        (
+            "joint_fit",
+            "Now Shift+click the deepest trough on the Mg II 2796.4 slice",
+            (
+                ExpectedTarget("velocityPlotContainer", TutorialTargetRole.INTERACT),
+                ExpectedTarget("analysisDetailParameterTree", TutorialTargetRole.OBSERVE),
+            ),
+        ),
+        (
+            "joint_fit",
+            "On the Fe II 2382.8 and Mg II 2796.4 slices",
+            (
+                ExpectedTarget("velocityPlotContainer", TutorialTargetRole.INTERACT),
+                ExpectedTarget("analysisDetailParameterTree", TutorialTargetRole.OBSERVE),
             ),
         ),
         (
@@ -370,11 +409,46 @@ def test_full_walkthrough_extends_the_short_one_with_the_low_z_absorber_flow() -
 
 
 def test_shared_chapters_have_a_single_definition() -> None:
-    """Chapters common to both walkthroughs must come from the same source."""
+    """Shared chapter structure differs only in the two walkthrough-specific texts."""
+    full_chapters = {chapter.chapter_id: chapter for chapter in build_full_walkthrough_chapters()}
+    short_chapters = {
+        chapter.chapter_id: chapter for chapter in build_short_walkthrough_chapters()
+    }
+
+    for chapter_id in ("identify", "analysis", "analysis_detail"):
+        assert short_chapters[chapter_id] == full_chapters[chapter_id]
+
+    short_getting_started = short_chapters["getting_started"]
+    full_getting_started = full_chapters["getting_started"]
+    assert short_getting_started.steps[1:] == full_getting_started.steps[1:]
+    assert (
+        replace(
+            short_getting_started.steps[0],
+            action_source=full_getting_started.steps[0].action_source,
+        )
+        == full_getting_started.steps[0]
+    )
+
+    short_save = short_chapters["save"]
+    full_save = full_chapters["save"]
+    assert short_save.steps[0] == full_save.steps[0]
+    assert (
+        replace(short_save.steps[1], action_source=full_save.steps[1].action_source)
+        == full_save.steps[1]
+    )
+
+
+def test_shared_chapter_copy_matches_each_walkthrough_scope() -> None:
+    short_chapters = {
+        chapter.chapter_id: chapter for chapter in build_short_walkthrough_chapters()
+    }
     full_chapters = {chapter.chapter_id: chapter for chapter in build_full_walkthrough_chapters()}
 
-    for chapter in build_short_walkthrough_chapters():
-        assert chapter == full_chapters[chapter.chapter_id]
+    assert "short tour" in short_chapters["getting_started"].steps[0].action_source
+    assert "full analysis workflow" in full_chapters["getting_started"].steps[0].action_source
+    assert "core workflow" in short_chapters["save"].steps[-1].action_source
+    assert "edit regions as needed" not in short_chapters["save"].steps[-1].action_source
+    assert "edit regions as needed" in full_chapters["save"].steps[-1].action_source
 
 
 def test_both_walkthroughs_teach_undo_and_redo_after_rectangle_zoom() -> None:
@@ -418,6 +492,8 @@ def test_wavelength_entry_instructions_match_the_unlabelled_field_layout() -> No
     ("chapter_id", "action_fragment", "expected_mode"),
     [
         ("identify", "Click [Analysis]", EditingMode.ANALYSIS),
+        ("preset_build", "Click [Identify]", EditingMode.IDENTIFY),
+        ("velocity_identify", "Click [Analysis]", EditingMode.ANALYSIS),
         ("joint_fit", "Click [Continuum]", EditingMode.CONTINUUM),
     ],
 )
@@ -446,6 +522,86 @@ def test_joint_fit_asks_about_the_fit_then_hands_over_to_continuum() -> None:
     assert fit_step.checkpoint_source is not None
     assert any(target.object_name == "analysisDetailResultsCard" for target in fit_step.targets)
     assert joint_fit_steps[-1].advance is AdvanceTrigger.MODE_CHANGE
+
+
+def test_joint_fit_opens_velocity_plot_before_placing_any_component() -> None:
+    steps = _walkthrough_steps()["joint_fit"]
+    open_velocity = _step_with_text("joint_fit", "combined region is too wide")
+    fe2_main = _step_with_text(
+        "joint_fit", "Shift+click the deepest trough on the Fe II 2382.8 slice"
+    )
+    mg2_main = _step_with_text(
+        "joint_fit", "Now Shift+click the deepest trough on the Mg II 2796.4 slice"
+    )
+    weak_components = _step_with_text("joint_fit", "On the Fe II 2382.8 and Mg II 2796.4 slices")
+
+    assert open_velocity.requires is TutorialCompletion.VELOCITY_PLOT_VISIBLE
+    assert open_velocity.operation is not None
+    assert open_velocity.operation.op_id == "analysis_toggle_velocity"
+
+    velocity_index = steps.index(open_velocity)
+    assert [steps.index(step) for step in (fe2_main, mg2_main, weak_components)] == [
+        velocity_index + 1,
+        velocity_index + 2,
+        velocity_index + 3,
+    ]
+    for step in (fe2_main, mg2_main, weak_components):
+        assert step.operation is not None
+        assert step.operation.op_id == "optimize_velocity_shift_click"
+    assert fe2_main.requires is TutorialCompletion.FE2_COMPONENT_EXISTS
+    assert mg2_main.requires is TutorialCompletion.MG2_COMPONENT_EXISTS
+    assert weak_components.requires is TutorialCompletion.FE2_AND_MG2_HAVE_THREE_COMPONENTS
+
+
+def test_velocity_identify_keeps_checkpoint_on_register_then_hands_over() -> None:
+    steps = _walkthrough_steps()["velocity_identify"]
+    register = _step_with_text("velocity_identify", "Click [Register]")
+
+    assert register.checkpoint_source is not None
+    assert register.advance is AdvanceTrigger.NEXT_BUTTON
+    assert steps[-1].advance is AdvanceTrigger.MODE_CHANGE
+    assert steps[-1].checkpoint_source is None
+
+
+def test_preset_build_enters_identify_by_hand_without_a_chapter_destination() -> None:
+    chapter = next(
+        chapter
+        for chapter in build_full_walkthrough_chapters()
+        if chapter.chapter_id == "preset_build"
+    )
+
+    assert chapter.destination.mode is None
+    assert chapter.destination.surface is None
+    assert chapter.destination.panel is None
+    assert chapter.steps[0].advance is AdvanceTrigger.MODE_CHANGE
+    assert chapter.steps[0].advance_mode is EditingMode.IDENTIFY
+
+
+def test_organize_opens_the_merged_region_by_hand_before_joint_fit() -> None:
+    steps = _walkthrough_steps()["analysis_structure"]
+    back_step = steps[-2]
+    open_step = steps[-1]
+
+    assert "[Back to Overview]" in back_step.action_source
+    assert tuple(target.object_name for target in back_step.targets) == (
+        "organizeSidePanelBackButton",
+    )
+    assert "[Open region]" in open_step.action_source
+    assert open_step.requires is TutorialCompletion.TUTORIAL_MULTI_ION_REGION_OPENED
+    assert open_step.checkpoint_source is not None
+
+    joint_fit = next(
+        chapter
+        for chapter in build_full_walkthrough_chapters()
+        if chapter.chapter_id == "joint_fit"
+    )
+    analysis_detail = next(
+        chapter
+        for chapter in build_full_walkthrough_chapters()
+        if chapter.chapter_id == "analysis_detail"
+    )
+    assert joint_fit.destination == analysis_detail.destination
+    assert "Open the merged region" not in joint_fit.steps[0].action_source
 
 
 def test_analysis_reviews_readiness_then_opens_the_region_by_hand() -> None:
@@ -501,6 +657,7 @@ def test_identify_navigation_leaves_every_zoom_route_usable() -> None:
     )
     assert all(target.role is TutorialTargetRole.INTERACT for target in step.targets)
     assert step.operation is None
+    assert step.requires is TutorialCompletion.CIV_ABSORBER_IN_VIEW
     assert step.advance is AdvanceTrigger.NEXT_BUTTON
 
 

@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Protocol
 
 from chappy.core.analysis import AnalysisRevision, RegionAnalysisState
 from chappy.core.change_set import ChangeSet
+from chappy.core.events import RegionTopologyChanged
 
 from .models import (
     AtomicStructureMutationExecution,
@@ -188,6 +189,14 @@ class AtomicStructureMutationExecutor:
             )
             raise
 
+        postcommit_changes = postcommit_changes.extend(
+            RegionTopologyChanged(
+                created_region_ids=effective_delta.created_region_ids,
+                removed_region_ids=effective_delta.removed_region_ids,
+                impacted_surviving_region_ids=effective_delta.affected_surviving_region_ids,
+                changed_surviving_line_ids=effective_delta.changed_surviving_line_ids,
+            )
+        )
         return AtomicStructureMutationExecution(
             result=committed_result, postcommit_changes=postcommit_changes
         )

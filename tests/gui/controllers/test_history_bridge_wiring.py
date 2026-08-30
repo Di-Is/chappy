@@ -266,7 +266,6 @@ def test_refresh_port_dispatches_model_and_optimize_panel_as_mutually_exclusive(
     ("target", "adapter_method", "expected_args"),
     [
         (HistoryRefreshTarget.IDENTIFY_PANEL, "refresh_identify", ()),
-        (HistoryRefreshTarget.ORGANIZE_PANEL, "refresh_organize", (None,)),
         (HistoryRefreshTarget.LINE_OVERLAYS, "refresh_velocity_window", (None, "region-1")),
         (HistoryRefreshTarget.VELOCITY_PLOT, "refresh_optimize_velocity_plot", (None,)),
         (

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 from chappy.application.history import HistoryRefreshTarget
@@ -14,8 +13,6 @@ if TYPE_CHECKING:
 
     from chappy.application.history import ChangeSet
     from chappy.core.spectroscopy_project import SpectroscopyProject
-
-logger = logging.getLogger(__name__)
 
 
 class SpectrumRangeUpdatePort(Protocol):
@@ -87,9 +84,6 @@ class DockLayoutRefreshPort(Protocol):
             preserve_selection: Whether to restore the previous organize selection.
         """
 
-    def emit_organize_data_changed(self) -> None:
-        """Emit a organize data changed notification."""
-
     def refresh_optimize_panel_for_history(self, region_id: str | None) -> None:
         """Refresh optimize UI after a history operation.
 
@@ -139,18 +133,6 @@ class HistoryRefreshAdapter:
         if project:
             project.model.update_model()
         continuum_editor.continuum_updated.emit(continuum)
-
-    def refresh_organize(self, dock_layout_coordinator: DockLayoutRefreshPort | None) -> None:
-        """Refresh organize panel and overlays.
-
-        Args:
-            dock_layout_coordinator: Dock layout coordinator containing organize UI.
-        """
-        dock_layout_coordinator = self._required_dock_layout(dock_layout_coordinator)
-
-        dock_layout_coordinator.refresh_organize_panel(preserve_selection=False)
-        dock_layout_coordinator.emit_organize_data_changed()
-        logger.debug("Organize UI refreshed after history operation")
 
     def refresh_identify(self) -> None:
         """Refresh identify coordinator via the main window."""
@@ -281,8 +263,6 @@ class HistoryBridgeRefreshPort:
             self._adapter.refresh_optimize_panel(dock_layout_coordinator, region_id)
         if target is HistoryRefreshTarget.IDENTIFY_PANEL:
             self._adapter.refresh_identify()
-        if target is HistoryRefreshTarget.ORGANIZE_PANEL:
-            self._adapter.refresh_organize(dock_layout_coordinator)
         if target is HistoryRefreshTarget.LINE_OVERLAYS:
             region_id = change_set.changed_region_ids[0] if change_set.changed_region_ids else None
             self._adapter.refresh_velocity_window(dock_layout_coordinator, region_id)

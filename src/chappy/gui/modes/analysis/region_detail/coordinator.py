@@ -19,12 +19,6 @@ class OptimizeEditorSignalPort(Protocol):
     fit_completed: SignalInstance
 
 
-class OptimizeModeStateSignalPort(Protocol):
-    """Mode state signals consumed by the optimize coordinator."""
-
-    group_removed: SignalInstance
-
-
 class OptimizeModeCoordinatorPort(Protocol):
     """Optimize panel handoff methods used by the coordinator."""
 
@@ -36,31 +30,21 @@ class OptimizeModeCoordinatorPort(Protocol):
         """Handle an editor fit-completed signal."""
         ...
 
-    def handle_mode_group_removed(self, group_name: str) -> None:
-        """Handle a removed group notification."""
-        ...
-
 
 class OptimizeModeCoordinator:
     """Coordinate optimize-mode signal routing and lifecycle handoff."""
 
     def __init__(
-        self,
-        *,
-        panel: OptimizeModeCoordinatorPort,
-        editor: OptimizeEditorSignalPort,
-        mode_state: OptimizeModeStateSignalPort | None = None,
+        self, *, panel: OptimizeModeCoordinatorPort, editor: OptimizeEditorSignalPort
     ) -> None:
         """Initialize the coordinator.
 
         Args:
             panel: Optimize panel handoff boundary.
             editor: Optimize editor signal boundary.
-            mode_state: Optional mode state signal boundary.
         """
         self._panel = panel
         self._editor = editor
-        self._mode_state = mode_state
         self._connected = False
 
     def connect(self) -> None:
@@ -70,8 +54,5 @@ class OptimizeModeCoordinator:
 
         self._editor.fit_started.connect(self._panel.handle_editor_fit_started)
         self._editor.fit_completed.connect(self._panel.handle_editor_fit_completed)
-
-        if self._mode_state is not None:
-            self._mode_state.group_removed.connect(self._panel.handle_mode_group_removed)
 
         self._connected = True

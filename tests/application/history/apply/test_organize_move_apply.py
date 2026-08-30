@@ -16,7 +16,6 @@ from chappy.application.history import (
     HistoryApplyError,
     HistoryApplyErrorCode,
     HistoryRecorder,
-    HistoryRefreshTarget,
     LineRegionAssignment,
     OrganizeMoveHistoryPayload,
     OrganizeMoveSystemsCommand,
@@ -366,23 +365,12 @@ def test_move_history_restores_masks_and_component_groups_exactly() -> None:
 
 
 def test_postcommit_domain_and_gui_observer_failures_are_isolated() -> None:
-    """Committed Undo reaches later domain and refresh-port observers after earlier failures.
-
-    The original GUI test observed a dock refresh count of 2 because
-    ``HistoryRefreshAdapter.refresh_velocity_window`` cascades an extra
-    organize-panel refresh in ANALYSIS mode; that cascade is GUI-owned and
-    covered by ``test_history_refresh_adapter.py``. At this Qt-free layer the
-    equivalent guarantee is that both dispatched refresh targets
-    (``ORGANIZE_PANEL`` and ``LINE_OVERLAYS``) reach the fake refresh port
-    even though the first one is armed to fail.
-    """
+    """Committed Undo reaches later domain observers after an earlier failure."""
     project, _artifacts = _project((("source", ("line-1", "line-2")), ("target", ("line-3",))))
     component = AbsorberComponent(component_id="component", group_id="source")
     project.model.add_component(component)
     project.absorption_lines["line-1"].model_ids.append(component.id)
-    refresh_port = FakeHistoryRefreshPort(
-        fail_targets=frozenset({HistoryRefreshTarget.ORGANIZE_PANEL})
-    )
+    refresh_port = FakeHistoryRefreshPort()
     history, _usecase = _history(project, refresh_port=refresh_port)
     recorder = HistoryRecorder(history, lambda: project)
     assert OrganizeOperationUseCase().move_lines(
@@ -399,7 +387,4 @@ def test_postcommit_domain_and_gui_observer_failures_are_isolated() -> None:
     assert history.undo().success
 
     assert observed
-    assert refresh_port.targets() == (
-        HistoryRefreshTarget.ORGANIZE_PANEL,
-        HistoryRefreshTarget.LINE_OVERLAYS,
-    )
+    assert refresh_port.targets() == ()

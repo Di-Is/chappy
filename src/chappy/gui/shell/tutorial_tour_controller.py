@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import logging
+import weakref
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QEvent, QObject, QPoint, QRect, QTimer
@@ -150,6 +151,8 @@ class TutorialTourController(QObject):
         self._step_completion_met = False
         self._step_completion_note: str | None = None
         self._triggered_step: tuple[int, int] | None = None
+        self._completed_dialog_trigger_steps: set[tuple[int, int]] = set()
+        self._dialog_trigger_sources: dict[tuple[int, int], weakref.ReferenceType[QDialog]] = {}
 
     @property
     def is_active(self) -> bool:
@@ -166,6 +169,8 @@ class TutorialTourController(QObject):
         self._awaiting_prerequisite = False
         self._applied_mode = None
         self._triggered_step = None
+        self._completed_dialog_trigger_steps.clear()
+        self._dialog_trigger_sources.clear()
         application = QApplication.instance()
         if application is not None:
             application.installEventFilter(self)
@@ -212,7 +217,7 @@ class TutorialTourController(QObject):
         step = self._current_step()
         expected_trigger = AdvanceTrigger.DIALOG_SHOWN if shown else AdvanceTrigger.DIALOG_HIDDEN
         if step.advance is expected_trigger and step.advance_dialog == dialog.objectName():
-            self._advance_when_completed()
+            self._advance_when_completed(dialog=dialog)
 
     def notify_mode_changed(self, mode: EditingMode) -> None:
         """Advance a signal-driven step when its expected mode activates.
@@ -227,16 +232,21 @@ class TutorialTourController(QObject):
         if step.advance is AdvanceTrigger.MODE_CHANGE and step.advance_mode == mode:
             self._advance_when_completed()
 
-    def _advance_when_completed(self) -> None:
+    def _advance_when_completed(self, *, dialog: QDialog | None = None) -> None:
         """Advance a signal-driven step, holding the trigger until its gate opens."""
         step = self._current_step()
+        position = (self._chapter_index, self._step_index)
+        if dialog is not None:
+            self._dialog_trigger_sources[position] = weakref.ref(dialog)
         if step.requires is not None and not self._check_completion(step.requires):
             # Dialogs hide before their result is applied, so the trigger waits for the gate.
-            self._triggered_step = (self._chapter_index, self._step_index)
+            self._triggered_step = position
             logger.info(
                 "Tutorial step trigger held; completion condition unmet: %s", step.requires.name
             )
             return
+        if step.advance in (AdvanceTrigger.DIALOG_SHOWN, AdvanceTrigger.DIALOG_HIDDEN):
+            self._completed_dialog_trigger_steps.add(position)
         self._advance()
 
     def _advance_held_trigger(self) -> bool:
@@ -246,8 +256,18 @@ class TutorialTourController(QObject):
         step = self._current_step()
         if step.requires is None or not self._check_completion(step.requires):
             return False
+        if step.advance in (AdvanceTrigger.DIALOG_SHOWN, AdvanceTrigger.DIALOG_HIDDEN):
+            self._completed_dialog_trigger_steps.add((self._chapter_index, self._step_index))
         self._advance()
         return True
+
+    def _current_step_allows_next(self) -> bool:
+        """Return whether Next may replay the current step's consumed trigger."""
+        step = self._current_step()
+        return step.advance is AdvanceTrigger.NEXT_BUTTON or (
+            step.advance in (AdvanceTrigger.DIALOG_SHOWN, AdvanceTrigger.DIALOG_HIDDEN)
+            and (self._chapter_index, self._step_index) in self._completed_dialog_trigger_steps
+        )
 
     def _ensure_widgets(self, host: QWidget) -> None:
         if self._overlay is not None and self._overlay.window() is not host:
@@ -301,16 +321,15 @@ class TutorialTourController(QObject):
         for widget in candidates:
             if widget.window() is main_host:
                 return widget
+        modal = QApplication.activeModalWidget()
+        if modal is not None and modal.isVisible():
+            resolved = _resolve_in_window(modal, object_name)
+            if resolved is not None and resolved.window().isVisible():
+                return resolved
         for widget in candidates:
             if widget.window().isVisible():
                 return widget
-        modal = QApplication.activeModalWidget()
-        if modal is None or not modal.isVisible():
-            return None
-        resolved = _resolve_in_window(modal, object_name)
-        if resolved is None or not resolved.window().isVisible():
-            return None
-        return resolved
+        return None
 
     def _resolve_target(self, target: TutorialTarget) -> QWidget | None:
         """Return the first reachable widget among a target's names, in order."""
@@ -329,7 +348,12 @@ class TutorialTourController(QObject):
         windows = {id(target.widget.window()): target.widget.window() for target in targets}
         if len(windows) > 1:
             logger.warning(
-                "Tutorial step targets span multiple windows; keeping the primary target's window"
+                "Tutorial step targets span multiple windows; keeping the primary target's "
+                "window: %s",
+                tuple(
+                    (target.widget.objectName(), target.widget.window().objectName())
+                    for target in targets
+                ),
             )
         primary = next(
             (
@@ -416,7 +440,7 @@ class TutorialTourController(QObject):
         self._step_completion_met = met
         self._step_completion_note = note
         self._bubble.set_completion_state(met=met, note=note)
-        self._bubble.set_next_enabled(step.advance is AdvanceTrigger.NEXT_BUTTON and met)
+        self._bubble.set_next_enabled(self._current_step_allows_next() and met)
         if met:
             self._completion_poll_timer.stop()
             self._advance_held_trigger()
@@ -483,7 +507,7 @@ class TutorialTourController(QObject):
             self._begin_chapter(skip_prerequisite=True)
             return
         step = self._current_step()
-        if step.advance is not AdvanceTrigger.NEXT_BUTTON:
+        if not self._current_step_allows_next():
             return
         if step.requires is not None and not self._check_completion(step.requires):
             return
@@ -498,10 +522,74 @@ class TutorialTourController(QObject):
         self._triggered_step = None
         if not self._awaiting_prerequisite and self._step_index > 0:
             self._step_index -= 1
+            self._restore_leading_mode_change_source()
+            self._restore_dialog_trigger_source()
             self._show_current_step()
             return
         self._awaiting_prerequisite = False
         self._retreat_to_previous_chapter()
+
+    def _restore_leading_mode_change_source(self) -> None:
+        """Restore the prior chapter when Back lands on its already-completed handoff."""
+        step = self._current_step()
+        if (
+            self._step_index != 0
+            or self._chapter_index == 0
+            or step.advance is not AdvanceTrigger.MODE_CHANGE
+            or step.advance_mode is not self._applied_mode
+        ):
+            return
+        previous_destination = self._chapters[self._chapter_index - 1].destination
+        if not self._apply_destination(previous_destination):
+            logger.warning(
+                "Tutorial mode-change source could not be restored: %s",
+                self._current_chapter().chapter_id,
+            )
+
+    def _dialog_for_current_step(self) -> QDialog | None:
+        """Return the retained dialog instance named by the current step."""
+        position = (self._chapter_index, self._step_index)
+        source_ref = self._dialog_trigger_sources.get(position)
+        if source_ref is not None:
+            source = source_ref()
+            if source is None:
+                return None
+            try:
+                source.objectName()
+            except RuntimeError:
+                self._dialog_trigger_sources.pop(position, None)
+                return None
+            else:
+                return source
+        dialog_name = self._current_step().advance_dialog
+        if dialog_name is None:
+            return None
+        candidates = self._main_window.findChildren(QDialog, dialog_name)
+        active = QApplication.activeModalWidget()
+        if isinstance(active, QDialog) and active.objectName() == dialog_name:
+            return active
+        return candidates[-1] if candidates else None
+
+    def _restore_dialog_trigger_source(self) -> None:
+        """Restore the pre-event dialog state when Back revisits a fired trigger."""
+        step = self._current_step()
+        position = (self._chapter_index, self._step_index)
+        if (
+            step.advance not in (AdvanceTrigger.DIALOG_SHOWN, AdvanceTrigger.DIALOG_HIDDEN)
+            or position not in self._completed_dialog_trigger_steps
+        ):
+            return
+        dialog = self._dialog_for_current_step()
+        if dialog is None:
+            return
+        if step.advance is AdvanceTrigger.DIALOG_SHOWN:
+            if dialog.isVisible():
+                dialog.hide()
+            self._completed_dialog_trigger_steps.discard(position)
+            return
+        if not dialog.isVisible():
+            dialog.show()
+        self._completed_dialog_trigger_steps.discard(position)
 
     def _retreat_to_previous_chapter(self) -> None:
         """Resume the nearest previous chapter whose destination still applies."""
@@ -518,6 +606,7 @@ class TutorialTourController(QObject):
                 logger.info("Tutorial chapter resumed backward: %s", chapter.chapter_id)
                 if self._chapter_context_changed is not None:
                     self._chapter_context_changed(chapter.chapter_id)
+                self._restore_dialog_trigger_source()
                 self._show_current_step()
                 return
             logger.warning(
@@ -627,8 +716,7 @@ class TutorialTourController(QObject):
             completion_note=completion_note,
         )
         bubble.set_next_enabled(
-            step.advance is AdvanceTrigger.NEXT_BUTTON
-            and (step.requires is None or completion_met)
+            self._current_step_allows_next() and (step.requires is None or completion_met)
         )
         bubble.set_back_enabled(self._chapter_index > 0 or self._step_index > 0)
         bubble.show()

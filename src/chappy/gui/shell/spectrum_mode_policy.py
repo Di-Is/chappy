@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from chappy.core.editing_mode import EditingMode
 from chappy.gui.spectrum.policy import (
+    AbsorptionMarkerScope,
     SpectrumInputCapabilities,
     SpectrumPlotPolicy,
     SpectrumPolicy,
@@ -35,6 +36,7 @@ def spectrum_interaction_mode_policy(mode: EditingMode) -> SpectrumPolicy:
             show_model_and_residual=optimize,
             show_mask_regions=optimize,
             show_absorption_line_markers=organize,
+            absorption_marker_scope=AbsorptionMarkerScope.ALL_REGIONS,
         ),
         cursor_enabled=optimize,
         fit_model_enabled=optimize,

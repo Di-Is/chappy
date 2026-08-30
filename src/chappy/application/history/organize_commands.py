@@ -471,7 +471,4 @@ def _changed_line_assignments(
 
 def _organize_result(change_set: ChangeSet) -> HistoryApplyResult:
     """Return a standard successful organize command result."""
-    return HistoryApplyResult.ok(
-        change_set=change_set,
-        refresh_targets=(HistoryRefreshTarget.ORGANIZE_PANEL, HistoryRefreshTarget.LINE_OVERLAYS),
-    )
+    return HistoryApplyResult.ok(change_set=change_set)

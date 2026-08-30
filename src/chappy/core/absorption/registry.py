@@ -144,6 +144,13 @@ class AbsorptionRegistry:
             return None
         return collect_lines_for_region(self._regions, self._lines, region_id)
 
+    def region_model_ids(self, region_id: str) -> tuple[str, ...]:
+        """Return unique component IDs referenced by a region in stable order."""
+        lines = self.find_lines_for_region(region_id)
+        if lines is None:
+            return ()
+        return tuple(dict.fromkeys(model_id for line in lines for model_id in line.model_ids))
+
     def is_region_needs_optimization(self, region_id: str) -> bool:
         """Return whether any absorption line in the region needs optimization.
 

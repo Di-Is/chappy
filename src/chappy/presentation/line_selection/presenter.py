@@ -46,7 +46,7 @@ class MultipletSummary:
     representative_id: str
     representative_rank: tuple[float, float, float, str]
     wavelength_min: float
-    f_value_min: float
+    f_value_max: float
     gamma_min: float
 
 
@@ -140,13 +140,13 @@ class LineSelectionPresenter:
             line: Atomic line to rank.
 
         Returns:
-            Sort key ordered by component index, descending f-value, wavelength, and ID.
+            Sort key ordered by descending f-value, component index, wavelength, and ID.
         """
         component = (
             float(line.component_index) if line.component_index is not None else float("inf")
         )
         f_value = -line.oscillator_strength if line.oscillator_strength else float("inf")
-        return (component, f_value, float(line.wavelength_angstrom), line.line_id)
+        return (f_value, component, float(line.wavelength_angstrom), line.line_id)
 
     def compute_multiplet_summaries(
         self, lines: Iterable[AtomicLine]
@@ -171,13 +171,13 @@ class LineSelectionPresenter:
                     representative_id=line.line_id,
                     representative_rank=rank,
                     wavelength_min=line.wavelength_angstrom,
-                    f_value_min=line.oscillator_strength,
+                    f_value_max=line.oscillator_strength,
                     gamma_min=line.gamma_value,
                 )
                 continue
 
             summary.wavelength_min = min(summary.wavelength_min, line.wavelength_angstrom)
-            summary.f_value_min = min(summary.f_value_min, line.oscillator_strength)
+            summary.f_value_max = max(summary.f_value_max, line.oscillator_strength)
             summary.gamma_min = min(summary.gamma_min, line.gamma_value)
             if rank < summary.representative_rank:
                 summary.representative_rank = rank
@@ -292,11 +292,9 @@ class LineSelectionPresenter:
             accessible_text=accessible_text,
             name_tooltip=name_tooltip,
             name_sort_key=self._make_sort_key(label_aggregate, line.transition_name, line.line_id),
-            wavelength_sort_key=self._make_sort_key(
-                summary.wavelength_min if summary else None, line.wavelength_angstrom, line.line_id
-            ),
+            wavelength_sort_key=self._wavelength_sort_key(line, summary),
             f_value_sort_key=self._make_sort_key(
-                summary.f_value_min if summary else None, line.oscillator_strength, line.line_id
+                summary.f_value_max if summary else None, line.oscillator_strength, line.line_id
             ),
             gamma_sort_key=self._make_sort_key(
                 summary.gamma_min if summary else None, line.gamma_value, line.line_id
@@ -308,6 +306,16 @@ class LineSelectionPresenter:
         """Build a (aggregated, actual, id) sort key, normalizing values."""
         resolved = actual if aggregated is None else aggregated
         return (self._normalize_sort_value(resolved), self._normalize_sort_value(actual), line_id)
+
+    def _wavelength_sort_key(self, line: AtomicLine, summary: MultipletSummary | None) -> SortKey:
+        """Build the wavelength-column key, keeping each multiplet's representative first."""
+        group_position = summary.wavelength_min if summary else line.wavelength_angstrom
+        member_rank = 0 if summary is None or line.line_id == summary.representative_id else 1
+        return (
+            float(group_position),
+            (member_rank, float(line.wavelength_angstrom)),
+            line.line_id,
+        )
 
     def _selection_sort_key(
         self, line: AtomicLine, summaries: dict[str, MultipletSummary]

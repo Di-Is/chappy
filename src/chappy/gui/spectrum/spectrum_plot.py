@@ -20,6 +20,7 @@ from chappy.gui.adapters.plotting import (
     create_matplotlib_mouse_event_bridge_adapter,
 )
 from chappy.gui.protocols.plotting import RendererProtocol
+from chappy.gui.spectrum.policy import AbsorptionMarkerScope
 from chappy.presentation.spectrum import (
     AbsorptionMarkerInput,
     ModelWindowBuilder,
@@ -367,7 +368,9 @@ class SpectrumPlotHost(QObject):
         elif policy.show_model_and_residual and self._selected_absorption_region:
             project = self._require_project_context()
             self.update_model_components(project)
-            self.update_absorption_line_markers(project)
+
+        if policy.show_absorption_line_markers and self.plot_widget is not None:
+            self._rebuild_absorption_line_markers()
 
         if not self.plot_widget:
             return
@@ -377,11 +380,10 @@ class SpectrumPlotHost(QObject):
 
     def preflight_policy(self, policy: SpectrumPlotPolicy) -> None:
         """Validate policy prerequisites without changing plot state."""
-        if (
-            policy.show_model_and_residual
-            and self._selected_absorption_region is not None
-            and self._project_context is None
-        ):
+        model_context_required = (
+            policy.show_model_and_residual and self._selected_absorption_region is not None
+        )
+        if model_context_required and self._project_context is None:
             self._require_project_context()
 
     def invalidate_policy(self) -> None:
@@ -504,7 +506,19 @@ class SpectrumPlotHost(QObject):
             region,
             include_component_curves=self._display_command.show_component_profiles,
             emphasized_component_id=self._selected_component_id,
+            allowed_component_ids=self._allowed_component_ids(project),
         )
+
+    def _allowed_component_ids(self, project: SpectroscopyProject) -> frozenset[str] | None:
+        """Return the component scope selected by the active plot policy."""
+        policy = self._plot_mode_policy
+        if policy is None or policy.absorption_marker_scope is AbsorptionMarkerScope.ALL_REGIONS:
+            return None
+        selected_region = self._selected_absorption_region
+        if selected_region is None:
+            return frozenset()
+        region_id = selected_region.region_id
+        return frozenset(project.region_model_ids(region_id))
 
     def _render_model_residual_dto(self, render_dto: SpectrumRenderDTO) -> None:
         """Render one already-assembled model/residual DTO without model mutation."""
@@ -701,6 +715,7 @@ class SpectrumPlotHost(QObject):
 
         self.clear_absorption_line_markers()
 
+        allowed_component_ids = self._allowed_component_ids(project)
         colorize = self._display_command.show_component_profiles
         enabled_index = 0
         for component in project.model.components:
@@ -745,13 +760,22 @@ class SpectrumPlotHost(QObject):
                 color=color,
             )
 
-            self.add_absorption_marker(marker)
+            if allowed_component_ids is None or component.id in allowed_component_ids:
+                self.add_absorption_marker(marker)
 
         self.plot_widget.refresh_absorption_marker_labels()
         show = (
             self._plot_mode_policy is None or self._plot_mode_policy.show_absorption_line_markers
         )
         self.plot_widget.toggle_absorption_line_markers(show=show)
+
+    def _rebuild_absorption_line_markers(self) -> None:
+        """Rebuild markers from the attached project or clear the empty-project layer."""
+        project = self._project_context
+        if project is None:
+            self.clear_absorption_line_markers()
+            return
+        self.update_absorption_line_markers(project)
 
     @staticmethod
     def _required_parameter_value(component: AbsorberComponent, parameter_name: str) -> float:
@@ -868,6 +892,12 @@ class SpectrumPlotHost(QObject):
         if self._plot_mode_policy is not None and self._plot_mode_policy.show_model_and_residual:
             project = self._require_project_context()
             self.update_model_components(project)
+        if (
+            self._plot_mode_policy is not None
+            and self._plot_mode_policy.show_absorption_line_markers
+        ):
+            project = self._require_project_context()
+            self.update_absorption_line_markers(project)
         if self._attached_model is not None:
             self.update_mask_regions(self._attached_model.mask_definitions)
 

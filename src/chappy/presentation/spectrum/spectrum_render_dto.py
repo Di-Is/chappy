@@ -78,6 +78,7 @@ class SpectrumRenderDTOAssembler:
         *,
         include_component_curves: bool = False,
         emphasized_component_id: str | None = None,
+        allowed_component_ids: frozenset[str] | None = None,
     ) -> SpectrumRenderDTO:
         """Return windowed model, residual and optional per-component curve data."""
         windows = self._windowing.region_wavelength_windows(project.absorption_lines, region)
@@ -109,7 +110,7 @@ class SpectrumRenderDTOAssembler:
         component_curves: tuple[SpectrumComponentCurve, ...] = ()
         if include_component_curves:
             component_curves = self._build_component_curves(
-                model, windows, emphasized_component_id
+                model, windows, emphasized_component_id, allowed_component_ids
             )
 
         return SpectrumRenderDTO(
@@ -126,6 +127,7 @@ class SpectrumRenderDTOAssembler:
         model: SpectrumModel,
         windows: list[tuple[float, float]],
         emphasized_component_id: str | None,
+        allowed_component_ids: frozenset[str] | None,
     ) -> tuple[SpectrumComponentCurve, ...]:
         """Return windowed transmission curves for every enabled absorber."""
         if model.observed_spectrum is None:
@@ -138,6 +140,8 @@ class SpectrumRenderDTOAssembler:
                 grid, flux, windows
             )
             if window_wavelength.size == 0:
+                continue
+            if allowed_component_ids is not None and component_id not in allowed_component_ids:
                 continue
             curves.append(
                 SpectrumComponentCurve(

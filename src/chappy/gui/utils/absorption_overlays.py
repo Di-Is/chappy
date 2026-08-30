@@ -85,6 +85,7 @@ def _format_wavelength(value: float | None) -> str:
 def compute_confirmed_line_regions(
     project: SpectroscopyProject | None,
     *,
+    region_id: str | None = None,
     alpha: float = 0.18,
     fallback_color: str = DEFAULT_CONFIRMED_COLOR,
     zorder: int = -6,
@@ -97,6 +98,8 @@ def compute_confirmed_line_regions(
     region_map = project.absorption_regions
 
     for line in project.list_absorption_lines():
+        if region_id is not None and line.region_id != region_id:
+            continue
         bounds = _line_bounds(line)
         if bounds is None:
             continue

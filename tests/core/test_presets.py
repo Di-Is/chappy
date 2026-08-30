@@ -36,6 +36,19 @@ def _store(atomic_data: AtomicLineData) -> PresetStore:
     return PresetStore(atomic_data, translate=lambda text: text)
 
 
+def test_preset_capacity_is_100_including_builtin_presets(atomic_data: AtomicLineData) -> None:
+    store = _store(atomic_data)
+    assert store.MAX_PRESETS == 100
+
+    custom_capacity = store.MAX_PRESETS - len(store.list_presets())
+    for index in range(custom_capacity):
+        store.create_custom_preset(f"Custom {index}")
+
+    assert len(store.list_presets()) == 100
+    with pytest.raises(OverflowError, match="Preset capacity exceeded"):
+        store.create_custom_preset("Over capacity")
+
+
 def test_group_local_invariants_are_strict() -> None:
     with pytest.raises(ValueError, match="uid"):
         PresetTieGroup(uid=" ", line_ids=("a", "b"))

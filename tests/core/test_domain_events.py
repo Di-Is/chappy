@@ -6,14 +6,7 @@ import pytest
 
 from chappy.core.components.absorber import AbsorberComponent
 from chappy.core.components.tie_set import ParameterTieSet
-from chappy.core.editing_mode import EditingModeState, FittingGroupSummary
-from chappy.core.events import (
-    ComponentChanged,
-    ComponentEnabledChanged,
-    FittingGroupAdded,
-    FittingGroupModified,
-    FittingGroupRemoved,
-)
+from chappy.core.events import ComponentChanged, ComponentEnabledChanged
 
 
 def test_component_parameter_update_returns_component_changed_event() -> None:
@@ -73,20 +66,3 @@ def test_multiplet_rejects_duplicate_component() -> None:
 
     with pytest.raises(ValueError, match="already in tie set"):
         tie_set.add_component(component)
-
-
-def test_mode_state_set_fitting_groups_returns_group_delta_events() -> None:
-    """Fitting group replacement should return add, remove, and modify events."""
-    state = EditingModeState()
-    old_group = FittingGroupSummary(name="old", wavelength_min=1000.0, wavelength_max=1010.0)
-    same_group = FittingGroupSummary(name="same", wavelength_min=1100.0, wavelength_max=1110.0)
-    state.set_fitting_groups({"old": old_group, "same": same_group})
-
-    new_group = FittingGroupSummary(name="new", wavelength_min=1200.0, wavelength_max=1210.0)
-    changed_group = FittingGroupSummary(name="same", wavelength_min=1101.0, wavelength_max=1111.0)
-
-    change_set = state.set_fitting_groups({"same": changed_group, "new": new_group})
-
-    assert [event.group_name for event in change_set.filter(FittingGroupRemoved)] == ["old"]
-    assert [event.group_name for event in change_set.filter(FittingGroupModified)] == ["same"]
-    assert [event.group_name for event in change_set.filter(FittingGroupAdded)] == ["new"]

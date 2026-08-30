@@ -102,3 +102,57 @@ def test_double_click_focuses_system_once(qtbot: QtBot) -> None:
 
     assert spy.count() == 1
     assert spy.at(0) == ["line-1", 3544.8, 3546.3]
+
+
+def _many_regions(count: int) -> list[ConfirmedRegionRow]:
+    return [
+        ConfirmedRegionRow(
+            group_id=f"region-{index}",
+            label=f"Region {index}",
+            systems=[
+                ConfirmedLineRow(
+                    system_id=f"line-{index}",
+                    species="Fe II",
+                    redshift=0.7627,
+                    lambda_start=4183.5 + index,
+                    lambda_end=4204.7 + index,
+                )
+            ],
+            is_expanded=True,
+        )
+        for index in range(count)
+    ]
+
+
+def test_reveal_regions_scrolls_a_region_below_the_fold_into_view(qtbot: QtBot) -> None:
+    """A region registered while off-screen must become visible without user scrolling."""
+    section = IdentifyConfirmedRegionsSection()
+    qtbot.addWidget(section)
+    section.resize(320, 120)
+    section.set_confirmed_regions(_many_regions(12))
+    section.show()
+    tree = section._groups_tree
+    last_group = tree.topLevelItem(11)
+    assert last_group is not None
+    assert not tree.viewport().rect().intersects(tree.visualItemRect(last_group))
+
+    section.reveal_regions(["region-11"])
+
+    assert tree.viewport().rect().intersects(tree.visualItemRect(last_group))
+    assert last_group.isSelected()
+
+
+def test_reveal_regions_ignores_unknown_ids(qtbot: QtBot) -> None:
+    """Region ids absent from the tree must leave the current scroll position alone."""
+    section = IdentifyConfirmedRegionsSection()
+    qtbot.addWidget(section)
+    section.resize(320, 120)
+    section.set_confirmed_regions(_many_regions(12))
+    section.show()
+    tree = section._groups_tree
+    before = tree.verticalScrollBar().value()
+
+    section.reveal_regions(["unassigned-region"])
+
+    assert tree.verticalScrollBar().value() == before
+    assert tree.currentItem() is None

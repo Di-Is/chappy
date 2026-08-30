@@ -27,6 +27,8 @@ if TYPE_CHECKING:
     from chappy.presentation.spectrum import SpectrumComponentCurve
     from chappy.presentation.velocity import VelocityAnalysisBounds
 
+_COMPONENT_MARKER_COLOR = "#2E7D32"
+
 
 class VelocitySubplotRenderer:
     """Own Matplotlib rendering details for a velocity subplot."""
@@ -187,11 +189,16 @@ class VelocitySubplotRenderer:
         axes = self._require_axes()
         lines = [
             axes.axvline(
-                marker.x, color="#2E7D32", linestyle=":", alpha=0.6, linewidth=1.0, zorder=5
+                marker.x,
+                color=marker.color or _COMPONENT_MARKER_COLOR,
+                linestyle=":",
+                alpha=0.6,
+                linewidth=1.0,
+                zorder=5,
             )
             for marker in markers
         ]
-        annotations = place_rotated_component_labels(axes, markers, color="#2E7D32")
+        annotations = place_rotated_component_labels(axes, markers, color=_COMPONENT_MARKER_COLOR)
         self._component_markers = list(zip(lines, annotations, strict=True))
         self._plot_widget.renderer.require_figure().canvas.draw_idle()
 
@@ -206,6 +213,14 @@ class VelocitySubplotRenderer:
     def component_marker_count(self) -> int:
         """Return the number of currently rendered component markers."""
         return len(self._component_markers)
+
+    def emphasized_marker_labels(self) -> tuple[str, ...]:
+        """Return the marker label texts currently drawn with selection emphasis."""
+        return tuple(
+            annotation.get_text()
+            for _line, annotation in self._component_markers
+            if annotation.get_fontweight() == "bold"
+        )
 
     def clear_component_markers(self) -> None:
         """Remove all component markers from the subplot."""

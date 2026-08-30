@@ -360,7 +360,6 @@
   props:
     doc.include: true
     doc.scope: analysis_region_detail
-    doc.badgePosition: outside-left
     doc.labelKey:
       text: Mask panel
     doc.descKey:

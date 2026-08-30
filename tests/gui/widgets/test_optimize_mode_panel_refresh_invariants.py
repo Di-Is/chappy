@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 import pytest
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject
 
 from chappy.application.project_document import ProjectDocument
 from chappy.application.project_mapper import project_to_document
@@ -45,8 +45,6 @@ if TYPE_CHECKING:
 
 class _ModeState(QObject):
     """Mode-state test double used by Detail group selection."""
-
-    group_removed = Signal(str)
 
     def __init__(self) -> None:
         super().__init__()

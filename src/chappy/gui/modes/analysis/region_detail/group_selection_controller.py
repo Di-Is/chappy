@@ -377,16 +377,6 @@ class OptimizeGroupSelectionController:
         self.update_export_controls(project)
         self._mask_refresh.emit_group_mask_changed(OptimizeMaskGroupChange(group_id=group_id))
 
-    def handle_group_removed(self, project: SpectroscopyProject | None) -> None:
-        """Refresh UI after a group removal notification.
-
-        Args:
-            project: Active project.
-        """
-        self.refresh_group_choices(project)
-        self._tree_render.clear_group_tree()
-        self.update_export_controls(project)
-
     def fit_summary(self, project: SpectroscopyProject | None, group_id: str) -> FitSummary | None:
         """Return stored fit summary for a group.
 

@@ -284,3 +284,40 @@ def test_clearing_component_profile_curves_reaches_the_shared_spectrum_facade() 
     renderer.clear_component_profile_curves()
 
     assert plot_widget.clear_component_profiles_count == 1
+
+
+def test_selected_component_marker_reads_bold_and_sits_in_front() -> None:
+    """The selected entry's label is bold so it stands out among crowded markers."""
+    plot_widget = _build_plot_widget()
+    renderer = VelocitySubplotRenderer(plot_widget)
+
+    renderer.set_component_markers(
+        [
+            ComponentLabelEntry(x=10.0, text="c1"),
+            ComponentLabelEntry(x=-20.0, text="c2", selected=True),
+        ]
+    )
+
+    weights = {text.get_text(): text.get_fontweight() for text in plot_widget.renderer.axes.texts}
+    assert weights == {"c1": "normal", "c2": "bold"}
+    assert renderer.emphasized_marker_labels() == ("c2",)
+
+
+def test_component_marker_colour_follows_the_entry() -> None:
+    """A marker carrying its own colour paints both its line and its label with it."""
+    plot_widget = _build_plot_widget()
+    renderer = VelocitySubplotRenderer(plot_widget)
+
+    renderer.set_component_markers(
+        [
+            ComponentLabelEntry(x=10.0, text="c1", color="#D95F02"),
+            ComponentLabelEntry(x=0.0, text="c2"),
+        ]
+    )
+
+    axes = plot_widget.renderer.axes
+    assert [line.get_color() for line in axes.lines] == ["#D95F02", "#2E7D32"]
+    assert {text.get_text(): text.get_color() for text in axes.texts} == {
+        "c1": "#D95F02",
+        "c2": "#2E7D32",
+    }

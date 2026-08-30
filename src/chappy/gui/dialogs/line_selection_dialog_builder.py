@@ -13,7 +13,7 @@ both runtime lookup and ``pyside6-lupdate`` extraction, strings created here use
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Protocol, override, runtime_checkable
+from typing import override
 
 from PySide6.QtCore import QCoreApplication, Qt
 from PySide6.QtGui import QDoubleValidator, QValidator
@@ -46,9 +46,6 @@ from chappy.gui.theme import (
     empty_state_label_style,
 )
 
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-
 
 class _CorrectableDoubleValidator(QDoubleValidator):
     """Keep invalid numeric drafts editable until the dialog validates them."""
@@ -70,38 +67,6 @@ class _CorrectableDoubleValidator(QDoubleValidator):
         if state is QValidator.State.Invalid:
             state = QValidator.State.Intermediate
         return state, normalized, normalized_position
-
-
-@runtime_checkable
-class _LineSelectionModeStatePort(Protocol):
-    """Protocol for the mode state used by ``LineSelectionDialog``."""
-
-    @property
-    def fitting_groups(self) -> Mapping[str, object]:
-        """Fitting groups exposed by the mode state."""
-        ...
-
-
-def validate_mode_state(
-    mode_state: _LineSelectionModeStatePort | None,
-) -> _LineSelectionModeStatePort | None:
-    """Validate an optional mode state with required attributes.
-
-    Args:
-        mode_state: Candidate mode state or None.
-
-    Returns:
-        The validated mode state, or None when not supplied.
-
-    Raises:
-        TypeError: If the mode state lacks the required attributes.
-    """
-    if mode_state is None:
-        return None
-    if not isinstance(mode_state, _LineSelectionModeStatePort):
-        msg = "mode_state must provide a 'fitting_groups' attributes for LineSelectionDialog"
-        raise TypeError(msg)
-    return mode_state
 
 
 @dataclass(frozen=True, slots=True)
@@ -126,7 +91,6 @@ class LineSelectionWidgets:
     remove_selection_button: QPushButton
     clear_selection_button: QPushButton
     button_box: QDialogButtonBox
-    group_selection_combo: QComboBox | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -159,7 +123,6 @@ class _DetailSection:
 
     group: QGroupBox
     preview: QTextEdit
-    group_selection_combo: QComboBox | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -181,7 +144,6 @@ class LineSelectionDialogBuilder:
     def __init__(self) -> None:
         """Initialize transient build state."""
         self._host: QWidget
-        self._mode_state: _LineSelectionModeStatePort | None = None
         self._sort_column: int = 0
         self._sort_order: Qt.SortOrder = Qt.SortOrder.AscendingOrder
 
@@ -189,7 +151,6 @@ class LineSelectionDialogBuilder:
         self,
         host: QWidget,
         *,
-        mode_state: _LineSelectionModeStatePort | None,
         ok_initially_enabled: bool,
         sort_column: int,
         sort_order: Qt.SortOrder,
@@ -198,7 +159,6 @@ class LineSelectionDialogBuilder:
 
         Args:
             host: Dialog widget that receives the top-level layout.
-            mode_state: Optional mode state driving the destination panel.
             ok_initially_enabled: Initial enabled state for the OK button.
             sort_column: Column used for the initial sort indicator.
             sort_order: Order used for the initial sort indicator.
@@ -207,7 +167,6 @@ class LineSelectionDialogBuilder:
             The widgets the dialog needs to wire up and update.
         """
         self._host = host
-        self._mode_state = mode_state
         self._sort_column = sort_column
         self._sort_order = sort_order
 
@@ -279,7 +238,6 @@ class LineSelectionDialogBuilder:
             remove_selection_button=selection_section.remove_selection_button,
             clear_selection_button=selection_section.clear_selection_button,
             button_box=button_box,
-            group_selection_combo=detail_section.group_selection_combo,
         )
 
     def _build_filter_bar(self, *, title: str) -> _FilterSection:
@@ -513,12 +471,12 @@ class LineSelectionDialogBuilder:
         layout.setContentsMargins(16, 12, 16, 12)
         layout.setSpacing(10)
 
-        detail_panel, preview, group_combo = self._build_detail_panel()
+        detail_panel, preview = self._build_detail_panel()
         layout.addWidget(detail_panel, stretch=1)
 
-        return _DetailSection(group=group, preview=preview, group_selection_combo=group_combo)
+        return _DetailSection(group=group, preview=preview)
 
-    def _build_detail_panel(self) -> tuple[QWidget, QTextEdit, QComboBox | None]:
+    def _build_detail_panel(self) -> tuple[QWidget, QTextEdit]:
         panel = QWidget(self._host)
         panel.setMinimumWidth(300)
         layout = QVBoxLayout(panel)
@@ -536,44 +494,7 @@ class LineSelectionDialogBuilder:
         preview.setMinimumHeight(140)
         layout.addWidget(preview, stretch=1)
 
-        group_combo: QComboBox | None = None
-        if self._mode_state:
-            info_panel, group_combo = self._build_group_info_panel(self._mode_state)
-            layout.addWidget(info_panel)
-
-        return panel, preview, group_combo
-
-    def _build_group_info_panel(
-        self, mode_state: _LineSelectionModeStatePort
-    ) -> tuple[QWidget, QComboBox]:
-        panel = QGroupBox(
-            QCoreApplication.translate("LineSelectionDialog", "Destination"), self._host
-        )
-        layout = QVBoxLayout(panel)
-        layout.setContentsMargins(12, 8, 12, 8)
-        layout.setSpacing(8)
-
-        info_label = QLabel(panel)
-        info_label.setObjectName("selectionDestinationInfo")
-        info_label.setWordWrap(True)
-
-        combo = QComboBox(panel)
-        combo.setObjectName("selectionDestinationCombo")
-        info_label.setText(
-            QCoreApplication.translate("LineSelectionDialog", "Choose a destination region.")
-        )
-
-        for group in mode_state.fitting_groups:
-            combo.addItem(group, group)
-
-        combo.addItem(
-            QCoreApplication.translate("LineSelectionDialog", "Create new region"), "new"
-        )
-
-        layout.addWidget(info_label)
-        layout.addWidget(combo)
-
-        return panel, combo
+        return panel, preview
 
     def _build_selection_group(self) -> _SelectionSection:
         group = QGroupBox(

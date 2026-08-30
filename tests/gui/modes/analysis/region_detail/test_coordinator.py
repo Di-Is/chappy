@@ -50,20 +50,12 @@ class _Editor:
         self.fit_completed = _Signal1[dict[str, bool]]()
 
 
-class _ModeState:
-    """Mode state signal test double."""
-
-    def __init__(self) -> None:
-        self.group_removed = _Signal1[str]()
-
-
 class _Panel:
     """Coordinator panel handoff test double."""
 
     def __init__(self) -> None:
         self.fit_started_count = 0
         self.fit_completed_payloads: list[dict[str, bool]] = []
-        self.removed_groups: list[str] = []
 
     def handle_editor_fit_started(self) -> None:
         """Record fit-start handoff."""
@@ -73,26 +65,19 @@ class _Panel:
         """Record fit-completed handoff."""
         self.fit_completed_payloads.append(results)
 
-    def handle_mode_group_removed(self, group_name: str) -> None:
-        """Record group-removed handoff."""
-        self.removed_groups.append(group_name)
 
-
-def test_connect_routes_editor_and_mode_state_signals() -> None:
+def test_connect_routes_editor_signals() -> None:
     """Coordinator should route external signals to panel handoff methods."""
     editor = _Editor()
-    mode_state = _ModeState()
     panel = _Panel()
-    coordinator = OptimizeModeCoordinator(panel=panel, editor=editor, mode_state=mode_state)
+    coordinator = OptimizeModeCoordinator(panel=panel, editor=editor)
 
     coordinator.connect()
     editor.fit_started.emit()
     editor.fit_completed.emit({"success": True})
-    mode_state.group_removed.emit("region-1")
 
     assert panel.fit_started_count == 1
     assert panel.fit_completed_payloads == [{"success": True}]
-    assert panel.removed_groups == ["region-1"]
 
 
 def test_connect_is_idempotent() -> None:

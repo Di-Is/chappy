@@ -20,6 +20,7 @@ from chappy.core.history import CommandHistory, HistoryState
 from chappy.core.history.operation_id import OperationId
 from chappy.core.presets import METAL_LINES_PRESET_ID
 from chappy.core.spectroscopy_project import SpectroscopyProject
+from chappy.gui.adapters.model_event_adapter import SpectrumModelEventAdapter
 from chappy.gui.common.shared_operations import AnalysisOperationPanel, AnalysisOperationSurface
 from chappy.gui.common.tutorial import (
     COMPLETION_NOTE_SOURCES,
@@ -81,7 +82,9 @@ if TYPE_CHECKING:
 
     from chappy.application.optimize import FitResultRawPayload
     from chappy.application.project_io_usecase import ProjectIOUseCase
+    from chappy.core.absorption.models import AbsorptionLine
     from chappy.core.atomic_data import AtomicLineData
+    from chappy.core.events import RegionTopologyChanged
     from chappy.core.presets import Preset
     from chappy.gui.common.range_selector import RangeSelectorWidget
     from chappy.gui.common.tutorial import TutorialChapter
@@ -152,6 +155,29 @@ _RECT_ZOOM_OPERATION_ID = (
 # Mg II 2796/2803 at z = 0.7627 fall on 4929.2 and 4941.8 A; the bounds keep a
 # margin so neither trough sits on the frame edge the next step must hover.
 _MG2_ABSORBER_VIEW_BOUNDS = (4926.0, 4945.0)
+# C IV 1548/1550 at z = 2.0764 fall near 4763 and 4771 A; the bounds retain a
+# small margin around both troughs.
+_CIV_ABSORBER_VIEW_BOUNDS = (4760.0, 4774.0)
+_TUTORIAL_PRESET_LINE_IDS = frozenset(
+    {
+        "580d9a1e59b77a82",  # Fe II 2374.5
+        "b5ddd1f3fcc99c31",  # Fe II 2382.8
+        "c63f98a2a68fc72d",  # Fe II 2586.6
+        "74a08828146e7ef2",  # Fe II 2600.2
+        "d85a4a9d4dfb3235",  # Mg II 2796.4
+        "380d715c908636f5",  # Mg II 2803.5
+    }
+)
+_TUTORIAL_REGION_LINES = frozenset(
+    {
+        ("Fe II", 2374.5),
+        ("Fe II", 2382.8),
+        ("Fe II", 2586.6),
+        ("Fe II", 2600.2),
+        ("Mg II", 2796.4),
+        ("Mg II", 2803.5),
+    }
+)
 
 
 class MainWindow(QMainWindow):
@@ -215,6 +241,7 @@ class MainWindow(QMainWindow):
         self._display_menu_controller: DisplayMenuController | None = None
         self._progress_bar: QProgressBar | None = None
         self._analysis_surface_coordinator: AnalysisSurfaceCoordinator | None = None
+        self._region_topology_event_adapter: SpectrumModelEventAdapter | None = None
 
         # UI components that will be created
         self.central_widget: QWidget | None = None
@@ -235,6 +262,7 @@ class MainWindow(QMainWindow):
         self.optimize_editor: OptimizeEditor | None = None
         self.mode_shell_coordinator: ModeShellCoordinator | None = None
         self._tutorial_tour: TutorialTourController | None = None
+        self._tutorial_initial_preset_ids: frozenset[str] = frozenset()
         self._dialog_workflow: DialogWorkflowCoordinator
         self._history_wiring: HistoryWiringCoordinator
         self._spectrum_surface: SpectrumSurfaceCoordinator
@@ -448,6 +476,20 @@ class MainWindow(QMainWindow):
         return project_session.current_project
 
     @property
+    def confirmed_line_overlay_region_id(self) -> str | None:
+        """Return the focused Detail region limiting confirmed line overlays."""
+        surface = self._analysis_surface_coordinator
+        mode_shell = self.mode_shell_coordinator
+        if (
+            surface is None
+            or mode_shell is None
+            or mode_shell.get_current_mode() is not EditingMode.ANALYSIS
+            or surface.panel_state is not PanelState.REGION_DETAIL
+        ):
+            return None
+        return self._analysis_navigation.state.focused_region_id
+
+    @property
     def project_file_path(self) -> str | None:
         """Get the file path recorded for the current project, if any."""
         project_session = self._project_session
@@ -603,6 +645,9 @@ class MainWindow(QMainWindow):
                 self._tutorial_tour.notify_mode_changed
             )
             self._tutorial_tour.deleteLater()
+        self._tutorial_initial_preset_ids = frozenset(
+            preset.id for preset in self.preset_store.list_presets()
+        )
         self._tutorial_tour = TutorialTourController(
             self,
             chapters=chapters,
@@ -626,8 +671,10 @@ class MainWindow(QMainWindow):
             TutorialPrerequisite.HAS_TWO_REGIONS: (
                 lambda: self._confirmed_tutorial_region_count() >= 2
             ),
-            TutorialPrerequisite.HAS_CUSTOM_PRESET: self._has_editable_tutorial_preset,
-            TutorialPrerequisite.HAS_MULTI_ION_REGION: self._has_multi_ion_tutorial_region,
+            TutorialPrerequisite.HAS_TOUR_CREATED_PRESET: (self._tutorial_new_preset_is_selected),
+            TutorialPrerequisite.HAS_TUTORIAL_MULTI_ION_REGION: (
+                self._has_tutorial_multi_ion_region
+            ),
         }
 
     def _confirmed_tutorial_region_count(self) -> int:
@@ -639,26 +686,25 @@ class MainWindow(QMainWindow):
             1 for region_id in project.absorption_regions if region_id != UNASSIGNED_REGION_ID
         )
 
-    def _has_editable_tutorial_preset(self) -> bool:
-        """Return whether at least one user-editable custom preset exists."""
-        return any(preset.is_editable for preset in self.preset_store.list_presets())
+    def _tutorial_new_preset_is_selected(self) -> bool:
+        """Return whether a preset created since this tour began is selected."""
+        preset = self._current_tutorial_preset()
+        return (
+            preset is not None
+            and preset.is_editable
+            and preset.id not in self._tutorial_initial_preset_ids
+        )
 
-    def _has_multi_ion_tutorial_region(self) -> bool:
-        """Return whether a confirmed region combines two or more ion species."""
+    def _has_tutorial_multi_ion_region(self) -> bool:
+        """Return whether one region contains exactly the six tutorial transitions."""
         project = self.current_project
         if project is None:
             return False
-        for region_id, region in project.absorption_regions.items():
-            if region_id == UNASSIGNED_REGION_ID:
-                continue
-            species = {
-                line.species
-                for line_id in region.line_ids
-                if (line := project.absorption_lines.get(line_id)) is not None
-            }
-            if len(species) >= 2:
-                return True
-        return False
+        return any(
+            region_id != UNASSIGNED_REGION_ID
+            and self._tutorial_region_has_exact_transitions(region_id)
+            for region_id in project.absorption_regions
+        )
 
     def _tutorial_completion_checks(self) -> dict[TutorialCompletion, Callable[[], bool]]:
         """Return tutorial step-completion predicates over live project state."""
@@ -670,10 +716,13 @@ class MainWindow(QMainWindow):
             TutorialCompletion.REFERENCE_LINE_IS_CIV1548: (
                 self._tutorial_reference_line_is_civ1548
             ),
+            TutorialCompletion.CIV_ABSORBER_IN_VIEW: self._tutorial_civ_absorber_in_view,
             TutorialCompletion.CONFIRMED_REGION_EXISTS: (
                 lambda: self._confirmed_tutorial_region_count() >= 1
             ),
-            TutorialCompletion.EDITABLE_PRESET_EXISTS: self._has_editable_tutorial_preset,
+            TutorialCompletion.NEW_TUTORIAL_PRESET_SELECTED: (
+                self._tutorial_new_preset_is_selected
+            ),
             TutorialCompletion.PRESET_HAS_TUTORIAL_LINES: (
                 self._tutorial_preset_has_tutorial_lines
             ),
@@ -689,23 +738,38 @@ class MainWindow(QMainWindow):
             TutorialCompletion.FE2_AND_MG2_REGIONS_EXIST: (
                 self._tutorial_fe2_and_mg2_regions_exist
             ),
-            TutorialCompletion.MULTI_ION_REGION_EXISTS: self._has_multi_ion_tutorial_region,
+            TutorialCompletion.MULTI_ION_REGION_EXISTS: self._has_tutorial_multi_ion_region,
             TutorialCompletion.MONO_ION_REGIONS_RESTORED: (
                 self._tutorial_mono_ion_regions_restored
             ),
             TutorialCompletion.REGION_DETAIL_OPENED: self._tutorial_region_detail_opened,
             TutorialCompletion.REGION_HAS_COMPONENT: self._tutorial_region_has_component,
+            TutorialCompletion.TUTORIAL_MULTI_ION_REGION_OPENED: (
+                self._tutorial_multi_ion_region_opened
+            ),
+            TutorialCompletion.FE2_COMPONENT_EXISTS: (
+                lambda: self._tutorial_species_has_component("Fe II")
+            ),
+            TutorialCompletion.MG2_COMPONENT_EXISTS: (
+                lambda: self._tutorial_species_has_component("Mg II")
+            ),
+            TutorialCompletion.FE2_AND_MG2_HAVE_THREE_COMPONENTS: (
+                self._tutorial_each_ion_has_three_components
+            ),
             TutorialCompletion.CROSS_ION_Z_TIE_EXISTS: (
                 self._tutorial_cross_ion_redshift_tie_exists
             ),
             TutorialCompletion.REGION_FIT_APPLIED: self._tutorial_region_fit_applied,
+            TutorialCompletion.MG2_LOGN_FIXED_AND_REFIT_APPLIED: (
+                self._tutorial_mg2_logn_fixed_and_refit_applied
+            ),
         }
 
     def _tutorial_completion_notes(self) -> dict[TutorialCompletion, Callable[[], str | None]]:
         """Return translated notes explaining a completion condition's verdict."""
         return {
             TutorialCompletion.REGION_FIT_APPLIED: self._tutorial_region_fit_note,
-            TutorialCompletion.EDITABLE_PRESET_EXISTS: self._tutorial_editable_preset_note,
+            TutorialCompletion.NEW_TUTORIAL_PRESET_SELECTED: (self._tutorial_editable_preset_note),
             TutorialCompletion.PRESET_HAS_TUTORIAL_LINES: self._tutorial_preset_lines_note,
             TutorialCompletion.PRESET_FE2_UNLINKED: self._tutorial_preset_fe2_unlinked_note,
             TutorialCompletion.PRESET_FE2_SINGLE_GROUP: (
@@ -713,6 +777,7 @@ class MainWindow(QMainWindow):
             ),
             TutorialCompletion.PRESET_BASELINE_IS_MG2796: self._tutorial_preset_baseline_note,
             TutorialCompletion.MG2_ABSORBER_IN_VIEW: self._tutorial_mg2_absorber_in_view_note,
+            TutorialCompletion.CIV_ABSORBER_IN_VIEW: self._tutorial_civ_absorber_in_view_note,
             TutorialCompletion.FE2_AND_MG2_REGIONS_EXIST: (
                 self._tutorial_fe2_and_mg2_regions_note
             ),
@@ -727,7 +792,8 @@ class MainWindow(QMainWindow):
     def _tutorial_editable_preset_note(self) -> str | None:
         """Return why the custom-preset gate is still closed."""
         return self._tutorial_unmet_note(
-            TutorialCompletion.EDITABLE_PRESET_EXISTS, met=self._has_editable_tutorial_preset()
+            TutorialCompletion.NEW_TUTORIAL_PRESET_SELECTED,
+            met=self._tutorial_new_preset_is_selected(),
         )
 
     def _tutorial_preset_lines_note(self) -> str | None:
@@ -775,6 +841,12 @@ class MainWindow(QMainWindow):
             TutorialCompletion.MG2_ABSORBER_IN_VIEW, met=self._tutorial_mg2_absorber_in_view()
         )
 
+    def _tutorial_civ_absorber_in_view_note(self) -> str | None:
+        """Return why the C IV absorber gate is still closed."""
+        return self._tutorial_unmet_note(
+            TutorialCompletion.CIV_ABSORBER_IN_VIEW, met=self._tutorial_civ_absorber_in_view()
+        )
+
     def _tutorial_region_fit_note(self) -> str | None:
         """Return why the focused region's latest fit passed or failed the gate."""
         project = self.current_project
@@ -813,11 +885,13 @@ class MainWindow(QMainWindow):
         return species_counts
 
     def _tutorial_preset_has_tutorial_lines(self) -> bool:
-        """Return whether the selected preset holds the 4 Fe II + 2 Mg II tutorial lines."""
-        if self._current_tutorial_preset() is None:
-            return False
-        species_counts = self._tutorial_preset_species_counts()
-        return species_counts.get("Fe II") == 4 and species_counts.get("Mg II") == 2
+        """Return whether the selected preset holds exactly the six requested line IDs."""
+        preset = self._current_tutorial_preset()
+        return (
+            preset is not None
+            and len(preset.line_ids) == len(_TUTORIAL_PRESET_LINE_IDS)
+            and set(preset.line_ids) == _TUTORIAL_PRESET_LINE_IDS
+        )
 
     def _tutorial_preset_species_line_ids(self, preset: Preset, species: str) -> set[str]:
         """Return the preset's line identifiers belonging to one ion species."""
@@ -882,16 +956,23 @@ class MainWindow(QMainWindow):
 
     def _tutorial_preset_is_selected(self) -> bool:
         """Return whether the currently selected preset is the tutorial's custom preset."""
-        preset = self._current_tutorial_preset()
-        return preset is not None and preset.is_editable
+        return self._tutorial_new_preset_is_selected()
 
     def _tutorial_mg2_absorber_in_view(self) -> bool:
-        """Return whether the Mg II 2796/2803 pair lies inside the visible wavelength range."""
+        """Return whether both Mg II troughs are inside the current view."""
+        return self._tutorial_absorber_in_view(bounds=_MG2_ABSORBER_VIEW_BOUNDS)
+
+    def _tutorial_civ_absorber_in_view(self) -> bool:
+        """Return whether both C IV troughs are inside the current view."""
+        return self._tutorial_absorber_in_view(bounds=_CIV_ABSORBER_VIEW_BOUNDS)
+
+    def _tutorial_absorber_in_view(self, *, bounds: tuple[float, float]) -> bool:
+        """Return whether a bounded absorber interval is visible."""
         spectrum_view = self.view_stack.spectrum_view if self.view_stack is not None else None
         if spectrum_view is None or spectrum_view.data_bridge.get_spectrum_data() is None:
             return False
         min_wave, max_wave = spectrum_view.get_wavelength_range()
-        lower_bound, upper_bound = _MG2_ABSORBER_VIEW_BOUNDS
+        lower_bound, upper_bound = bounds
         return min_wave <= lower_bound and max_wave >= upper_bound
 
     def _tutorial_velocity_plot_visible(self) -> bool:
@@ -962,6 +1043,62 @@ class MainWindow(QMainWindow):
                 return False
         return True
 
+    def _tutorial_region_transitions(self, region_id: str) -> frozenset[tuple[str, float]]:
+        """Return stable species/wavelength identities for one project region."""
+        project = self.current_project
+        if project is None:
+            return frozenset()
+        lines = project.find_lines_for_region(region_id)
+        if lines is None:
+            return frozenset()
+        return frozenset((line.species, round(line.rest_wavelength, 1)) for line in lines)
+
+    def _tutorial_region_has_exact_transitions(self, region_id: str) -> bool:
+        """Return whether a region contains only the six tutorial transitions."""
+        project = self.current_project
+        if project is None:
+            return False
+        lines = project.find_lines_for_region(region_id)
+        return (
+            lines is not None
+            and len(lines) == len(_TUTORIAL_REGION_LINES)
+            and self._tutorial_region_transitions(region_id) == _TUTORIAL_REGION_LINES
+        )
+
+    def _tutorial_multi_ion_region_opened(self) -> bool:
+        """Return whether Detail is focused on exactly the merged tutorial region."""
+        if not self._tutorial_region_detail_opened():
+            return False
+        region_id = self._analysis_navigation.state.focused_region_id
+        return region_id is not None and self._tutorial_region_has_exact_transitions(region_id)
+
+    def _tutorial_focused_region_lines(self, species: str) -> tuple[AbsorptionLine, ...]:
+        """Return focused-region absorption lines for one ion species."""
+        project = self.current_project
+        region_id = self._analysis_navigation.state.focused_region_id
+        if project is None or region_id is None:
+            return ()
+        lines = project.find_lines_for_region(region_id)
+        if lines is None:
+            return ()
+        return tuple(line for line in lines if line.species == species)
+
+    def _tutorial_species_has_component(self, species: str) -> bool:
+        """Return whether every focused-region line of an ion has a component."""
+        lines = self._tutorial_focused_region_lines(species)
+        return bool(lines) and all(line.model_ids for line in lines)
+
+    def _tutorial_species_component_count_at_least(self, species: str, count: int) -> bool:
+        """Return whether every focused-region line of an ion has ``count`` models."""
+        lines = self._tutorial_focused_region_lines(species)
+        return bool(lines) and all(len(line.model_ids) >= count for line in lines)
+
+    def _tutorial_each_ion_has_three_components(self) -> bool:
+        """Return whether Fe II and Mg II each have at least three tied components."""
+        return self._tutorial_species_component_count_at_least(
+            "Fe II", 3
+        ) and self._tutorial_species_component_count_at_least("Mg II", 3)
+
     def _tutorial_region_has_component(self) -> bool:
         """Return whether the focused region has at least one modeled line."""
         project = self.current_project
@@ -986,8 +1123,13 @@ class MainWindow(QMainWindow):
         for line in lines:
             for model_id in line.model_ids:
                 component = project.find_absorber_component(model_id)
-                tie_set = component.tie_set if component is not None else None
-                if tie_set is None or tie_set.uid in checked_tie_uids:
+                direct_tie_set = component.tie_set if component is not None else None
+                if direct_tie_set is None:
+                    continue
+                # A cross-ion tie nests each ion's multiplet tie, so the shared
+                # redshift lives on the parent rather than on component.tie_set.
+                tie_set = direct_tie_set.parent_tie or direct_tie_set
+                if tie_set.uid in checked_tie_uids:
                     continue
                 checked_tie_uids.add(tie_set.uid)
                 if tie_set.mask != frozenset({"redshift"}):
@@ -1009,6 +1151,18 @@ class MainWindow(QMainWindow):
             return False
         readiness = DeriveAnalysisReadinessUseCase().execute(project, region_id)
         return readiness is AnalysisReadiness.LATEST
+
+    def _tutorial_mg2_logn_fixed_and_refit_applied(self) -> bool:
+        """Return whether Mg II logN is fixed and the focused region was refitted."""
+        project = self.current_project
+        if project is None or not self._tutorial_region_fit_applied():
+            return False
+        for line in self._tutorial_focused_region_lines("Mg II"):
+            for model_id in line.model_ids:
+                component = project.find_absorber_component(model_id)
+                if component is not None and component.parameters["column_density"].fixed:
+                    return True
+        return False
 
     def _set_tutorial_chapter_context(self, chapter_id: str | None) -> None:
         """Apply chapter-scoped walkthrough state without persisting it."""
@@ -1111,7 +1265,6 @@ class MainWindow(QMainWindow):
         self._initialize_analysis_surface()
         self.range_dock = dock_coordinator.create_range_selector_dock()
         self.range_selector = dock_coordinator.range_selector
-        dock_coordinator.organize_data_changed.connect(self._on_organize_data_changed)
         self._sync_bootstrap_parts()
 
     def _initialize_analysis_surface(self) -> None:
@@ -1140,6 +1293,7 @@ class MainWindow(QMainWindow):
                 bottom_pane=bottom_pane,
                 data_control=data_control,
                 actions=self.action_map,
+                refresh_confirmed_line_overlays=self._refresh_analysis_line_overlays,
             )
         )
         guard = AnalysisTransitionGuardAdapter(
@@ -1181,6 +1335,16 @@ class MainWindow(QMainWindow):
                 self.view_stack.spectrum_view if self.view_stack is not None else None
             ),
         ).focus_region(region)
+        if self.confirmed_line_overlay_region_id is not None:
+            self._refresh_analysis_line_overlays()
+
+    def _refresh_analysis_line_overlays(self) -> None:
+        """Refresh confirmed line overlays through the Analysis lifecycle."""
+        mode_shell = self.mode_shell_coordinator
+        if mode_shell is None:
+            msg = "Analysis line overlay refresh requires a mode shell coordinator."
+            raise RuntimeError(msg)
+        mode_shell.refresh_line_overlays_for_mode(EditingMode.ANALYSIS)
 
     def _reconcile_analysis_focus_with_selector(self, _event: object) -> None:
         """Settle canonical Analysis focus once a project context change completes.
@@ -1363,6 +1527,22 @@ class MainWindow(QMainWindow):
             project: Project to set as current (None to clear)
         """
         self._project_switch_coordinator.switch_project(project)
+        self._set_region_topology_project(project)
+
+    def _set_region_topology_project(self, project: SpectroscopyProject | None) -> None:
+        """Attach the shell topology observer to exactly the active project."""
+        adapter = self._region_topology_event_adapter
+        if adapter is not None:
+            adapter.region_topology_changed.disconnect(self._on_region_topology_changed)
+            adapter.close()
+            self._region_topology_event_adapter = None
+
+        if project is None:
+            return
+
+        adapter = SpectrumModelEventAdapter(project.model, self)
+        adapter.region_topology_changed.connect(self._on_region_topology_changed)
+        self._region_topology_event_adapter = adapter
 
     def _setup_coordinators(self) -> None:
         """Setup component coordinators."""
@@ -1721,12 +1901,8 @@ class MainWindow(QMainWindow):
         if self._data_control_coordinator is not None:
             self._data_control_coordinator.auto_adjust_flux()
 
-    def _on_organize_data_changed(self) -> None:
-        """Handle organize data changes by updating spectrum overlays.
-
-        Called when organize operations (delete, merge, split, move) modify
-        project data. Updates the spectrum overlay to reflect changes.
-        """
+    def _on_region_topology_changed(self, event: RegionTopologyChanged) -> None:
+        """Recover removed Analysis focus and refresh topology-dependent overlays."""
         if not self.mode_shell_coordinator:
             return
         current_mode = self.mode_shell_coordinator.get_current_mode()
@@ -1735,8 +1911,7 @@ class MainWindow(QMainWindow):
         focused_region_id = self._analysis_navigation.state.focused_region_id
         if (
             focused_region_id is not None
-            and self.current_project is not None
-            and not self.current_project.is_region_analysis_capable(focused_region_id)
+            and focused_region_id in event.removed_region_ids
             and self._analysis_surface_coordinator is not None
         ):
             self._analysis_surface_coordinator.handle_focused_region_removed(focused_region_id)

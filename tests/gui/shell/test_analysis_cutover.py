@@ -8,6 +8,7 @@ from typing import cast
 from chappy.core.absorption.models import UNASSIGNED_REGION_ID, AbsorptionLine, AbsorptionRegion
 from chappy.core.editing_mode import EditingMode
 from chappy.core.spectroscopy_project import SpectroscopyProject
+from chappy.gui.modes.analysis.contracts import PanelState
 from chappy.gui.modes.common.analysis_navigation import AnalysisSurface, OpenAnalysisRegionIntent
 from chappy.gui.common.shared_operations import AnalysisOperationSurface
 from chappy.gui.shell.main_window import MainWindow
@@ -161,3 +162,16 @@ def test_tutorial_region_detail_uses_valid_focused_region() -> None:
 
     assert applied is True
     assert window.opened == ["region-1"]
+
+
+def test_tutorial_region_detail_does_not_reopen_an_already_open_region() -> None:
+    project = _project()
+    window = _tutorial_surface_window("region-1", project)
+    window._require_analysis_surface_coordinator().panel_state = PanelState.REGION_DETAIL
+
+    applied = MainWindow._switch_tutorial_analysis_surface(
+        cast("MainWindow", window), AnalysisOperationSurface.REGION_DETAIL
+    )
+
+    assert applied is True
+    assert window.opened == []

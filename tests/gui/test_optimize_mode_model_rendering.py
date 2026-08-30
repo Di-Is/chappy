@@ -103,6 +103,15 @@ class _PlotWidget:
     def toggle_absorption_line_markers(self, show: bool) -> None:
         """Accept marker visibility changes."""
 
+    def add_absorption_marker(self, marker: object) -> None:
+        """Accept one absorption marker."""
+
+    def clear_absorption_line_markers(self) -> None:
+        """Accept absorption marker clearing."""
+
+    def refresh_absorption_marker_labels(self) -> None:
+        """Accept absorption marker label refresh."""
+
 
 class _PlotWidgetWithoutClearPort:
     """Plot widget double missing the required model/residual clear port."""
@@ -126,6 +135,7 @@ class _ModelRenderDTOAssembler:
         *,
         include_component_curves: bool = False,
         emphasized_component_id: str | None = None,
+        allowed_component_ids: frozenset[str] | None = None,
     ) -> SpectrumRenderDTO:
         """Return model data without depending on domain line-window setup."""
         return SpectrumRenderDTO(
@@ -425,13 +435,13 @@ def test_scoped_region_refresh_reslices_residual_without_model_recalculation(qtb
 
 
 def test_entering_analysis_detail_without_region_does_not_refresh_model(
-    plot_host: _RecordingPlotHost,
+    plot_host: _RecordingPlotHost, project: SpectroscopyProject
 ) -> None:
-    """Analysis Detail without a selected region should not refresh model components."""
+    """Detail without a selected region refreshes markers but not model components."""
     plot_host.apply_policy(analysis_spectrum_policy(SpectrumProfile.REGION_DETAIL).plot_policy)
 
     assert plot_host.updated_projects == []
-    assert plot_host.marker_projects == []
+    assert plot_host.marker_projects == [project]
     plot_widget = plot_host.plot_widget
     assert isinstance(plot_widget, _PlotWidget)
 

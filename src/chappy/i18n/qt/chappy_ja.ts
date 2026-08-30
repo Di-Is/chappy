@@ -365,7 +365,7 @@
         <translation>解析概要へ戻りました</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/surface_coordinator.py" line="152"/>
+        <location filename="../../gui/modes/analysis/surface_coordinator.py" line="156"/>
         <source>The open region was deleted; returned to Overview</source>
         <translation>開いていた領域が削除されたため、解析概要へ戻りました</translation>
     </message>
@@ -378,7 +378,7 @@
         <translation>ファイルが見つかりません: {name}</translation>
     </message>
     <message>
-        <location filename="../../__main__.py" line="182"/>
+        <location filename="../../__main__.py" line="177"/>
         <source>Failed to load: {error}</source>
         <translation>読み込みに失敗しました: {error}</translation>
     </message>
@@ -748,37 +748,37 @@ H₀, Ωm, ΩΛ から Ωk=1−Ωm−ΩΛ を導出し、共動距離とルッ�
 <context>
     <name>DockLayoutCoordinator</name>
     <message>
-        <location filename="../../gui/shell/dock_layout_coordinator.py" line="537"/>
+        <location filename="../../gui/shell/dock_layout_coordinator.py" line="529"/>
         <source>Fitting Ranges</source>
         <translation>フィッティング範囲</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/dock_layout_coordinator.py" line="442"/>
+        <location filename="../../gui/shell/dock_layout_coordinator.py" line="434"/>
         <source>Analysis tools</source>
         <translation>解析ツール</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/dock_layout_coordinator.py" line="443"/>
+        <location filename="../../gui/shell/dock_layout_coordinator.py" line="435"/>
         <source>Analysis review and parameters</source>
         <translation>解析レビューとパラメータ</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/dock_layout_coordinator.py" line="588"/>
+        <location filename="../../gui/shell/dock_layout_coordinator.py" line="580"/>
         <source>Parameters</source>
         <translation>パラメータ</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/dock_layout_coordinator.py" line="589"/>
+        <location filename="../../gui/shell/dock_layout_coordinator.py" line="581"/>
         <source>Region list</source>
         <translation>領域一覧</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/dock_layout_coordinator.py" line="735"/>
+        <location filename="../../gui/shell/dock_layout_coordinator.py" line="727"/>
         <source>Focused spectrum to {minimum:.1f}–{maximum:.1f} Å</source>
         <translation>スペクトルを {minimum:.1f}–{maximum:.1f} Å にフォーカスしました</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/dock_layout_coordinator.py" line="825"/>
+        <location filename="../../gui/shell/dock_layout_coordinator.py" line="817"/>
         <source>Press {undo_shortcut} to undo</source>
         <extracomment>Keep {undo_shortcut} unchanged; it is replaced for the running OS.</extracomment>
         <translation>元に戻す場合は {undo_shortcut} を押します</translation>
@@ -1142,39 +1142,39 @@ Using: {filename}</source>
 <context>
     <name>IdentifyConfirmedRegionsSection</name>
     <message>
-        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="117"/>
+        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="118"/>
         <source>Registered regions appear here.</source>
         <translation>登録した領域がここに表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="140"/>
+        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="157"/>
         <source>0 regions · Shown after registration</source>
         <translation>0件 · 登録後に表示</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="141"/>
+        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="158"/>
         <source>{count} region</source>
         <translation>{count}件</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="141"/>
+        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="158"/>
         <source>{count} regions</source>
         <translation>{count}件</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="147"/>
+        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="164"/>
         <source>{regions} · {label} · {species} z={redshift:.4f}</source>
         <extracomment>{regions} is a localized region count; {label} is a region label; {species} and {redshift} identify its first line.</extracomment>
         <translation>{regions} · {label} · {species} z={redshift:.4f}</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="155"/>
+        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="172"/>
         <source>{regions} · {label}</source>
         <extracomment>{regions} is a localized region count; {label} is a region label.</extracomment>
         <translation>{regions} · {label}</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="159"/>
+        <location filename="../../gui/modes/identify/panel/confirmed_section.py" line="176"/>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
@@ -1190,225 +1190,225 @@ Using: {filename}</source>
 <context>
     <name>IdentifyModeCoordinator</name>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="443"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="431"/>
         <source>Error spectrum is required for detection.</source>
         <translation>誤差スペクトルが存在しないため検出できません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="444"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="432"/>
         <source>Insufficient data for detection (minimum 100 samples).</source>
         <translation>十分なデータがありません（最低100点必要）。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="445"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="433"/>
         <source>Continuum model is not available.</source>
         <translation>連続光モデルが設定されていません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="446"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="434"/>
         <source>Detection failed: {reason}</source>
         <translation>検出処理に失敗しました: {reason}</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="447"/>
-        <location filename="../../gui/modes/identify/coordinator.py" line="700"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="435"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="691"/>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="406"/>
-        <location filename="../../gui/modes/identify/coordinator.py" line="707"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="394"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="698"/>
         <source>Please specify a valid wavelength position</source>
         <translation>有効な波長位置を指定してください</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="412"/>
-        <location filename="../../gui/modes/identify/coordinator.py" line="715"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="400"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="706"/>
         <source>Candidate line added for {species} (λ = {start:.2f}–{end:.2f} Å).</source>
         <translation>一時ラインを追加しました: {species}（λ = {start:.2f}–{end:.2f} Å）</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="414"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="402"/>
         <source>Added {count} candidate line(s).</source>
         <translation>一時ラインを {count} 件追加しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="416"/>
-        <location filename="../../gui/modes/identify/coordinator.py" line="719"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="404"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="710"/>
         <source>Added {created} candidate line(s); skipped {skipped} duplicate(s).</source>
         <translation>一時ラインを {created} 件追加し、重複 {skipped} 件をスキップしました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="418"/>
-        <location filename="../../gui/modes/identify/coordinator.py" line="721"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="406"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="712"/>
         <source>Candidate line already exists at this location.</source>
         <translation>この位置には既に一時ラインが存在します。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="407"/>
-        <location filename="../../gui/modes/identify/coordinator.py" line="706"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="395"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="697"/>
         <source>Select a baseline line before opening the velocity plot.</source>
         <translation>速度プロットを開く前に基準線を選択してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="408"/>
-        <location filename="../../gui/modes/identify/coordinator.py" line="708"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="396"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="699"/>
         <source>No lines were selected.</source>
         <translation>線種が選択されませんでした。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="409"/>
-        <location filename="../../gui/modes/identify/coordinator.py" line="709"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="397"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="700"/>
         <source>Baseline wavelength is invalid for velocity conversion.</source>
         <translation>基準波長が速度変換に使用できません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="410"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="398"/>
         <source>Candidate line limit reached (1000 entries).</source>
         <translation>一時ラインの上限（1000件）に達しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="635"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="626"/>
         <source>Preset could not be selected because it no longer exists.</source>
         <translation>プリセットを選択できません。既に削除されています。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="634"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="625"/>
         <source>Baseline line updated for the active preset.</source>
         <translation>基準線を更新しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="672"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="663"/>
         <source>No candidate lines to group.</source>
         <translation>グループ化する一時ラインはありません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="673"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="664"/>
         <source>No selected candidate lines to group.</source>
         <translation>グループ化する選択済み一時ラインはありません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="430"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="418"/>
         <source>Focused spectrum view on candidate window (λ = {start:.2f}–{end:.2f} Å).</source>
         <translation>スペクトルを候補領域（λ = {start:.2f}–{end:.2f} Å）へフォーカスしました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="433"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="421"/>
         <source>Focused spectrum view on region range (λ = {start:.1f}–{end:.1f} Å).</source>
         <translation>スペクトルを領域範囲（λ = {start:.1f}–{end:.1f} Å）へフォーカスしました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="419"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="407"/>
         <source>No candidate lines selected.</source>
         <translation>一時ラインが選択されていません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="421"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="409"/>
         <source>Removed {count} candidate line(s).</source>
         <translation>一時ラインを {count} 件削除しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="420"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="408"/>
         <source>Selected candidate lines were not removed.</source>
         <translation>選択した一時ラインは削除されませんでした。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="400"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="388"/>
         <source>New candidates ±{value:g} km/s  ·  V: Verify in Velocity Plot</source>
         <extracomment>{value} is the future-candidate analysis half-width in km/s.</extracomment>
         <translation>新規候補 ±{value:g} km/s  ・  V: 速度プロットで確認</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="422"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="410"/>
         <source>No candidate lines to clear.</source>
         <translation>一時ラインはありません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="423"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="411"/>
         <source>Candidate lines cleared.</source>
         <translation>一時ラインをすべてクリアしました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="682"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="673"/>
         <source>No candidate lines to register.</source>
         <translation>登録する一時ラインはありません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="694"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="685"/>
         <source>Overlaps multiple existing regions. Check the assignment in Analysis Structure after registering.</source>
         <translation>複数の既存領域と重なっています。登録後に解析構造で割り当てを確認してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="698"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="689"/>
         <source>{count} system(s) could not be registered due to missing atomic data.</source>
         <translation>原子データ不足のため {count} 件のシステムを登録できませんでした。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="683"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="674"/>
         <source>Candidate lines could not be registered.</source>
         <translation>一時ラインを登録できませんでした。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="436"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="424"/>
         <source>Focused spectrum view on line range (λ = {start:.1f}–{end:.1f} Å).</source>
         <translation>スペクトルをライン範囲（λ = {start:.1f}–{end:.1f} Å）へフォーカスしました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="680"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="671"/>
         <source>Cannot register lines without an active project.</source>
         <translation>アクティブなプロジェクトがないため登録できません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="685"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="676"/>
         <source>Registered {count} line(s)</source>
         <extracomment>{count} is the number of registered lines.</extracomment>
         <translation>{count} 本を登録しました</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="687"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="678"/>
         <source> ({details})</source>
         <extracomment>{details} is a pre-built list such as &quot;2 new region(s), added to Region 3&quot;.</extracomment>
         <translation>（{details}）</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="689"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="680"/>
         <source>{count} new region(s)</source>
         <extracomment>{count} is the number of newly created regions.</extracomment>
         <translation>新規領域 {count} 件</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="691"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="682"/>
         <source>added to {region}</source>
         <extracomment>{region} is the display name of an existing region.</extracomment>
         <translation>{region} へ追加</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="692"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="683"/>
         <source>, </source>
         <translation>、</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="710"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="701"/>
         <source>Velocity plot centered at z = {z:.4f} for {label}.</source>
         <translation>速度プロットを z = {z:.4f}（{label}）で表示しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="711"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="702"/>
         <source>Velocity plot closed.</source>
         <translation>速度プロットを閉じました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="712"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="703"/>
         <source>Select at least one line in the velocity plot.</source>
         <translation>速度プロットで追加する線を選択してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="713"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="704"/>
         <source>Unable to create candidate lines from the selected lines.</source>
         <translation>選択した線から一時ラインを作成できませんでした。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/identify/coordinator.py" line="717"/>
+        <location filename="../../gui/modes/identify/coordinator.py" line="708"/>
         <source>Added {count} candidate line(s) from the velocity plot.</source>
         <translation>速度プロットから一時ラインを{count}件追加しました。</translation>
     </message>
@@ -1479,7 +1479,7 @@ Using: {filename}</source>
 <context>
     <name>IdentifySidePanel</name>
     <message>
-        <location filename="../../gui/modes/identify/panel/panel.py" line="391"/>
+        <location filename="../../gui/modes/identify/panel/panel.py" line="395"/>
         <source>Confirmed Regions</source>
         <translation>確定領域</translation>
     </message>
@@ -1646,364 +1646,349 @@ Using: {filename}</source>
 <context>
     <name>LineSelectionDialog</name>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="210"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="202"/>
         <source>Line</source>
         <translation>線種</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="211"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="203"/>
         <source>Wavelength (Å)</source>
         <translation>波長 (Å)</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="212"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="204"/>
         <source>f-value</source>
         <translation>f値</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="213"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="205"/>
         <source>Γ (s⁻¹)</source>
         <translation>Γ (s⁻¹)</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="534"/>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="852"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="526"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="844"/>
         <source>Multiplet</source>
         <translation>マルチプレット</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="204"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="196"/>
         <source>Line Database Search</source>
         <translation>吸収線データベース検索</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="226"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="185"/>
         <source>Filter Criteria</source>
         <translation>検索条件</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="658"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="579"/>
         <source>Add selected lines</source>
         <translation>選択した線種を追加</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="297"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="255"/>
         <source>Keyword</source>
         <translation>キーワード</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="301"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="259"/>
         <source>Search lines by name, multiplet, or comment</source>
         <translation>線種名・multiplet・コメントで検索</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="849"/>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="308"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="841"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="266"/>
         <source>Element</source>
         <translation>元素記号</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="850"/>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="332"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="842"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="290"/>
         <source>Ion stage</source>
         <translation>電離段階</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="341"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="299"/>
         <source>Wavelength Range (Å)</source>
         <translation>波長範囲 (Å)</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="350"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="308"/>
         <source>–</source>
         <translation>～</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="521"/>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="360"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="513"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="318"/>
         <source>No minimum</source>
         <translation>最小なし</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="522"/>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="373"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="514"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="331"/>
         <source>No maximum</source>
         <translation>最大なし</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="413"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="371"/>
         <source>Clear filters</source>
         <translation>条件クリア</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="463"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="421"/>
         <source>Results</source>
         <translation>検索結果</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="474"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="432"/>
         <source>Double-click to add immediately / Space toggles selection</source>
         <translation>ダブルクリックで即追加 / Spaceでチェック</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="532"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="490"/>
         <source>Select a line in the table to view details.</source>
         <translation>表から線種を選ぶと詳細が表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="510"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="468"/>
         <source>Line Details</source>
         <translation>線種詳細</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="393"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="351"/>
         <source>Element filter</source>
         <translation>元素フィルター</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="396"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="354"/>
         <source>Minimum wavelength</source>
         <translation>最小波長</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="399"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="357"/>
         <source>Maximum wavelength</source>
         <translation>最大波長</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="563"/>
-        <source>Choose a destination region.</source>
-        <translation>移動先の領域を選択してください。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="580"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="501"/>
         <source>Lines to Add</source>
         <translation>追加予定リスト</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="599"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="520"/>
         <source>No lines selected yet.</source>
         <translation>まだ線種が選択されていません。</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="623"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="544"/>
         <source>Remove selection</source>
         <translation>選択解除</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="630"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="551"/>
         <source>Clear selection</source>
         <translation>選択クリア</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="550"/>
-        <source>Destination</source>
-        <translation>追加先</translation>
-    </message>
-    <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="570"/>
-        <source>Create new region</source>
-        <translation>新しい領域を作成</translation>
-    </message>
-    <message>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="666"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="587"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="318"/>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="346"/>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="515"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="310"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="338"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="507"/>
         <source>All</source>
         <translation>すべて</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="406"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="398"/>
         <source>Minimum wavelength exceeds the maximum.</source>
         <translation>波長の最小値が最大値を上回っています</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="535"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="527"/>
         <source>Selecting one component will select the entire multiplet.</source>
         <translation>いずれかのコンポーネントを選択するとマルチプレット全体が選択されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="562"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="554"/>
         <source>This line is already selected.</source>
         <translation>この線種は既に選択されています</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="673"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="665"/>
         <source> (including {count} already selected)</source>
         <translation> （うち{count}件は既に選択済み）</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="875"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="867"/>
         <source>Ritz</source>
         <translation>リッツ</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="876"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="868"/>
         <source>Observed</source>
         <translation>観測</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="877"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="869"/>
         <source>Aggregated</source>
         <translation>合成</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="878"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="870"/>
         <source>Custom</source>
         <translation>カスタム</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="851"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="843"/>
         <source>Species</source>
         <translation>種別</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="371"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="363"/>
         <source>Select an element from the suggestions.</source>
         <translation>候補から元素を選択してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="390"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="382"/>
         <source>Enter a wavelength from 0 to 50,000 Å.</source>
         <translation>0～50,000 Åの範囲で波長を入力してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="520"/>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="322"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="512"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="280"/>
         <source>All elements</source>
         <translation>すべての元素</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="670"/>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="679"/>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="454"/>
-        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="586"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="662"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="671"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="412"/>
+        <location filename="../../gui/dialogs/line_selection_dialog_builder.py" line="507"/>
         <source>{count} lines</source>
         <extracomment>{count} is the number of result lines; translators must keep the placeholder.</extracomment>
         <translation>{count} 件</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="853"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="845"/>
         <source>Component</source>
         <translation>コンポーネント</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="854"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="846"/>
         <source>Rest wavelength</source>
         <translation>真空波長</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="855"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="847"/>
         <source>Ritz wavelength</source>
         <translation>リッツ波長</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="856"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="848"/>
         <source>Ritz uncertainty</source>
         <translation>リッツ波長の不確かさ</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="857"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="849"/>
         <source>Observed wavelength</source>
         <translation>観測波長</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="858"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="850"/>
         <source>Observed uncertainty</source>
         <translation>観測波長の不確かさ</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="859"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="851"/>
         <source>Source</source>
         <translation>波長ソース</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="860"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="852"/>
         <source>Oscillator f</source>
         <translation>振動子強度 f</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="861"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="853"/>
         <source>Gamma (s⁻¹)</source>
         <translation>Γ (s⁻¹)</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="862"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="854"/>
         <source>Lower level (eV)</source>
         <translation>下位準位エネルギー (eV)</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="863"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="855"/>
         <source>Upper level (eV)</source>
         <translation>上位準位エネルギー (eV)</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="864"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="856"/>
         <source>Delta E (eV)</source>
         <translation>遷移エネルギー差 (eV)</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="865"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="857"/>
         <source>Lower level</source>
         <translation>下位準位</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="866"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="858"/>
         <source>Upper level</source>
         <translation>上位準位</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="867"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="859"/>
         <source>Accuracy</source>
         <translation>精度コード</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="868"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="860"/>
         <source>Transition ref</source>
         <translation>遷移参照コード</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="869"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="861"/>
         <source>Wavelength ref</source>
         <translation>波長参照コード</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="870"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="862"/>
         <source>Notes</source>
         <translation>コメント</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="871"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="863"/>
         <source>Basic information</source>
         <translation>基本情報</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="872"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="864"/>
         <source>Wavelength &amp; strength</source>
         <translation>波長・強度</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="873"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="865"/>
         <source>Energy levels</source>
         <translation>エネルギー準位</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="874"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="866"/>
         <source>References</source>
         <translation>参照情報</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="929"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="921"/>
         <source>No lines selected</source>
         <translation>線種が選択されていません</translation>
     </message>
     <message>
-        <location filename="../../gui/dialogs/line_selection_dialog.py" line="930"/>
+        <location filename="../../gui/dialogs/line_selection_dialog.py" line="922"/>
         <source>Check the lines to add or select a row.</source>
         <translation>追加する線種をチェックするか、行を選択してください。</translation>
     </message>
@@ -2053,22 +2038,22 @@ Using: {filename}</source>
         <translation>分解能 R={R} を適用しました</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/main_window.py" line="1630"/>
+        <location filename="../../gui/shell/main_window.py" line="1818"/>
         <source>Switched to {name} view</source>
         <translation>{name} ビューに切り替えました</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/main_window.py" line="1655"/>
+        <location filename="../../gui/shell/main_window.py" line="1843"/>
         <source>Fitting model...</source>
         <translation>フィッティング中...</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/main_window.py" line="1673"/>
+        <location filename="../../gui/shell/main_window.py" line="1861"/>
         <source>Fit completed: χ² = {value:.3f}</source>
         <translation>フィット完了: χ² = {value:.3f}</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/main_window.py" line="1680"/>
+        <location filename="../../gui/shell/main_window.py" line="1868"/>
         <source>Fit failed: {error}</source>
         <translation>フィットに失敗しました: {error}</translation>
     </message>
@@ -2619,7 +2604,7 @@ Astrophysical absorption line analysis workstation</source>
     </message>
     <message>
         <location filename="../../gui/shell/mode_shell_coordinator.py" line="90"/>
-        <location filename="../../gui/shell/mode_shell_coordinator.py" line="565"/>
+        <location filename="../../gui/shell/mode_shell_coordinator.py" line="560"/>
         <source>Identify</source>
         <translation>同定</translation>
     </message>
@@ -2640,8 +2625,8 @@ Astrophysical absorption line analysis workstation</source>
     </message>
     <message>
         <location filename="../../gui/shell/mode_shell_coordinator.py" line="84"/>
-        <location filename="../../gui/shell/mode_shell_coordinator.py" line="563"/>
-        <location filename="../../gui/shell/mode_shell_coordinator.py" line="569"/>
+        <location filename="../../gui/shell/mode_shell_coordinator.py" line="558"/>
+        <location filename="../../gui/shell/mode_shell_coordinator.py" line="564"/>
         <source>Analysis</source>
         <translation>解析</translation>
     </message>
@@ -2651,29 +2636,29 @@ Astrophysical absorption line analysis workstation</source>
         <translation>領域をレビューして解析</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/mode_shell_coordinator.py" line="433"/>
+        <location filename="../../gui/shell/mode_shell_coordinator.py" line="428"/>
         <source>Start mode ready</source>
         <translation>開始モードの準備が完了しました</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/mode_shell_coordinator.py" line="436"/>
+        <location filename="../../gui/shell/mode_shell_coordinator.py" line="431"/>
         <source>Switched to {mode} mode</source>
         <translation>{mode} モードに切り替えました</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/mode_shell_coordinator.py" line="507"/>
+        <location filename="../../gui/shell/mode_shell_coordinator.py" line="502"/>
         <source>Start</source>
         <comment>context bar title</comment>
         <translation>スタート</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/mode_shell_coordinator.py" line="561"/>
+        <location filename="../../gui/shell/mode_shell_coordinator.py" line="556"/>
         <source>Start</source>
         <comment>mode name</comment>
         <translation>スタート</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/mode_shell_coordinator.py" line="567"/>
+        <location filename="../../gui/shell/mode_shell_coordinator.py" line="562"/>
         <source>Continuum</source>
         <translation>連続光</translation>
     </message>
@@ -2929,77 +2914,77 @@ Astrophysical absorption line analysis workstation</source>
 <context>
     <name>OrganizeInteractionCoordinator</name>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="210"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="208"/>
         <source>Analysis Structure</source>
         <translation>解析構造</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="154"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="152"/>
         <source>No selection</source>
         <translation>選択なし</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="213"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="211"/>
         <source>Merge selected regions</source>
         <translation>選択した領域を統合</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="216"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="214"/>
         <source>Split line into new region</source>
         <translation>ラインを新規領域へ切り出し</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="219"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="217"/>
         <source>Unlink this line system</source>
         <translation>このラインの連結を解除</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="224"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="222"/>
         <source>Delete selection</source>
         <translation>選択削除</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="227"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="225"/>
         <source>Move spectrum to selection</source>
         <translation>選択項目のスペクトル領域へ移動</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="265"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="263"/>
         <source>Moved {count} lines to {destination}.</source>
         <translation>{destination} に {count} 件のラインを移動しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="287"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="285"/>
         <source>Merged {count} regions into {name}.</source>
         <translation>{name} に {count} 件の領域を統合しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="312"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="310"/>
         <source>Created new region &quot;{name}&quot; from the selection.</source>
         <translation>選択したラインから新しい領域「{name}」を作成しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="347"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="345"/>
         <source>{count} regions</source>
         <translation>領域 {count} 件</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="349"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="347"/>
         <source>{count} lines</source>
         <translation>ライン {count} 件</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="354"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="352"/>
         <source>Deleted {summary}.</source>
         <translation>{summary} を削除しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="382"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="380"/>
         <source>Unlinked {count} lines from the system.</source>
         <translation>連結ラインから {count} 本のラインの連結を解除しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="410"/>
+        <location filename="../../gui/modes/analysis/overview/interaction_coordinator.py" line="404"/>
         <source>new region</source>
         <translation>新規領域</translation>
     </message>
@@ -3069,111 +3054,111 @@ Astrophysical absorption line analysis workstation</source>
 <context>
     <name>OrganizeSidePanel</name>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="244"/>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="359"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="245"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="360"/>
         <source>Back to Overview</source>
         <translation>概要へ戻る</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="246"/>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="360"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="247"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="361"/>
         <source>Return to Analysis Overview (Alt+Left)</source>
         <translation>解析概要へ戻る (Alt+←)</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="256"/>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="358"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="257"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="359"/>
         <source>Edit regions</source>
         <translation>領域の編集</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="304"/>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="361"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="305"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="362"/>
         <source>Load absorber data to manage regions and lines here.</source>
         <translation>同定した領域とラインを管理できます。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="370"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="371"/>
         <source>Merge</source>
         <translation>統合</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="371"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="372"/>
         <source>Merge the selected regions into one region.</source>
         <translation>選択した領域を1つの領域に統合します。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="372"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="373"/>
         <source>Split</source>
         <translation>分割</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="373"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="374"/>
         <source>Split the selected lines into a new region.</source>
         <translation>選択したラインを新しい領域へ分割します。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="374"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="375"/>
         <source>Delete</source>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="375"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="376"/>
         <source>Delete the selected regions and lines.</source>
         <translation>選択した領域とラインを削除します。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="376"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="377"/>
         <source>Unlink system</source>
         <translation>連結を解除</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="378"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="379"/>
         <source>Unlink this line system: keep the lines and remove only their system links.</source>
         <translation>このラインの連結を解除します。ラインは保持し、連結だけを取り除きます。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="384"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="385"/>
         <source>Observed range: {minimum:.2f} – {maximum:.2f} Å</source>
         <translation>観測範囲: {minimum:.2f} – {maximum:.2f} Å</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="386"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="387"/>
         <source>{species} {wavelengths} [z={redshift}, ±{window} km/s]</source>
         <translation>{species} {wavelengths} [z={redshift}, ±{window} km/s]</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="388"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="389"/>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="603"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="607"/>
         <source>(λ: {range_text} Å)</source>
         <translation>(λ: {range_text} Å)</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="609"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="613"/>
         <source>(1 line)</source>
         <translation>(1 ライン)</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="611"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="615"/>
         <source>({count} lines)</source>
         <translation>({count} ライン)</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="624"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="628"/>
         <source>This group needs parameter re-optimization.</source>
         <translation>このグループはパラメータの再最適化が必要です。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="680"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="684"/>
         <source>Drop here to create a new region</source>
         <translation>ここにドロップして新規領域を作成</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/overview/panel.py" line="681"/>
+        <location filename="../../gui/modes/analysis/overview/panel.py" line="685"/>
         <source>Drag lines here to create a new region.</source>
         <translation>ラインをドラッグすると新しい領域になります。</translation>
     </message>
@@ -4137,58 +4122,58 @@ Do you want to save them?</source>
         <translation>領域が未作成のため、マスク範囲を追加できません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="699"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="728"/>
         <source>Enter a finite analysis range in km/s.</source>
         <translation>有限の解析範囲をkm/s単位で入力してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="786"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="815"/>
         <source>Applied ±{applied:g} km/s to {count} linked lines.</source>
         <translation>±{applied:g} km/s を連結ライン {count} 本に適用しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="791"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="820"/>
         <source>Requested ±{requested:g} km/s; applied ±{applied:g} km/s to {count} linked lines to include all model centers.</source>
         <translation>要求値は ±{requested:g} km/s でした。すべてのモデル中心を含めるため、±{applied:g} km/s を連結ライン {count} 本に適用しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="797"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="826"/>
         <source>Analysis range is already ±{retained:g} km/s.</source>
         <translation>解析範囲はすでに ±{retained:g} km/sです。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="802"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="831"/>
         <source>Requested ±{requested:g} km/s; retained ±{retained:g} km/s because model centers require this minimum.</source>
         <translation>要求値は ±{requested:g} km/s でした。モデル中心を含める最小値が必要なため、±{retained:g} km/s を維持しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="807"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="836"/>
         <source>Model centers require more than ±{maximum:g} km/s; the analysis range was not changed.</source>
         <translation>モデル中心を含めるには ±{maximum:g} km/sを超える範囲が必要なため、解析範囲を変更しませんでした。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="812"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="841"/>
         <source>Analysis range must be between ±{minimum:g} and ±{maximum:g} km/s.</source>
         <translation>解析範囲は ±{minimum:g} から ±{maximum:g} km/s の間で入力してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="816"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="845"/>
         <source>Cannot edit the analysis range because model component {component_id} has inconsistent redshift data.</source>
         <translation>モデルコンポーネント {component_id} の赤方偏移データに不整合があるため、解析範囲を編集できません。</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="857"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="886"/>
         <source>Redshift must be between {z_min:.3f} and {z_max:.3f} for this line</source>
         <translation>赤方偏移はこのラインで {z_min:.3f} から {z_max:.3f} の範囲である必要があります</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="860"/>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="862"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="889"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="891"/>
         <source>Enter a valid value for this parameter</source>
         <translation>このパラメータに有効な値を入力してください</translation>
     </message>
     <message>
-        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="1085"/>
+        <location filename="../../gui/modes/analysis/region_detail/panel.py" line="1110"/>
         <source>Add Component Here</source>
         <translation>ここにコンポーネントを追加</translation>
     </message>
@@ -4455,7 +4440,7 @@ Do you want to save them?</source>
     </message>
     <message>
         <location filename="../../gui/common/shared_operations.py" line="150"/>
-        <location filename="../../gui/common/shared_operations.py" line="181"/>
+        <location filename="../../gui/common/shared_operations.py" line="197"/>
         <source>Drag</source>
         <translation>ドラッグ</translation>
     </message>
@@ -4467,6 +4452,7 @@ Do you want to save them?</source>
     <message>
         <location filename="../../gui/common/shared_operations.py" line="157"/>
         <location filename="../../gui/common/shared_operations.py" line="168"/>
+        <location filename="../../gui/common/shared_operations.py" line="181"/>
         <source>Shift+Click</source>
         <translation>Shift+クリック</translation>
     </message>
@@ -4481,112 +4467,117 @@ Do you want to save them?</source>
         <translation>コンポーネントを追加（ライン選択時）</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="182"/>
+        <location filename="../../gui/common/shared_operations.py" line="183"/>
+        <source>Add component at velocity position (no line selection required)</source>
+        <translation>速度位置にコンポーネントを追加（ライン選択不要）</translation>
+    </message>
+    <message>
+        <location filename="../../gui/common/shared_operations.py" line="198"/>
         <source>Adjust component center (z)</source>
         <translation>コンポーネントの中心（z）を調整</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="192"/>
+        <location filename="../../gui/common/shared_operations.py" line="208"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="193"/>
+        <location filename="../../gui/common/shared_operations.py" line="209"/>
         <source>Run fit</source>
         <translation>フィットを実行</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="203"/>
+        <location filename="../../gui/common/shared_operations.py" line="219"/>
         <source>V</source>
         <translation>V</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="204"/>
+        <location filename="../../gui/common/shared_operations.py" line="220"/>
         <source>Toggle velocity plot</source>
         <translation>速度プロットを切り替え</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="214"/>
+        <location filename="../../gui/common/shared_operations.py" line="230"/>
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="215"/>
+        <location filename="../../gui/common/shared_operations.py" line="231"/>
         <source>Toggle component profiles</source>
         <translation>コンポーネントプロファイルを切り替え</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="225"/>
+        <location filename="../../gui/common/shared_operations.py" line="241"/>
         <source>Move absorption lines</source>
         <translation>ラインを移動</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="227"/>
+        <location filename="../../gui/common/shared_operations.py" line="243"/>
         <source>Drag and drop lines onto the target region</source>
         <translation>ラインを移動先の領域へドラッグ＆ドロップ</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="230"/>
+        <location filename="../../gui/common/shared_operations.py" line="246"/>
         <source>The drop target highlights, and multi-select moves together.</source>
         <translation>ドロップ先が強調表示され、複数選択したラインはまとめて移動します。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="243"/>
+        <location filename="../../gui/common/shared_operations.py" line="259"/>
         <source>Split lines into a new region</source>
         <translation>ラインを新しい領域へ分割</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="245"/>
+        <location filename="../../gui/common/shared_operations.py" line="261"/>
         <source>Use Split for the selected lines</source>
         <translation>選択したラインに［分割］を使用</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="248"/>
+        <location filename="../../gui/common/shared_operations.py" line="264"/>
         <source>Creates a dedicated region immediately.</source>
         <translation>専用の領域がすぐに作成されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="259"/>
+        <location filename="../../gui/common/shared_operations.py" line="275"/>
         <source>Merge absorption regions</source>
         <translation>吸収領域を統合</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="261"/>
+        <location filename="../../gui/common/shared_operations.py" line="277"/>
         <source>Select multiple regions, then use Merge</source>
         <translation>複数の領域を選択して［統合］を使用</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="264"/>
+        <location filename="../../gui/common/shared_operations.py" line="280"/>
         <source>Review the resulting region name and contents afterwards.</source>
         <translation>操作後に領域名と内容を確認してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="277"/>
+        <location filename="../../gui/common/shared_operations.py" line="293"/>
         <source>Unlink a line system</source>
         <translation>ラインの連結を解除</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="279"/>
+        <location filename="../../gui/common/shared_operations.py" line="295"/>
         <source>Select the linked line, then use Unlink</source>
         <translation>連結されたラインを選択して［連結解除］を使用</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="282"/>
+        <location filename="../../gui/common/shared_operations.py" line="298"/>
         <source>Only the selected scientific link is removed.</source>
         <translation>選択した科学的な連結だけが解除されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="294"/>
+        <location filename="../../gui/common/shared_operations.py" line="310"/>
         <source>Delete absorption regions or lines</source>
         <translation>吸収領域またはラインを削除</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="297"/>
+        <location filename="../../gui/common/shared_operations.py" line="313"/>
         <source>Select the items, then use Delete</source>
         <translation>項目を選択して［削除］を使用</translation>
     </message>
     <message>
-        <location filename="../../gui/common/shared_operations.py" line="300"/>
+        <location filename="../../gui/common/shared_operations.py" line="316"/>
         <source>Review the impact confirmation before deleting.</source>
         <translation>削除前に影響確認の内容を確認してください。</translation>
     </message>
@@ -4715,839 +4706,881 @@ Project (.h5 or .hdf5)</source>
 <context>
     <name>Tutorial</name>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="116"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="135"/>
         <source>Getting Started</source>
         <translation>はじめに</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="125"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="116"/>
         <source>The bundled sample spectrum of quasar Q0329-385 has been loaded. This tour walks you through the full analysis workflow using it.</source>
         <translation>同梱サンプルのクェーサー Q0329-385 のスペクトルを読み込みました。このツアーでは、このデータで解析ワークフローを最初から最後まで体験します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="133"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="145"/>
         <source>The spectrum is displayed and chappy is in identify mode.</source>
         <translation>スペクトルが表示され、chappy は同定モードになっています。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="138"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="150"/>
         <source>Observation data is a pair of FITS files: the observed flux and its error. A quasar spectrum shows dips where intervening gas absorbs the light.</source>
         <translation>観測データとは、観測フラックスと観測誤差の FITS ファイルの組のことです。クェーサーのスペクトルには、手前にあるガスが光を吸収した波長にくぼみ（吸収線）が現れます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="163"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="175"/>
         <source>After loading your own data, chappy asks for the instrument&apos;s resolving power (R), which sets how much the instrument blurs the spectrum. The sample already has R = 54,000 applied from the survey catalogue.</source>
         <translation>自分のデータを読み込むと、観測装置の波長分解能 R(装置がスペクトルをどの程度なまらせるかを決める値)を入力するダイアログが表示されます。このサンプルにはサーベイのカタログに基づく R = 54,000 が設定済みです。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="175"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="187"/>
         <source>Zoom with the mouse wheel or the Up/Down arrow keys: the view scales around the cursor. Pan left and right with a horizontal scroll or the Left/Right arrow keys.</source>
         <translation>マウスホイールまたは上下キーでズームします。表示はカーソル位置を中心に拡大縮小します。左右へ動かすには横スクロールまたは左右キーを使います。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="362"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="374"/>
         <source>Select the region you want to analyze in the region list, read its Analysis status and Next action columns, then click [Open region]. Double-clicking the row, pressing Enter, or right-clicking it does the same.</source>
         <translation>領域一覧で解析したい領域を選択し、「解析状態」と「次の操作」の列を確認してから、［領域を開く］をクリックします。行のダブルクリック、Enter キー、右クリックメニューでも同じ操作ができます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="465"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="491"/>
         <source>Filter by rest wavelength instead of typing names: enter 2370 and 2810 as the wavelength range and set the element to Fe with ion stage II. Check Fe II 2382.8 and Fe II 2600.2 — each check also selects its multiplet partner. Then switch the element to Mg and check Mg II 2796.4 the same way.</source>
         <translation>名前で検索する代わりに静止波長で絞り込みます。波長範囲に 2370 と 2810 を入力し、元素を Fe、電離段階を II に設定します。Fe II 2382.8 と Fe II 2600.2 にチェックを入れると、同じ多重線の相方も一緒に選択されます。続けて元素を Mg に切り替え、同じ要領で Mg II 2796.4 にチェックを入れます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="657"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="683"/>
         <source>Bring the absorber near 4929 Å into view with any navigation route from the first chapter; typing 4900 and 4970 into the wavelength fields is the quickest, and [Auto Adjust] reframes the flux axis.</source>
         <translation>4929 Å 付近の吸収体を表示範囲に入れます。第 1 章で扱ったどの操作方法でもかまいませんが、波長入力欄に 4900 と 4970 を入力するのが最短です。フラックス軸は［自動調整］で整えられます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="666"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="692"/>
         <source>Two deep absorption troughs are visible near 4929 and 4942 Å — the Mg II 2796/2803 pair.</source>
         <translation>4929 Å と 4942 Å 付近に 2 本の深い吸収が見えています。Mg II 2796/2803 のペアです。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="839"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="884"/>
         <source>The side panel switches to the region editor: regions as parent rows with their absorption lines underneath.</source>
         <translation>サイドパネルが領域エディタに切り替わり、領域を親として、その下に吸収線がツリー表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="934"/>
-        <source>When you are done, click [Back to Overview] to return to the summary.</source>
-        <translation>編集が終わったら、[概要へ戻る]をクリックしてサマリーに戻ってください。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="940"/>
-        <source>The region editor closes and the summary panel returns.</source>
-        <translation>領域エディタが閉じ、サマリーパネルに戻ります。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1224"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1333"/>
         <source>Double-click on the spectrum to add a control point where the continuum needs adjustment, then drag it into place.</source>
         <translation>連続光を調整したい波長でスペクトルをダブルクリックして制御点を追加し、ドラッグして位置を調整します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1242"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1351"/>
         <source>Remove an unneeded point: right-click it on the spectrum and choose [Delete Control Point].</source>
         <translation>不要な制御点は、スペクトル上で右クリックして[制御点を削除]を選ぶと削除できます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1292"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1401"/>
         <source>Identify mode is active; this badge shows the current mode. Select [Next] to choose a preset.</source>
         <translation>同定モードが有効です。このバッジが現在のモードを示します。［次へ］を選んでプリセットを選択します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1299"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1408"/>
         <source>The Identify badge is highlighted.</source>
         <translation>同定バッジが強調表示されています。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1315"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1424"/>
         <source>The reference line and candidate list update for the preset.</source>
         <translation>プリセットに合わせて基準線と候補リストが更新されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1389"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1499"/>
         <source>A new row appears in the Temporary Lines section of the side panel, with a heading showing where it will be registered.</source>
         <translation>サイドパネルの「一時ライン」セクションに新しい行が追加され、見出しに登録先が表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1397"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1507"/>
         <source>A temporary line links a species to an absorption feature but is not saved yet; registering turns it into a line.</source>
         <translation>一時ラインは線種と吸収を結びつけたものでまだ保存されていません。登録するとラインになります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1428"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1538"/>
         <source>Did you identify the C IV system at z ≈ 2.076?</source>
         <translation>z ≈ 2.076 の C IV 吸収系を同定できましたか？</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1456"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1566"/>
         <source>Fitting a Region in Detail</source>
         <translation>領域詳細でのフィット</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1491"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1601"/>
         <source>Select the C IV 1548/1551 row in this tree, then click [Add Component] to add a model to it.</source>
         <translation>このツリーで C IV 1548/1551 の行を選択し、［コンポーネントを追加］をクリックしてモデルを追加します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1564"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1674"/>
         <source>The model traces both dips and the statistics settle near z ≈ 2.0764, logN ≈ 13.7, b ≈ 7 km/s.</source>
         <translation>モデルが 2 本の吸収をなぞり、統計量が z ≈ 2.0764、logN ≈ 13.7、b ≈ 7 km/s 付近に落ち着きます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="350"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="362"/>
         <source>Reviewing Analysis Readiness</source>
         <translation>解析状態のレビュー</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="183"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="195"/>
         <source>The visible range zooms around the cursor position and shifts sideways as you pan.</source>
         <translation>表示範囲がカーソル位置を中心に拡大縮小し、パンで左右に移動します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="149"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="161"/>
         <source>Use this button when you want to analyze your own data; it selects the flux/error FITS pair.</source>
         <translation>自分のデータを解析するときに使うボタンです。フラックス／誤差の FITS ペアを選択します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="156"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="125"/>
+        <source>The bundled sample spectrum of quasar Q0329-385 has been loaded. This short tour walks you through identifying and fitting one absorption system using it.</source>
+        <translation>クエーサー Q0329-385 の同梱サンプルスペクトルを読み込みました。この短いツアーでは、このサンプルを使って 1 つの吸収系を同定し、フィットする流れを説明します。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="168"/>
         <source>When used, it opens a file dialog; after loading, chappy switches to identify mode automatically.</source>
         <translation>使用するとファイル選択ダイアログが開き、読込後は自動的に同定モードへ切り替わります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="197"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="209"/>
         <source>To zoom into an exact region, first click this Zoom button, then drag a rectangle around the spectrum area you want to inspect.</source>
         <translation>範囲を正確に拡大するには、まずこの［ズーム］ボタンをクリックし、続いて調べたいスペクトル領域を矩形でドラッグします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="205"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="217"/>
         <source>The view zooms to the dragged rectangle, and zoom mode turns off automatically.</source>
         <translation>ドラッグした矩形へ表示が拡大され、ズームモードは自動的に解除されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="228"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="240"/>
         <source>The spectrum returns to the wavelength and flux ranges shown before the rectangle zoom.</source>
         <translation>スペクトルが矩形ズーム前の波長範囲とフラックス範囲へ戻ります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="235"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="247"/>
         <source>Undo reverses one recorded action at a time. Spectrum navigation and later scientific edits use the same history.</source>
         <translation>［元に戻す］は記録された操作を1つずつ取り消します。スペクトルの表示操作と、その後の解析上の編集操作には同じ履歴が使用されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="256"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="268"/>
         <source>The spectrum returns to the zoomed wavelength and flux ranges.</source>
         <translation>スペクトルがズーム後の波長範囲とフラックス範囲へ戻ります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="262"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="274"/>
         <source>Undo and Redo move through recent actions one step at a time. [Reset View] instead jumps directly to the current context&apos;s baseline view.</source>
         <translation>［元に戻す］と［やり直す］は最近の操作を1つずつたどります。一方、［表示をリセット］は現在のコンテキストの基準表示へ直接戻ります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="285"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="297"/>
         <source>The spectrum view updates to the entered range.</source>
         <translation>入力した範囲にスペクトル表示が更新されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="305"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="317"/>
         <source>The wavelength range stays unchanged while the flux minimum and maximum update to frame the visible data.</source>
         <translation>波長範囲は変わらず、表示中のデータが収まるようにフラックスの最小値と最大値が更新されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="312"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="324"/>
         <source>Use Auto Adjust whenever a zoom or navigation action leaves an absorption line too small or vertically clipped.</source>
         <translation>ズームや移動の後に吸収線が小さすぎる場合や、縦方向に表示範囲から外れた場合は［自動調整］を使用します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="334"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="346"/>
         <source>The wavelength and flux ranges return to the current context&apos;s baseline; when no baseline is stored, the entire spectrum is fitted into view.</source>
         <translation>波長範囲とフラックス範囲が現在の表示文脈の基準範囲へ戻ります。基準範囲が保存されていない場合は、スペクトル全体が収まる表示になります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="371"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="383"/>
         <source>Region Detail opens with the region&apos;s lines and components.</source>
         <translation>領域詳細が開き、その領域のラインとコンポーネントが表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="393"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="405"/>
         <source>Building a Custom Preset</source>
         <translation>カスタムプリセットの作成</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="399"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="411"/>
+        <source>Click [Identify] to build a custom preset for another absorber.</source>
+        <translation>別の吸収体用のカスタムプリセットを作成するため、［同定］をクリックします。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="417"/>
+        <source>Identify mode opens with its preset controls.</source>
+        <translation>同定モードが開き、プリセット操作が表示されます。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="425"/>
         <source>The sample hides a second absorber at z ≈ 0.7627 where several ions absorb together. Build a custom preset for it: click this preset management button.</source>
         <translation>このサンプルには、複数のイオンが同時に吸収を作る z ≈ 0.7627 の吸収体がもう1つ隠れています。そのためのカスタムプリセットを作りましょう。このプリセット管理ボタンをクリックしてください。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="407"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="433"/>
         <source>The Absorption Preset Management dialog opens and the tour continues inside it.</source>
         <translation>吸収線プリセット管理ダイアログが開き、ツアーはダイアログの中に続きます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="414"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="440"/>
         <source>Fitting lines of several ions together constrains the gas better than any single line. A custom preset collects exactly the lines you expect from one absorber.</source>
         <translation>複数イオンの線をまとめてフィットすると、1本の線だけよりもガスの性質を強く制約できます。カスタムプリセットには、1つの吸収体に期待される線だけを集めます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="431"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="457"/>
         <source>Click [New], type a name such as &quot;Low-z absorber&quot; in the prompt, and confirm with [OK].</source>
         <translation>［新規］をクリックし、入力欄に「低赤方偏移吸収体」などの名前を入力して［OK］で確定します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="438"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="464"/>
         <source>The new empty preset appears selected in the preset list.</source>
         <translation>新しい空のプリセットが作成され、プリセット一覧で選択された状態になります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="447"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="473"/>
         <source>Click [Add Line] to pick transitions from the line database.</source>
         <translation>［線種を追加］をクリックして、線データベースから遷移を選びます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="452"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="478"/>
         <source>The line database search dialog opens.</source>
         <translation>線データベース検索ダイアログが開きます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="476"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="502"/>
         <source>Six lines are listed in the selection summary.</source>
         <translation>選択サマリーに 6 本の線が表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="479"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="505"/>
         <source>The catalog stores rest wavelengths. Divide an observed wavelength by (1 + z) to know where to look: the troughs near 4929 and 4942 Å at z = 0.7627 point to rest 2796 and 2803 Å.</source>
         <translation>カタログに載っているのは静止波長です。観測波長を (1 + z) で割ればどこを探せばよいかわかります。z = 0.7627 の 4929 Å・4942 Å 付近の吸収は、静止波長 2796 Å・2803 Å に対応します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="499"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="517"/>
+        <source>Click [Add selected lines] to add them to the preset. If the dialog closed with lines missing, reopen [Add Line] and check the remaining ones.</source>
+        <translation>［選択した線種を追加］をクリックしてプリセットに追加します。ラインが足りないままダイアログが閉じた場合は、［ラインを追加］を開き直し、残りのラインにチェックを入れます。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="525"/>
         <source>The dialog closes; the preset now lists six lines with database-derived links.</source>
         <translation>ダイアログが閉じ、プリセットにはデータベース由来の連結が付いた 6 本の線が並びます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="521"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="547"/>
         <source>The Link column shows Fe II split across two links: 2374/2382 and 2586/2600 are separate multiplets in the database.</source>
         <translation>連結列を見ると、Fe II は 2 つの連結に分かれています。データベース上、2374/2382 と 2586/2600 は別の多重線だからです。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="529"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="555"/>
         <source>Linked lines are later registered into one shared analysis region. Left as two links, Fe II would split into two regions.</source>
         <translation>連結された線は、後で 1 つの共通の解析領域として登録されます。2 つの連結のままだと、Fe II は 2 つの領域に分かれてしまいます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="544"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="570"/>
         <source>Click [Unlink] and confirm the prompt to remove both Fe II links.</source>
         <translation>［連結解除］をクリックし、確認に答えて Fe II の連結を両方削除します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="550"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="576"/>
         <source>The Link column of the four Fe II rows becomes empty.</source>
         <translation>Fe II の 4 行の連結列が空になります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="555"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="581"/>
         <source>[Link selected lines] refuses rows that already belong to another link, so unlink first when regrouping.</source>
         <translation>［選択行を連結］は、すでに別の連結に属している行を受け付けません。組み替えるときは先に連結を解除します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="569"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="595"/>
         <source>With the four Fe II rows still selected, click [Link selected lines].</source>
         <translation>Fe II の 4 行を選択したまま［選択行を連結］をクリックします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="575"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="601"/>
         <source>All four Fe II rows now share a single link; Mg II keeps its automatic link.</source>
         <translation>Fe II の 4 行が 1 つの連結を共有します。Mg II は自動付与された連結のままです。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="582"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="608"/>
         <source>Keep the Mg II link: without it, each Mg II line would later register as its own region.</source>
         <translation>Mg II の連結は残してください。連結がないと、後の登録で Mg II が 1 本ずつ別の領域になってしまいます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="604"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="630"/>
         <source>The dialog closes and the new preset is ready to use.</source>
         <translation>ダイアログが閉じ、新しいプリセットが使える状態になります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="626"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="652"/>
         <source>Identifying with the Velocity Plot</source>
         <translation>速度プロットで同定する</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="635"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="661"/>
         <source>Select your new preset with this preset selector.</source>
         <translation>このプリセット選択で、作成したプリセットを選びます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="640"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="666"/>
         <source>The candidate list updates and the reference line becomes Mg II 2796 automatically.</source>
         <translation>候補一覧が更新され、基準線は自動的に Mg II 2796 になります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="677"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="703"/>
         <source>Hover the cursor over the deep trough near 4929 Å and press V to open the velocity plot.</source>
         <translation>4929 Å 付近の深い吸収にカーソルを合わせ、V キーを押して速度プロットを開きます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="684"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="710"/>
         <source>The spectrum is replaced by stacked velocity slices, one per preset line, centered on the hovered feature.</source>
         <translation>スペクトルの代わりに、プリセットの線ごとの速度スライスが縦に並び、カーソルを合わせた吸収を中心に表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="692"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="718"/>
         <source>The velocity plot converts each line&apos;s wavelength axis into velocity relative to a common redshift, so lines of the same absorber align vertically.</source>
         <translation>速度プロットは各線の波長軸を、共通の赤方偏移に対する速度に変換します。同じ吸収体の線は縦に揃って見えます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="703"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="729"/>
         <source>Compare the slices: the deep trough and the two weaker dips 70–120 km/s to its right repeat in every ion.</source>
         <translation>スライスを見比べてください。深い吸収と、その右 70〜120 km/s にある 2 本の弱いくぼみが、どのイオンにも現れています。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="710"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="736"/>
         <source>Fe II and Mg II share the same velocity structure — strong evidence they trace the same absorber.</source>
         <translation>Fe II と Mg II が同じ速度構造を持っています。同一の吸収体を見ている強い証拠です。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="717"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="743"/>
         <source>Alignment is what justifies tying redshifts across ions later. It is not guaranteed: ions in different ionization states can live in physically separate gas even at a similar redshift.</source>
-        <translation>この整列が、後でイオン間の赤方偏移をタイで結ぶ根拠になります。ただし整列は自明ではありません。電離状態の異なるイオンは、近い赤方偏移でも物理的に別のガスに存在することがあります。</translation>
+        <translation>この整列が、後でイオン間で赤方偏移を共有させる根拠になります。ただし整列は自明ではありません。電離状態の異なるイオンは、近い赤方偏移でも物理的に別のガスに存在することがあります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="729"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="755"/>
         <source>Tick the checkbox on each of the four Fe II slices; only Mg II is preselected.</source>
         <translation>Fe II の 4 スライスのチェックボックスをオンにします。初期状態では Mg II だけが選択されています。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="736"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="762"/>
         <source>Six slices are checked in total.</source>
         <translation>合計 6 スライスにチェックが入ります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="746"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="772"/>
         <source>Click [Add selected lines to temporary list].</source>
         <translation>［選択した線を一時ラインに追加］をクリックします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="749"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="775"/>
         <source>All six lines appear in the Temporary Lines section of the side panel.</source>
         <translation>サイドパネルの一時ラインに 6 本すべてが追加されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="761"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="787"/>
         <source>Click [Register] to confirm all six lines at once.</source>
         <translation>［登録］をクリックして 6 本を一括で確定します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="766"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="792"/>
         <source>Confirmed Regions gains a four-line Fe II region and a two-line Mg II region.</source>
         <translation>確定領域に、Fe II 4 本の領域と Mg II 2 本の領域が追加されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="773"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="799"/>
         <source>Registration groups lines by preset link, one region per link. Unlinked lines would each get their own region.</source>
         <translation>登録はプリセットの連結ごとに線をまとめ、連結 1 つにつき領域を 1 つ作ります。連結のない線は 1 本ずつ別の領域になります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="797"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="818"/>
+        <source>Click [Analysis] to organize the Fe II and Mg II regions you just registered.</source>
+        <translation>［解析］をクリックし、先ほど登録した Fe II と Mg II の領域を整理します。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="825"/>
+        <source>Analysis mode opens with the new low-redshift regions listed in the overview.</source>
+        <translation>解析モードが開き、概要に新しい低赤方偏移の領域が表示されます。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="842"/>
         <source>Merging Regions</source>
         <translation>領域の統合</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="808"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="853"/>
         <source>Back in Analysis, the overview now also lists the Fe II and Mg II regions. Select one of them.</source>
         <translation>解析モードに戻ると、概要に Fe II と Mg II の領域も並んでいます。どちらかを選択してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="821"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="866"/>
         <source>A region is the bundle of lines fitted together; a tie declares that parameters are shared. The two are orthogonal: merging or splitting regions never touches ties.</source>
-        <translation>領域は「同時にフィットする線の束」、タイは「パラメータを共有する宣言」です。両者は独立しており、領域の統合や分割はタイに影響しません。</translation>
+        <translation>領域は「同時にフィットする線の束」、パラメータ共有は「値を一致させる宣言」です。両者は独立しており、領域の統合や分割は共有関係に影響しません。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="860"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="905"/>
         <source>Both region rows are selected and [Merge] becomes available.</source>
         <translation>2 つの領域行が選択され、［統合］が使えるようになります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="865"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="910"/>
         <source>You will later tie the redshift across both ions. If they stayed in separate regions, fitting one region alone would adjust the shared redshift using only that region&apos;s data.</source>
-        <translation>この後、2 つのイオンの赤方偏移をタイで結びます。領域が別々のままだと、片方の領域だけをフィットしたとき、共有された赤方偏移がその領域のデータだけで決まってしまいます。</translation>
+        <translation>この後、2 つのイオンで赤方偏移を共有させます。領域が別々のままだと、片方の領域だけをフィットしたとき、共有された赤方偏移がその領域のデータだけで決まってしまいます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="879"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="924"/>
         <source>Click [Merge].</source>
         <translation>［統合］をクリックします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="881"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="926"/>
         <source>A single region now holds all six lines.</source>
         <translation>6 本すべての線が 1 つの領域にまとまります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="891"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="937"/>
         <source>Merging is not one-way: select one Mg II line inside the merged region and click [Split].</source>
         <translation>統合は一方通行ではありません。統合後の領域の中の Mg II の線を 1 本選択し、［分割］をクリックしてみましょう。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="898"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="944"/>
         <source>The whole Mg II multiplet moves into a new region — the original two regions are back.</source>
         <translation>Mg II の多重線がまとめて新しい領域に移り、元の 2 領域に戻ります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="912"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="959"/>
         <source>Select the two regions again and click [Merge] to restore the merged region.</source>
         <translation>もう一度 2 つの領域を選択し、［統合］をクリックして統合状態に戻します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="959"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1005"/>
+        <source>Region Detail opens with all four Fe II and both Mg II lines in its parameter tree.</source>
+        <translation>領域詳細が開き、パラメーターツリーに 4 本の Fe II ラインと 2 本の Mg II ラインがすべて表示されます。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1027"/>
         <source>Tying Ions and Fitting Together</source>
-        <translation>イオン間タイと同時フィット</translation>
+        <translation>イオン間のパラメータ共有と同時フィット</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="968"/>
-        <source>Open the merged region with this region selector.</source>
-        <translation>この領域セレクタで、統合した領域を開きます。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="973"/>
-        <source>The parameter tree lists all six lines of the merged region.</source>
-        <translation>パラメータツリーに統合領域の 6 本の線が表示されます。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="984"/>
-        <source>Select the Fe II 2382 line in the tree and click [Add Component].</source>
-        <translation>ツリーで Fe II 2382 のラインを選択し、［コンポーネントを追加］をクリックします。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="990"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1088"/>
         <source>A tied component appears under every Fe II line: multiplet lines of one ion always share all parameters.</source>
-        <translation>Fe II の全 4 本のラインにタイで結ばれたコンポーネントが現れます。同じイオンの多重線は常に全パラメータを共有します。</translation>
+        <translation>Fe II の全 4 本のラインに、パラメータを共有したコンポーネントが現れます。同じイオンの多重線は常に全パラメータを共有します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="998"/>
-        <source>Full sharing (logN included) exists only within one ion species: its lines probe the same column density, while different ions have physically different ones. That is why cross-ion sharing is limited to z (and b).</source>
-        <translation>logN を含む全パラメータ共有は、同一イオン種の中だけで成立します。同じイオンの線は同じ柱密度を見ていますが、イオンが違えば柱密度は物理的に別物だからです。イオン間の共有が z（と b）に限られるのはこのためです。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1014"/>
-        <source>Now select the Mg II 2796 line and click [Add Component] again.</source>
-        <translation>続けて Mg II 2796 のラインを選択し、もう一度［コンポーネントを追加］をクリックします。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1020"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1121"/>
         <source>A tied component pair appears under the Mg II lines as well.</source>
-        <translation>Mg II の 2 本のラインにも、タイで結ばれたコンポーネントの組が現れます。</translation>
+        <translation>Mg II の 2 本のラインにも、パラメータを共有したコンポーネントの組が現れます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1032"/>
-        <source>Add the two weaker velocity components as well: Shift+click the two shallow dips just redward of the main trough — once each on a Fe II line and on a Mg II line.</source>
-        <translation>弱い方の 2 つの速度成分も追加します。主成分のすぐ赤側にある 2 本の浅いくぼみを、Fe II のライン上と Mg II のライン上でそれぞれ Shift+クリックしてください。</translation>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1065"/>
+        <source>All six lines are stacked vertically on a velocity axis, making their repeated trough structure easier to compare.</source>
+        <translation>6 本のラインが速度軸上に縦に積まれ、繰り返し現れる谷の構造を比較しやすくなります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1041"/>
-        <source>Each ion now has three components, mirrored across its multiplet lines.</source>
-        <translation>各イオンが 3 成分になり、多重線の間で共有されます。</translation>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1134"/>
+        <source>On the Fe II 2382.8 and Mg II 2796.4 slices, Shift+click each of the two shallow dips to the right of the deepest trough. Use their alignment across both ions as the guide rather than aiming for exact displayed velocities.</source>
+        <translation>Fe II 2382.8 と Mg II 2796.4 の各スライスで、最も深い谷の右側にある 2 つの浅いくぼみをそれぞれ Shift+クリックします。表示速度の正確な値ではなく、両イオンでの位置の揃い方を目安にしてください。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1059"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1165"/>
         <source>Both components now show a shared-z marker: one redshift parameter drives both ions.</source>
         <translation>両方のコンポーネントに z 共有のマークが付き、1 つの赤方偏移パラメータが両イオンを駆動します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1085"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1191"/>
         <source>Click [Fit] (or press F5) to fit all six lines simultaneously. Run it again if it stops before converging.</source>
         <translation>［フィットを実行］をクリック（または F5）して、6 本の線を同時にフィットします。収束前に止まったら、もう一度実行してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1093"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1199"/>
         <source>The shared redshift settles near z ≈ 0.76273 and the main Fe II component near logN ≈ 13.24 with b ≈ 4.9 km/s.</source>
         <translation>共有された赤方偏移は z ≈ 0.76273 に、Fe II の主成分は logN ≈ 13.24、b ≈ 4.9 km/s 付近に落ち着きます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1101"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1207"/>
         <source>Thanks to the tie, every ion&apos;s data constrains the same redshift at once — the reason the regions were merged before fitting.</source>
-        <translation>タイのおかげで、すべてのイオンのデータが 1 つの赤方偏移を同時に制約します。フィットの前に領域を統合したのはこのためです。</translation>
+        <translation>赤方偏移を共有しているので、すべてのイオンのデータが 1 つの赤方偏移を同時に制約します。フィットの前に領域を統合したのはこのためです。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1117"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1224"/>
         <source>Mg II is saturated, so its logN is unreliable: right-click the main Mg II component, tick [Fix logN], and fit once more.</source>
         <translation>Mg II は飽和しているため logN は信頼できません。Mg II の主成分を右クリックし、［logN を固定］にチェックを入れて、もう一度フィットします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1125"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1232"/>
         <source>The fit converges with Mg II&apos;s logN held fixed; quote such values as lower limits, not measurements.</source>
         <translation>Mg II の logN を固定したままフィットが収束します。こうした値は測定値ではなく下限値として報告してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1132"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1239"/>
         <source>A saturated line absorbs nearly all light at its center, so the profile barely changes as logN grows: the fit can wander to extreme logN with tiny b. Fixing logN for saturated lines is standard practice.</source>
         <translation>飽和した線は中心付近の光をほぼ完全に吸収するため、logN が増えてもプロファイルがほとんど変わりません。その結果、フィットは極端な logN と小さな b に迷い込むことがあります。飽和線の logN を固定するのは標準的な手順です。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1151"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1260"/>
         <source>Click [Continuum] to inspect the continuum controls.</source>
         <translation>［連続光］をクリックして、連続光のコントロールを確認します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1156"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1265"/>
         <source>Continuum mode opens with its control point table.</source>
         <translation>連続光モードが開き、制御点テーブルが表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1170"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1279"/>
         <source>Correcting the Continuum</source>
         <translation>連続光の補正</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1187"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1296"/>
         <source>The context bar turns green and the control point table panel appears.</source>
         <translation>コンテキストバーが緑系の配色に変わり、制御点テーブルパネルが表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1193"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1302"/>
         <source>The continuum is the quasar&apos;s intrinsic light without absorption. Line depths are measured relative to it. This mode is normally unnecessary for already-normalized spectra; use it when fit residuals from Region Detail reveal a continuum error. The sample data is already normalized, so the continuum is nearly flat at 1.</source>
         <translation>連続光はクエーサー本来の光で、吸収を含みません。吸収線の深さはこれを基準に測ります。規格化済みのスペクトルでは通常このモードは不要で、領域詳細のフィット残差が連続光の誤りを示すときに使います。サンプルデータは規格化済みのため、連続光はほぼ 1 で平坦です。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1210"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1319"/>
         <source>Click [Auto Estimate].</source>
         <translation>［自動推定］をクリックします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1212"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1321"/>
         <source>The continuum curve and the control point list update with the estimate.</source>
         <translation>連続光曲線と制御点リストが推定結果で更新されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1231"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1340"/>
         <source>The new point appears immediately in the view and in the control point table.</source>
         <translation>追加した制御点が即座にスペクトルビューと制御点テーブルへ反映されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1249"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1358"/>
         <source>The point disappears and the continuum curve is recalculated.</source>
         <translation>制御点が削除され、連続光曲線が再計算されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1262"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1371"/>
         <source>The sample needs no continuum correction, so undo the edits you just made: press {undo_shortcut} until the control point table returns to the state before [Auto Estimate].</source>
         <extracomment>Keep {undo_shortcut} unchanged; it is replaced for the running OS.</extracomment>
         <translation>サンプルデータに連続光の補正は不要なので、いま加えた編集を取り消します。制御点の表が［自動推定］の前の状態に戻るまで {undo_shortcut} を押してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1270"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1379"/>
         <source>The added and deleted points are restored and the continuum is flat at 1 again, so the fit you ran stays valid.</source>
         <translation>追加・削除した制御点が元に戻り、連続光は再び 1 付近の平坦な曲線になります。実行済みのフィットもそのまま有効です。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1329"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1438"/>
         <source>Select C IV 1548.204 as the reference line with this selector.</source>
         <translation>このセレクタで C IV 1548.204 を基準線として選択します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1363"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1472"/>
         <source>A pair of absorption dips is visible near 4763 and 4771 Å.</source>
         <translation>4763 Å と 4771 Å の付近に、一対の吸収のくぼみが見えます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1381"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1491"/>
         <source>Hold Shift and hover over the left, deeper dip near 4763 Å to preview the candidate positions, then Shift+click to register it as a temporary line.</source>
         <translation>Shift キーを押しながら、4763 Å 付近にある左側の深いくぼみにカーソルを合わせて候補位置をプレビューし、そのまま Shift+クリックで一時ラインとして登録します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1420"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1530"/>
         <source>The temporary line leaves the list, and Confirmed Regions opens to show its region with the measured redshift.</source>
         <translation>一時ラインが一覧から消え、「確定領域」が開いて、その領域と測定された赤方偏移が表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1555"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1665"/>
         <source>Click [Fit] (or press F5). If it stops without converging, run it once more: it continues from the current values. Once it converges, [Export Results] writes the fitted parameters to CSV.</source>
         <translation>［フィットを実行］をクリック（または F5）します。収束せずに止まった場合は、もう一度実行すれば現在の値から続きます。収束したら、［結果の書き出し］でフィット結果のパラメータを CSV に書き出せます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1503"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1613"/>
         <source>A component describes one absorbing gas cloud with parameters: column density (logN), Doppler width (b), redshift (z), and covering factor (Cf). You can also add one at a chosen wavelength by Shift+clicking the spectrum or using [Add Component Here] in its right-click menu.</source>
         <translation>コンポーネントは 1 つの吸収ガス雲を表し、列密度（logN）・ドップラー幅（b）・赤方偏移（z）・カバリングファクター（Cf）のパラメータを持ちます。スペクトル上の任意の波長を Shift+クリックするか、右クリックメニューの［ここにコンポーネントを追加］を使って追加することもできます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1521"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1631"/>
         <source>Give the fit a starting point: drag the component&apos;s dashed center line onto the dip you are modeling, or double-click a z, logN, b, or Cf cell to type a value you already know.</source>
         <translation>フィットの出発点を置きます。成分中心の破線を、モデル化するくぼみの中央へドラッグして合わせるか、z・logN・b・Cf のセルをダブルクリックして既知の値を入力します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1535"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1645"/>
         <source>The line shape is modeled with a Voigt profile computed from these parameters. The fit starts from the values you leave here, so they need not be exact: the dashed center near the middle of the dip is enough. A starting point too far off can settle on a different solution — move the center back onto the dip and fit again.</source>
         <translation>線の形状はこれらのパラメータから計算される Voigt プロファイルでモデル化されます。フィットはここに残した値から探索を始めるため、値は正確でなくてもかまいません。破線がくぼみの中央付近にあれば十分です。出発点が離れすぎていると別の解に落ち着くことがあり、その場合は中心をくぼみに合わせ直してもう一度フィットします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1571"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1681"/>
         <source>Fitting starts from the values you placed and adjusts them to minimize the difference between data and model.</source>
         <translation>フィットは、ここで置いた値を出発点に、データとモデルの差が最小になるようパラメータを自動調整します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="815"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="860"/>
         <source>The summary updates for the selected region and [Edit region] is ready.</source>
         <translation>選択した領域の内容でサマリーが更新され、［領域を編集］を選べるようになります。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="221"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="233"/>
         <source>Click [Undo] to reverse the rectangle zoom. The shortcut is {undo_shortcut}.</source>
         <extracomment>Keep {undo_shortcut} unchanged; it is replaced for the running OS.</extracomment>
         <translation>［元に戻す］をクリックして矩形ズームを取り消します。ショートカットは {undo_shortcut} です。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="249"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="261"/>
         <source>Click [Redo] to apply the rectangle zoom again. The shortcut is {redo_shortcut}.</source>
         <extracomment>Keep {redo_shortcut} unchanged; it is replaced for the running OS.</extracomment>
         <translation>［やり直す］をクリックして矩形ズームを再適用します。ショートカットは {redo_shortcut} です。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="277"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="289"/>
         <source>You can also type an exact wavelength range here: enter the lower value in the left wavelength field and the upper value in the right field, then press Enter.</source>
         <translation>波長範囲は数値でも指定できます。左側の波長入力欄に下限値、右側の入力欄に上限値を入力し、Enter で確定します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="297"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="309"/>
         <source>After changing the wavelength range, click [Auto Adjust] to fit the flux axis to the visible data. The shortcut is {auto_adjust_flux_shortcut}.</source>
         <extracomment>Keep {auto_adjust_flux_shortcut} unchanged; it is replaced for the OS.</extracomment>
         <translation>波長範囲を変更したら、［自動調整］をクリックして、表示中のデータにフラックス軸を合わせます。ショートカットは {auto_adjust_flux_shortcut} です。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="326"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="338"/>
         <source>Click [Reset View] to return from zooming or manual range edits to the baseline view. The shortcut is {reset_view_shortcut}.</source>
         <extracomment>Keep {reset_view_shortcut} unchanged; it is replaced for the running OS.</extracomment>
         <translation>ズームや手動の範囲変更から基準表示へ戻るには、［表示をリセット］をクリックします。ショートカットは {reset_view_shortcut} です。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="376"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="388"/>
         <source>Not analyzed means the region is ready but not fitted yet; stale means a fit exists but its inputs changed afterwards, so it has to be run again. Click a count to filter the list by that status.</source>
         <translation>「未解析」は準備は整っているがまだフィットしていない状態、「結果が古い」はフィット結果はあるものの、その後に入力が変わったため再解析が必要な状態です。件数をクリックすると、その状態で一覧を絞り込めます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="491"/>
-        <source>Click [OK] to add the selected lines to the preset. If the dialog closed with lines missing, reopen [Add Line] and check the remaining ones.</source>
-        <translation>［OK］をクリックして、選択した線をプリセットに追加します。線が足りないままダイアログを閉じた場合は、［線種を追加］を開き直して残りにチェックを入れてください。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="513"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="539"/>
         <source>In the line table, select all four Fe II rows: click the first row, then {primary_modifier}+click the other three.</source>
         <extracomment>Keep {primary_modifier} unchanged; it is replaced for the running OS.</extracomment>
         <translation>線一覧で Fe II の 4 行をすべて選択します。最初の行をクリックし、残り 3 行を {primary_modifier}+クリックします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="593"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="619"/>
         <source>Check that [Reference line] shows Mg II 2796.</source>
         <translation>［基準線］が Mg II 2796 になっていることを確認します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="596"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="622"/>
         <source>[Reference line] shows Mg II 2796.</source>
         <translation>［基準線］が Mg II 2796 になっています。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="602"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="628"/>
         <source>Click [Close].</source>
         <translation>［閉じる］をクリックします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="611"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="637"/>
         <source>Does the preset hold six lines with one Fe II link covering all four Fe II lines?</source>
         <translation>プリセットに 6 本の線があり、Fe II の 4 本が 1 つの連結にまとまっていますか？</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="782"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="808"/>
         <source>Do Confirmed Regions show a 4-line Fe II region and a 2-line Mg II region at z ≈ 0.7627?</source>
         <translation>確定領域に z ≈ 0.7627 の Fe II 4 本の領域と Mg II 2 本の領域が表示されていますか？</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="836"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="881"/>
         <source>Click [Edit region] for the selected region.</source>
         <translation>選択した領域の［領域を編集］をクリックします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="853"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="898"/>
         <source>Select the Fe II region row, then {primary_modifier}+click the Mg II region row.</source>
         <extracomment>Keep {primary_modifier} unchanged; it is replaced for the running OS.</extracomment>
         <translation>Fe II 領域の行を選択し、続けて Mg II 領域の行を {primary_modifier}+クリックします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="920"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="967"/>
         <source>All six lines are in one region again; {undo_shortcut} would also undo any of these edits.</source>
         <extracomment>Keep {undo_shortcut} unchanged; it is replaced for the running OS.</extracomment>
         <translation>再び 6 本が 1 つの領域になります。これらの編集は {undo_shortcut} でも取り消せます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="945"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="979"/>
+        <source>Click [Back to Overview] to leave the region editor.</source>
+        <translation>［概要へ戻る］をクリックし、領域エディターを閉じます。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="984"/>
+        <source>The summary panel returns with the merged region listed.</source>
+        <translation>統合した領域が一覧に表示された状態で、サマリーパネルに戻ります。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="998"/>
+        <source>Select the merged six-line region in the region list, then click [Open region].</source>
+        <translation>領域一覧で 6 本のラインを含む統合領域を選択し、［領域を開く］をクリックします。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1013"/>
         <source>Is there one merged region containing all four Fe II and both Mg II lines?</source>
         <translation>Fe II 4 本と Mg II 2 本をすべて含む統合領域が 1 つになっていますか？</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1051"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1056"/>
+        <source>The combined region is too wide for the wavelength plot to separate the closely spaced troughs you are about to model. Press V (or right-click the spectrum and choose [Show Velocity Plot (V)]).</source>
+        <translation>統合領域は波長プロット上で、これからモデル化する近接した谷を見分けるには広すぎます。V キーを押します（またはスペクトル上で右クリックし、［速度プロットを表示 (V)］を選択します）。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1081"/>
+        <source>Shift+click the deepest trough on the Fe II 2382.8 slice to place the ion&apos;s main component.</source>
+        <translation>Fe II 2382.8 のスライスで最も深い谷を Shift+クリックし、このイオンの主成分を置きます。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1096"/>
+        <source>Full sharing (logN included) exists only within one ion species: its lines probe the same column density, while different ions have physically different ones. That is why cross-ion sharing is limited to z (and b). Shift+click also starts the component at the clicked velocity, whereas [Add Component] starts it at the redshift frozen during identification.</source>
+        <translation>logN を含む全パラメータ共有は、同一イオン種の中だけで成立します。同じイオンの線は同じ柱密度を見ていますが、イオンが違えば柱密度は物理的に別物だからです。イオン間の共有が z（と b）に限られるのはこのためです。また Shift+クリックはクリックした速度からコンポーネントを始めますが、［コンポーネントを追加］は同定時に固定された赤方偏移から始めます。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1116"/>
+        <source>Now Shift+click the deepest trough on the Mg II 2796.4 slice.</source>
+        <translation>続けて Mg II 2796.4 のスライスで最も深い谷を Shift+クリックします。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1144"/>
+        <source>Each ion now has three components, mirrored across all of its multiplet lines.</source>
+        <translation>各イオンが 3 成分になり、その全ての多重線に複製されます。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1157"/>
         <source>Tie the ions together: {primary_modifier}+click the main Fe II component and the main Mg II component, right-click, and choose [Share z].</source>
         <extracomment>Keep {primary_modifier} unchanged; it is replaced for the running OS.</extracomment>
-        <translation>イオン間をタイで結びます。Fe II の主成分と Mg II の主成分を {primary_modifier}+クリックで選択し、右クリックして［z を共有］を選びます。</translation>
+        <translation>イオン間で赤方偏移を共有させます。Fe II の主成分と Mg II の主成分を {primary_modifier}+クリックで選択し、右クリックして［z を共有］を選びます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1066"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1172"/>
         <source>The tie shares only z; logN and b stay independent per ion. [Share all parameters] is disabled across different species by design. Dragging any tied component&apos;s center line on the spectrum moves every member together.</source>
-        <translation>タイで共有されるのは z だけで、logN と b はイオンごとに独立のままです。［全パラメータを共有］は異なるイオン種間では設計上無効です。タイ済み成分はどれか1つの中心線をスペクトル上でドラッグすると、メンバー全員が一緒に動きます。</translation>
+        <translation>共有されるのは z だけで、logN と b はイオンごとに独立のままです。［全パラメータを共有］は異なるイオン種間では設計上無効です。共有した成分は、どれか 1 つの中心線をスペクトル上でドラッグすると、メンバー全員が一緒に動きます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1141"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1248"/>
         <source>Did the joint fit converge near z ≈ 0.76273 with Fe II logN ≈ 13.24 and b ≈ 4.9 km/s?</source>
         <translation>同時フィットは z ≈ 0.76273、Fe II logN ≈ 13.24、b ≈ 4.9 km/s 付近に収束しましたか？</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1180"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1289"/>
         <source>Continuum mode is active. You can return with {continuum_mode_shortcut} or this button.</source>
         <extracomment>Keep {continuum_mode_shortcut} unchanged; it is replaced for the OS.</extracomment>
         <translation>連続光モードが有効です。{continuum_mode_shortcut} またはこのボタンで戻れます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1284"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1393"/>
         <source>Identifying Absorption Systems</source>
         <translation>吸収系の同定</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1309"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1418"/>
         <source>Choose the built-in preset &quot;Metal Lines&quot; with this preset selector.</source>
         <translation>このプリセットセレクタで組み込みプリセット「金属線」を選択します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1320"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1429"/>
         <source>A preset is a reusable set of spectral line species.</source>
         <translation>プリセットは、よく使うスペクトル線種の組です。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1335"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1444"/>
         <source>The reference line changes to C IV 1548.204.</source>
         <translation>基準線が C IV 1548.204 に更新されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1338"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1447"/>
         <source>Some species split into several wavelengths (multiplets), shown grouped under a representative line.</source>
         <translation>一部の線種は複数の波長に分かれるマルチプレットで、代表ラインにまとめて表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1355"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1464"/>
         <source>Bring the 4755-4780 Å range into view with any zoom you like, or by typing the two values into the wavelength fields, then click [Auto Adjust].</source>
         <translation>4755〜4780 Å の範囲を表示します。ズーム方法は自由で、波長入力欄に両端の値を入力してもかまいません。そのあと［自動調整］をクリックしてください。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1368"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1477"/>
         <source>An absorption line is a narrow dip where intervening gas absorbs the background light at a specific wavelength.</source>
         <translation>吸収線は、手前のガスが特定の波長で背景光を吸収してできる細いくぼみです。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1413"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1523"/>
         <source>Click [Register] to save the line immediately; Undo ({undo_shortcut}) reverts it if needed.</source>
         <extracomment>Keep {undo_shortcut} unchanged; it is replaced for the running OS.</extracomment>
         <translation>［登録］をクリックするとラインが即座に保存されます。必要なら元に戻す（{undo_shortcut}）で取り消せます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1434"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1544"/>
         <source>Click [Analysis] to review the absorption regions you identified.</source>
         <translation>［解析］をクリックして、同定した吸収領域を確認します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1440"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1550"/>
         <source>Analysis mode opens with an overview of the identified regions.</source>
         <translation>解析モードが開き、同定した領域の概要が表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1468"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1039"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1578"/>
         <source>The region you just opened is shown here; this selector switches to another region without going back.</source>
         <translation>いま開いた領域がここに表示されます。概要に戻らずに別の領域へ切り替えるときは、このセレクタを使います。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1475"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1046"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1585"/>
         <source>The spectrum view moves to the region and the panel lists its lines and components.</source>
         <translation>スペクトル表示が領域へ移動し、パネルにライン・コンポーネントが一覧表示されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1498"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1608"/>
         <source>A component row appears under the selected line.</source>
         <translation>選択中のラインの配下にコンポーネントの行が追加されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1530"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1640"/>
         <source>The model profile follows your edits in real time.</source>
         <translation>モデルの形状が編集に合わせてリアルタイムに変化します。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1579"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1690"/>
         <source>Did the fit converge near z ≈ 2.0764 with logN ≈ 13.7 and b ≈ 7 km/s?</source>
         <translation>フィットは z ≈ 2.0764、logN ≈ 13.7、b ≈ 7 km/s 付近に収束しましたか？</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1592"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1713"/>
+        <source>That&apos;s the core workflow: load, identify, review in Analysis, fit Region Detail, then save. The same steps apply to your own data.</source>
+        <translation>以上が基本的なワークフローです。読み込み、同定、解析モードでの確認、領域詳細でのフィット、保存の順に進みます。自分のデータでも同じ手順を使えます。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1722"/>
         <source>Saving Your Work</source>
         <translation>プロジェクトの保存</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1599"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1729"/>
         <source>Save your project: press {save_project_shortcut} or click this button.</source>
         <extracomment>Keep {save_project_shortcut} unchanged; it is replaced for the OS.</extracomment>
         <translation>プロジェクトの保存: {save_project_shortcut} を押すか、このボタンをクリックします。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1605"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1735"/>
         <source>A save dialog asks for a location; the project is written as an .h5 file.</source>
         <translation>保存ダイアログで保存先を指定すると、プロジェクトが .h5 ファイルとして書き出されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1611"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1741"/>
         <source>A project file (.h5) stores your spectrum, regions, lines, components, and settings in one place.</source>
         <translation>プロジェクトファイル（.h5）には、スペクトル・領域・ライン・コンポーネント・設定がまとめて保存されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1621"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1703"/>
         <source>That&apos;s the whole workflow: load, identify, review in Analysis, fit Region Detail, edit regions as needed, and correct the continuum when fit residuals call for it, then save. The same steps apply to your own data.</source>
         <translation>これでワークフローは一通り完了です。読み込み、同定、解析での確認、領域の詳細でのフィット、必要に応じた領域の編集、フィット残差が示す場合の連続光補正、そして保存。ご自身のデータでも同じ手順で進められます。</translation>
     </message>
     <message>
-        <location filename="../../gui/shell/tutorial_chapters.py" line="1630"/>
+        <location filename="../../gui/shell/tutorial_chapters.py" line="1752"/>
         <source>You can restart this tour anytime from Help &gt; Tutorial.</source>
         <translation>このツアーはヘルプ &gt; チュートリアルからいつでも再開できます。</translation>
     </message>
@@ -5577,100 +5610,105 @@ Project (.h5 or .hdf5)</source>
         <translation>これは何？</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="73"/>
+        <location filename="../../gui/common/tutorial/model.py" line="79"/>
         <source>The fit converged.</source>
         <translation>フィットが収束しました。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="75"/>
+        <location filename="../../gui/common/tutorial/model.py" line="81"/>
         <source>The fit converged, but the parameter uncertainties are large.</source>
         <translation>フィットは収束しましたが、パラメータの不確かさが大きい状態です。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="80"/>
+        <location filename="../../gui/common/tutorial/model.py" line="86"/>
         <source>The fit stopped at the iteration limit with a usable result. Selecting [Fit] again resumes from here.</source>
         <translation>反復回数の上限で停止しましたが、利用可能な結果が得られています。［フィット］を再度実行すると続きから最適化されます。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="87"/>
+        <location filename="../../gui/common/tutorial/model.py" line="93"/>
         <source>A parameter settled on its bound. The next step addresses this.</source>
         <translation>パラメータが境界値に張り付いています。次のステップがこれへの対処です。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="92"/>
+        <location filename="../../gui/common/tutorial/model.py" line="98"/>
         <source>The parameters are degenerate, so the result was not applied.</source>
         <translation>パラメータが縮退しているため、結果は適用されませんでした。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="97"/>
+        <location filename="../../gui/common/tutorial/model.py" line="103"/>
         <source>The fit failed numerically, so the result was not applied.</source>
         <translation>数値的にフィットが破綻したため、結果は適用されませんでした。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="100"/>
+        <location filename="../../gui/common/tutorial/model.py" line="106"/>
         <source>The fit stopped at the iteration limit without improving, so the result was not applied.</source>
         <translation>改善しないまま反復回数の上限に達したため、結果は適用されませんでした。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="107"/>
+        <location filename="../../gui/common/tutorial/model.py" line="113"/>
         <source>There is no free parameter to fit.</source>
         <translation>フィット対象となる自由パラメータがありません。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="114"/>
-        <source>No custom preset exists yet. Create one with [New] so it becomes the selected preset.</source>
-        <translation>カスタムプリセットがまだありません。［新規］で作成すると、そのプリセットが選択状態になります。</translation>
+        <location filename="../../gui/common/tutorial/model.py" line="120"/>
+        <source>No new preset from this tour is selected yet. Create one with [New] so it becomes the selected preset.</source>
+        <translation>このツアーで作成した新しいプリセットがまだ選択されていません。［新規］で作成すると、そのプリセットが選択状態になります。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="122"/>
+        <location filename="../../gui/common/tutorial/model.py" line="206"/>
+        <source>This chapter works on the custom preset created during this tour, but it is not selected or no longer exists.</source>
+        <translation>この章では、このツアー中に作成したカスタムプリセットを使用しますが、そのプリセットが選択されていないか、すでに存在しません。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/common/tutorial/model.py" line="220"/>
+        <source>This chapter works on the merged region containing the six tutorial lines, but that region is not available.</source>
+        <translation>この章では、チュートリアルの 6 本のラインを含む統合領域を使用しますが、その領域を利用できません。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/common/tutorial/model.py" line="128"/>
         <source>This step needs exactly 4 Fe II lines and 2 Mg II lines in the preset (it currently holds Fe II {fe2_count}, Mg II {mg2_count}). Reopen [Add Line] to add the missing ones, or remove the extra rows.</source>
         <extracomment>Keep {fe2_count} and {mg2_count} unchanged; they are replaced with live counts.</extracomment>
         <translation>このステップにはプリセットに Fe II 4本と Mg II 2本がちょうど必要です（現在 Fe II {fe2_count}本、Mg II {mg2_count}本）。［線種を追加］を開き直して不足分を追加するか、余分な行を削除してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="130"/>
+        <location filename="../../gui/common/tutorial/model.py" line="136"/>
         <source>At least one Fe II line still belongs to a link. Select the four Fe II rows and click [Unlink].</source>
         <translation>Fe II の線がまだ連結に含まれています。Fe II の4行を選択して［連結解除］をクリックしてください。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="137"/>
+        <location filename="../../gui/common/tutorial/model.py" line="143"/>
         <source>The four Fe II lines must share one link, and the two Mg II lines another. Select the four Fe II rows and click [Link selected lines]; if the Mg II link is gone, select the two Mg II rows and link them the same way.</source>
         <translation>Fe II 4本を1つの連結に、Mg II 2本をもう1つの連結にまとめる必要があります。Fe II の4行を選択して［選択行を連結］をクリックしてください。Mg II の連結が失われている場合は、Mg II の2行を選択して同じ手順で連結します。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="146"/>
+        <location filename="../../gui/common/tutorial/model.py" line="152"/>
         <source>[Reference line] must be Mg II 2796; choose it in the selector.</source>
         <translation>［基準線］を Mg II 2796 にする必要があります。セレクタで選択してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="151"/>
+        <location filename="../../gui/common/tutorial/model.py" line="157"/>
         <source>Confirmed Regions does not yet hold both a 4-line Fe II region and a 2-line Mg II region. Registration makes one region per preset link, so check that all four Fe II lines were added to the temporary list and that they share one link in the preset.</source>
         <translation>確定領域に、Fe II 4 本の領域と Mg II 2 本の領域がまだ揃っていません。登録はプリセットの連結ごとに 1 つの領域を作るので、Fe II 4 本すべてが一時ラインに追加されているか、プリセットで 1 つの連結にまとまっているかを確認してください。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="160"/>
-        <source>The troughs near 4929 and 4942 Å are not fully in view yet. Any navigation route brings them on screen; typing 4900 and 4970 into the wavelength fields is the quickest.</source>
-        <translation>4929 Å と 4942 Å 付近の吸収が、まだ表示範囲に収まっていません。どの操作方法でも表示できますが、波長入力欄に 4900 と 4970 を入力するのが最短です。</translation>
+        <location filename="../../gui/common/tutorial/model.py" line="166"/>
+        <source>The troughs near 4929 and 4942 Å are not both in view yet. Any navigation route brings them on screen; typing 4900 and 4970 into the wavelength fields is the quickest.</source>
+        <translation>4929 Å と 4942 Å 付近の吸収のくぼみが、まだ両方とも表示範囲に入っていません。どの表示操作でも画面に入れられますが、波長入力欄に 4900 と 4970 を入力するのが最短です。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="185"/>
+        <location filename="../../gui/common/tutorial/model.py" line="174"/>
+        <source>The troughs near 4763 and 4771 Å are not both in view yet. Any navigation route brings them on screen; typing 4755 and 4780 into the wavelength fields is the quickest.</source>
+        <translation>4763 Å と 4771 Å 付近の吸収のくぼみが、まだ両方とも表示範囲に入っていません。どの表示操作でも画面に入れられますが、波長入力欄に 4755 と 4780 を入力するのが最短です。</translation>
+    </message>
+    <message>
+        <location filename="../../gui/common/tutorial/model.py" line="199"/>
         <source>This chapter works on a registered absorption region, but none has been registered yet.</source>
         <translation>この章は登録済みの吸収領域を対象にしますが、まだ1つも登録されていません。</translation>
     </message>
     <message>
-        <location filename="../../gui/common/tutorial/model.py" line="192"/>
-        <source>This chapter works on a custom preset, but none has been created yet.</source>
-        <translation>この章はカスタムプリセットを対象にしますが、まだ作成されていません。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/common/tutorial/model.py" line="197"/>
+        <location filename="../../gui/common/tutorial/model.py" line="213"/>
         <source>This chapter works on the Fe II and Mg II regions, but fewer than two absorption regions are registered.</source>
         <translation>この章は Fe II と Mg II の領域を対象にしますが、登録済みの吸収領域が2つ未満です。</translation>
-    </message>
-    <message>
-        <location filename="../../gui/common/tutorial/model.py" line="204"/>
-        <source>This chapter works on a region combining two or more ion species, but no region combines them yet.</source>
-        <translation>この章は2種以上のイオン種を含む領域を対象にしますが、そのような領域がまだありません。</translation>
     </message>
 </context>
 <context>
@@ -5732,17 +5770,17 @@ Project (.h5 or .hdf5)</source>
 <context>
     <name>VelocitySubplot</name>
     <message>
-        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="363"/>
+        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="365"/>
         <source>No velocity data</source>
         <translation>速度データがありません</translation>
     </message>
     <message>
-        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="366"/>
+        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="368"/>
         <source>Region (auto)</source>
         <translation>領域 (自動)</translation>
     </message>
     <message>
-        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="367"/>
+        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="369"/>
         <source>{label} (baseline)</source>
         <translation>{label} (基準)</translation>
     </message>
@@ -5757,13 +5795,13 @@ Project (.h5 or .hdf5)</source>
         <translation>フラックス</translation>
     </message>
     <message>
-        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="371"/>
+        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="373"/>
         <source>Analysis range extends beyond view (±{value:g} km/s)</source>
         <extracomment>{value} is the analysis half-width that extends beyond the current view.</extracomment>
         <translation>解析範囲が表示外まで続いています（±{value:g} km/s）</translation>
     </message>
     <message>
-        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="375"/>
+        <location filename="../../gui/spectrum/velocity/subplot_widget.py" line="377"/>
         <source>Dashed lines mark analysis boundaries at ±{value:g} km/s.</source>
         <extracomment>{value} is the symmetric analysis-boundary half-width in km/s.</extracomment>
         <translation>破線は ±{value:g} km/s にある解析境界を示します。</translation>

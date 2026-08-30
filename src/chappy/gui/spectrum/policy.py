@@ -3,8 +3,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import StrEnum
 
 from chappy.presentation.spectrum import SpectrumPlotDisplayCommand
+
+
+class AbsorptionMarkerScope(StrEnum):
+    """Component scope used for absorption markers and profile curves."""
+
+    ALL_REGIONS = "ALL_REGIONS"
+    SELECTED_REGION = "SELECTED_REGION"
 
 
 @dataclass(frozen=True, slots=True)
@@ -26,6 +34,7 @@ class SpectrumPlotPolicy:
     show_model_and_residual: bool
     show_mask_regions: bool
     show_absorption_line_markers: bool
+    absorption_marker_scope: AbsorptionMarkerScope
 
 
 @dataclass(frozen=True, slots=True)
@@ -79,6 +88,7 @@ def neutral_spectrum_policy() -> SpectrumPolicy:
             show_model_and_residual=False,
             show_mask_regions=False,
             show_absorption_line_markers=False,
+            absorption_marker_scope=AbsorptionMarkerScope.ALL_REGIONS,
         ),
         cursor_enabled=False,
         fit_model_enabled=False,
@@ -94,6 +104,7 @@ def neutral_spectrum_policy() -> SpectrumPolicy:
 
 
 __all__ = [
+    "AbsorptionMarkerScope",
     "SpectrumInputCapabilities",
     "SpectrumPlotPolicy",
     "SpectrumPolicy",

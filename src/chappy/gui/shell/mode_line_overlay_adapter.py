@@ -46,6 +46,11 @@ class LineOverlayWindow(Protocol):
         ...
 
     @property
+    def confirmed_line_overlay_region_id(self) -> str | None:
+        """Return the region limiting confirmed overlays, or None for all lines."""
+        ...
+
+    @property
     def identify_coordinator(self) -> IdentifyLineOverlaySource | None:
         """Return the identify coordinator when available."""
         ...
@@ -86,7 +91,9 @@ class ModeLineOverlayAdapter:
 
     def _confirmed_regions(self) -> list[RegionPayload]:
         """Return confirmed line regions for the active project."""
-        return compute_confirmed_line_regions(self._window.current_project)
+        return compute_confirmed_line_regions(
+            self._window.current_project, region_id=self._window.confirmed_line_overlay_region_id
+        )
 
     def _set_regions(self, regions: list[RegionPayload]) -> None:
         """Apply regions to the spectrum view when available."""

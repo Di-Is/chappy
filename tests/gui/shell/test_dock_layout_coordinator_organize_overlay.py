@@ -5,7 +5,7 @@ from __future__ import annotations
 import shutil
 import xml.etree.ElementTree as ET
 from contextlib import contextmanager
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Protocol, cast
 from unittest.mock import patch
@@ -21,7 +21,7 @@ from chappy.gui.modes.analysis.overview.panel import OrganizeSidePanel
 from scripts.i18n_lupdate import run_lupdate
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator, Sequence
+    from collections.abc import Iterator, Sequence
 
     from chappy.application.history import (
         AbsorptionLineSnapshot,
@@ -42,14 +42,6 @@ def _unused_region_detail_factory(**_: object) -> "RegionDetailUi":
     """Fail if invoked; these tests never build the mode panel."""
     msg = "Region Detail factory should not be invoked in this test."
     raise AssertionError(msg)
-
-
-class _VoidSignal(Protocol):
-    """Protocol for a Qt signal that emits no arguments."""
-
-    def connect(self, slot: "Callable[[], None]") -> object:
-        """Connect a slot to the signal."""
-        ...
 
 
 class _StatusSignal:
@@ -217,29 +209,6 @@ ORGANIZE_OPERATION_CONTROLLER_QT_SOURCES = {
     "Select regions or lines to delete.",
     "Failed to delete the selected items.",
 }
-
-
-@dataclass(frozen=True)
-class _SignalRecord:
-    """Signal emission history."""
-
-    emissions: list[None] = field(default_factory=list)
-
-    @property
-    def count(self) -> int:
-        """Return the number of signal emissions observed."""
-        return len(self.emissions)
-
-
-def _record_signal_emissions(signal: _VoidSignal) -> _SignalRecord:
-    """Connect a slot and record each signal emission into a list."""
-    record = _SignalRecord()
-
-    def _on_emitted() -> None:
-        record.emissions.append(None)
-
-    signal.connect(_on_emitted)
-    return record
 
 
 def _line(line_id: str, region_id: str, *, center_z: float = 1.0) -> AbsorptionLine:
@@ -449,8 +418,8 @@ def test_lupdate_extracts_organize_interaction_coordinator_sources(tmp_path: Pat
     assert not any("GUI__" in source for source in sources)
 
 
-class TestOrganizeDataChangedSignal:
-    """Tests for project updates and organize_data_changed signal emission."""
+class TestOrganizeInteractionPublication:
+    """Tests that interaction state resets while topology observers own refresh."""
 
     def test_delete_removes_region_and_refreshes_organize_overlay(
         self, organize_harness: _OrganizeHarness
@@ -458,19 +427,14 @@ class TestOrganizeDataChangedSignal:
         """Delete removes selected region data and emits an overlay update."""
         project = organize_harness.main_window.current_project
         _add_region(project, "region_1", ["line_1"])
-        signal_record = _record_signal_emissions(
-            organize_harness.coordinator.organize_data_changed
-        )
-
         _select_for_organize(organize_harness.coordinator, ["region_1"], [])
         result = organize_harness.coordinator._execute_organize_delete()
 
         assert result is True
         assert "region_1" not in project.absorption_regions
         assert "line_1" not in project.absorption_lines
-        assert signal_record.count == 1
         assert organize_harness.panel.clear_count == 1
-        assert organize_harness.panel.refresh_count == 1
+        assert organize_harness.panel.refresh_count == 0
 
     def test_delete_without_selection_preserves_project_and_does_not_emit(
         self, organize_harness: _OrganizeHarness
@@ -478,17 +442,12 @@ class TestOrganizeDataChangedSignal:
         """Empty delete requests fail without overlay updates."""
         project = organize_harness.main_window.current_project
         _add_region(project, "region_1", ["line_1"])
-        signal_record = _record_signal_emissions(
-            organize_harness.coordinator.organize_data_changed
-        )
-
         _select_for_organize(organize_harness.coordinator, [], [])
         result = organize_harness.coordinator._execute_organize_delete()
 
         assert result is False
         assert list(project.absorption_regions) == ["region_1"]
         assert list(project.absorption_lines) == ["line_1"]
-        assert signal_record.count == 0
         assert organize_harness.panel.clear_count == 0
         assert organize_harness.panel.refresh_count == 0
 
@@ -499,10 +458,6 @@ class TestOrganizeDataChangedSignal:
         project = organize_harness.main_window.current_project
         _add_region(project, "region_1", ["line_1"])
         _add_region(project, "region_2", ["line_2"])
-        signal_record = _record_signal_emissions(
-            organize_harness.coordinator.organize_data_changed
-        )
-
         _select_for_organize(organize_harness.coordinator, ["region_1", "region_2"], [])
         result = organize_harness.coordinator._execute_organize_merge()
 
@@ -510,9 +465,8 @@ class TestOrganizeDataChangedSignal:
         assert list(project.absorption_regions) == ["region_1"]
         assert project.absorption_regions["region_1"].line_ids == ["line_1", "line_2"]
         assert project.absorption_lines["line_2"].region_id == "region_1"
-        assert signal_record.count == 1
         assert organize_harness.panel.clear_count == 1
-        assert organize_harness.panel.refresh_count == 1
+        assert organize_harness.panel.refresh_count == 0
 
     def test_merge_with_single_group_preserves_project_and_does_not_emit(
         self, organize_harness: _OrganizeHarness
@@ -520,17 +474,12 @@ class TestOrganizeDataChangedSignal:
         """Single-group merge requests fail before project mutation."""
         project = organize_harness.main_window.current_project
         _add_region(project, "region_1", ["line_1"])
-        signal_record = _record_signal_emissions(
-            organize_harness.coordinator.organize_data_changed
-        )
-
         _select_for_organize(organize_harness.coordinator, ["region_1"], [])
         result = organize_harness.coordinator._execute_organize_merge()
 
         assert result is False
         assert list(project.absorption_regions) == ["region_1"]
         assert project.absorption_regions["region_1"].line_ids == ["line_1"]
-        assert signal_record.count == 0
         assert organize_harness.panel.clear_count == 0
         assert organize_harness.panel.refresh_count == 0
 
@@ -541,10 +490,6 @@ class TestOrganizeDataChangedSignal:
         project = organize_harness.main_window.current_project
         _add_region(project, "source_region", ["line_1", "line_2"])
         original_region_ids = set(project.absorption_regions)
-        signal_record = _record_signal_emissions(
-            organize_harness.coordinator.organize_data_changed
-        )
-
         _select_for_organize(organize_harness.coordinator, [], ["line_1"])
         result = organize_harness.coordinator._execute_organize_split()
 
@@ -555,9 +500,8 @@ class TestOrganizeDataChangedSignal:
         assert project.absorption_regions["source_region"].line_ids == ["line_2"]
         assert project.absorption_regions[new_region_id].line_ids == ["line_1"]
         assert project.absorption_lines["line_1"].region_id == new_region_id
-        assert signal_record.count == 1
         assert organize_harness.panel.clear_count == 1
-        assert organize_harness.panel.refresh_count == 1
+        assert organize_harness.panel.refresh_count == 0
 
     def test_split_without_line_selection_preserves_project_and_does_not_emit(
         self, organize_harness: _OrganizeHarness
@@ -565,17 +509,12 @@ class TestOrganizeDataChangedSignal:
         """Split requires exactly one selected line."""
         project = organize_harness.main_window.current_project
         _add_region(project, "source_region", ["line_1"])
-        signal_record = _record_signal_emissions(
-            organize_harness.coordinator.organize_data_changed
-        )
-
         _select_for_organize(organize_harness.coordinator, [], [])
         result = organize_harness.coordinator._execute_organize_split()
 
         assert result is False
         assert list(project.absorption_regions) == ["source_region"]
         assert project.absorption_regions["source_region"].line_ids == ["line_1"]
-        assert signal_record.count == 0
         assert organize_harness.panel.clear_count == 0
         assert organize_harness.panel.refresh_count == 0
 
@@ -586,15 +525,10 @@ class TestOrganizeDataChangedSignal:
         project = organize_harness.main_window.current_project
         _add_region(project, "source_region", ["line_1"])
         _add_region(project, "target_region", [])
-        signal_record = _record_signal_emissions(
-            organize_harness.coordinator.organize_data_changed
-        )
-
         organize_harness.coordinator._handle_organize_line_move("target_region", ["line_1"])
 
         assert "source_region" not in project.absorption_regions
         assert project.absorption_regions["target_region"].line_ids == ["line_1"]
         assert project.absorption_lines["line_1"].region_id == "target_region"
-        assert signal_record.count == 1
         assert organize_harness.panel.clear_count == 0
-        assert organize_harness.panel.refresh_count == 1
+        assert organize_harness.panel.refresh_count == 0

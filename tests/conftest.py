@@ -82,3 +82,20 @@ def _close_matplotlib_figures() -> Iterator[None]:
         application = QApplication.instance()
         if application is not None:
             application.processEvents()
+
+
+@pytest.fixture(autouse=True)
+def _hide_qt_top_level_widgets() -> Iterator[None]:
+    """Hide test-owned top-level widgets before the next test reuses QApplication."""
+    yield
+    if "PySide6.QtWidgets" not in sys.modules:
+        return
+
+    from PySide6.QtWidgets import QApplication
+
+    application = QApplication.instance()
+    if application is None:
+        return
+    for widget in QApplication.topLevelWidgets():
+        widget.hide()
+    application.processEvents()

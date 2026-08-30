@@ -10,7 +10,7 @@ from PySide6.QtCore import QT_TRANSLATE_NOOP, QObject, Signal
 from PySide6.QtWidgets import QWidget
 
 from chappy.application.analysis_artifacts import run_postcommit_actions_isolated
-from chappy.core.editing_mode import EditingMode, FittingGroupSummary
+from chappy.core.editing_mode import EditingMode
 from chappy.gui.modes.analysis.lifecycle import AnalysisLifecycleCoordinator
 from chappy.gui.modes.continuum import ContinuumModeLifecycle
 from chappy.gui.modes.identify import IdentifyModeLifecycle
@@ -154,11 +154,6 @@ class ModeShellCoordinator(QObject):
             action_map_provider=self._shell_action_map,
             zoom_rect_toggle_callback=self._interaction_mode_coordinator.handle_zoom_rect_mode,
         )
-
-    @property
-    def fitting_groups(self) -> Mapping[str, FittingGroupSummary]:
-        """Return the current fitting group registry from the mode state store."""
-        return self._require_mode_state_store().fitting_groups
 
     def _require_mode_state_store(self) -> ModeStateStore:
         """Return the configured mode state store or fail fast."""

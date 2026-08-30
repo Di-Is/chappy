@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject
 
 from chappy.core.absorption.models import AbsorptionLine, AbsorptionRegion
 from chappy.core.spectroscopy_project import SpectroscopyProject
@@ -41,8 +41,6 @@ if TYPE_CHECKING:
 
 class _ModeState(QObject):
     """Minimal mode-state double exposing the signal the panel wires on construction."""
-
-    group_removed = Signal(str)
 
 
 def _region(region_id: str, line_id: str) -> tuple[AbsorptionRegion, AbsorptionLine]:

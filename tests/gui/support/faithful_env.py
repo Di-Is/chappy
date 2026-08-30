@@ -14,7 +14,7 @@ from PySide6.QtCore import QPoint, QRect
 from PySide6.QtWidgets import QAbstractScrollArea, QApplication, QDialog, QWidget
 
 from chappy.gui.application_font import configure_application_font
-from chappy.gui.theme import apply_dark_palette, get_application_stylesheet
+from chappy.gui.theme import apply_application_theme
 from chappy.i18n.qt_translator import QtTranslatorInstaller
 
 
@@ -31,9 +31,7 @@ def faithful_application_environment(app: QApplication, language: str) -> Iterat
     previous_style_name = app.style().name()
     installer = QtTranslatorInstaller()
     try:
-        app.setStyle("Fusion")
-        apply_dark_palette(app)
-        app.setStyleSheet(get_application_stylesheet())
+        apply_application_theme(app)
         configure_application_font(app)
         installer.install_language(language)
         yield

@@ -73,6 +73,7 @@ class VelocitySubplotRenderState:
     residual_visible: bool
     center_line_count: int
     component_marker_count: int
+    emphasized_marker_labels: tuple[str, ...]
     component_ids: tuple[str, ...]
     analysis_boundary_count: int
     analysis_out_of_view_text: str | None
@@ -353,6 +354,7 @@ class VelocitySubplotWidget(QFrame):
             residual_visible=residual_data is not None,
             center_line_count=len(self._plot_renderer.center_lines()),
             component_marker_count=self._plot_renderer.component_marker_count(),
+            emphasized_marker_labels=self._plot_renderer.emphasized_marker_labels(),
             component_ids=tuple(component.component_id for component in self._components),
             analysis_boundary_count=self._plot_renderer.analysis_boundary_count(),
             analysis_out_of_view_text=self._plot_renderer.analysis_out_of_view_text(),
@@ -474,6 +476,8 @@ class VelocitySubplotWidget(QFrame):
                     short_text=format_abbreviated_component_marker_label(
                         component.label, component.tie_label
                     ),
+                    selected=component.selected,
+                    color=component.color,
                 )
                 for component in render_input.component_markers
             ]

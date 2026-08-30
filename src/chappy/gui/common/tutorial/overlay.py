@@ -393,7 +393,17 @@ class TutorialSpotlightOverlay(QWidget):
             self._spotlights = new_spotlights
             self.update()
             self.spotlight_changed.emit()
-        if self.isVisible() and parent is not None:
+        targets_hidden = (
+            parent is not None
+            and self._targets
+            and not any(tracked.target.widget.isVisibleTo(parent) for tracked in self._targets)
+        )
+        if self.isVisible() and parent is not None and targets_hidden:
+            # A target can disappear mid-step (for example, closing the velocity
+            # plot from inside its own interaction target). An empty widget mask
+            # keeps the host usable until the tracked target becomes visible again.
+            self.setMask(QRegion())
+        elif self.isVisible() and parent is not None:
             self.setMask(QRegion(self.rect()).subtracted(interactive_region))
         else:
             self.clearMask()

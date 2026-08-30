@@ -1404,7 +1404,7 @@
     <message>
         <location filename="_annotations_extraction_bridge.py" line="721"/>
         <source>Shown in the bottom pane while Region Detail is open. Edit component parameters and each line&apos;s Analysis range [km/s] for the selected region. Component rows leave the analysis-range cell empty. Each parameter value cell combines the shared tie label, fitted value, and uncertainty in one display; right-click a column header to show or hide columns, and drag a header to reorder columns (visibility, order, and width are remembered for next time).</source>
-        <translation>領域詳細を開いている間、下部ペインに表示されます。選択した領域の成分パラメータと各ラインの［解析範囲 [km/s]］を編集します。成分行の解析範囲セルは空欄です。各パラメータ値セルには、共有タイラベル、フィット値、誤差がまとめて表示されます。列見出しを右クリックすると列の表示/非表示を切り替えられ、見出しをドラッグすると列を並べ替えられます（表示状態、順序、幅は次回まで保存されます）。</translation>
+        <translation>領域詳細を開いている間、下部ペインに表示されます。選択した領域の成分パラメータと各ラインの［解析範囲 [km/s]］を編集します。成分行の解析範囲セルは空欄です。各パラメータ値セルには、共有ラベル、フィット値、誤差がまとめて表示されます。列見出しを右クリックすると列の表示/非表示を切り替えられ、見出しをドラッグすると列を並べ替えられます（表示状態、順序、幅は次回まで保存されます）。</translation>
     </message>
     <message>
         <location filename="_annotations_extraction_bridge.py" line="725"/>
@@ -2001,7 +2001,7 @@
     </message>
     <message>
         <location filename="../exporter.py" line="1287"/>
-        <location filename="../tutorial_guide.py" line="96"/>
+        <location filename="../tutorial_guide.py" line="122"/>
         <source>No.</source>
         <translation>番号</translation>
     </message>
@@ -2367,14 +2367,14 @@
     <message>
         <location filename="../line_database_guide.py" line="182"/>
         <location filename="../pipeline.py" line="525"/>
-        <location filename="../tutorial_guide.py" line="287"/>
+        <location filename="../tutorial_guide.py" line="342"/>
         <source>Tips and Best Practices</source>
         <translation>注意点とベストプラクティス</translation>
     </message>
     <message>
         <location filename="../line_database_guide.py" line="203"/>
         <location filename="../pipeline.py" line="528"/>
-        <location filename="../tutorial_guide.py" line="297"/>
+        <location filename="../tutorial_guide.py" line="352"/>
         <source>Related References</source>
         <translation>関連資料</translation>
     </message>
@@ -2384,325 +2384,330 @@
         <translation>| ステップ | 操作 | 期待される結果 |</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="19"/>
+        <location filename="../tutorial_guide.py" line="45"/>
         <location filename="../user_manual_manifest.py" line="423"/>
         <source>Guided Tutorial</source>
         <translation>ガイド付きチュートリアル</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="20"/>
+        <location filename="../tutorial_guide.py" line="46"/>
         <source>What the in-app guided tour teaches, how it starts, and how to run it again from the Help menu.</source>
         <translation>アプリ内のガイドツアーで学べる内容と、開始方法、［ヘルプ］メニューからの再開方法を説明します。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="26"/>
+        <location filename="../tutorial_guide.py" line="52"/>
         <source>chappy includes a guided tour: coach-mark bubbles that highlight one widget at a time and walk you through the analysis workflow on the bundled sample spectrum of quasar Q0329-385. It never touches your own data, because it opens the sample spectrum itself before it starts.</source>
         <translation>chappy には、ウィジェットを 1 つずつハイライトするコーチマーク（吹き出し）で解析の流れを案内するガイドツアーがあります。同梱されたクェーサー Q0329-385 のサンプルスペクトルを使って進み、開始前にツアー自身がそのサンプルを開くため、ご自身のデータに触れることはありません。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="34"/>
+        <location filename="../tutorial_guide.py" line="60"/>
         <source>Starting the Tour</source>
         <translation>ツアーを開始する</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="35"/>
+        <location filename="../tutorial_guide.py" line="61"/>
         <source>The tour is offered through the same [Welcome to chappy] dialog on both occasions below.</source>
         <translation>次の 2 つの場面のどちらでも、同じ［chappy へようこそ］ダイアログからツアーを開始できます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="40"/>
+        <location filename="../tutorial_guide.py" line="66"/>
         <source>On the very first launch, chappy shows the dialog automatically, once. If the bundled sample spectrum is not part of this installation, the dialog still appears but its two walkthrough buttons are disabled; you can still open your own data from [File] &gt; [Open Observation Data].</source>
         <translation>初回起動時には、このダイアログが 1 度だけ自動で表示されます。同梱のサンプルスペクトルがインストールに含まれていない場合、ダイアログは表示されますが 2 つのコースのボタンは無効になります。その場合も、［ファイル］&gt;［観測データを開く］からご自身のデータを読み込めます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="47"/>
+        <location filename="../tutorial_guide.py" line="73"/>
         <source>Afterward, select [Help] &gt; [Tutorial] to reopen the same dialog at any time and start the tour again.</source>
         <translation>2 回目以降は、［ヘルプ］&gt;［チュートリアル］を選ぶと同じダイアログをいつでも開き直し、ツアーを再開できます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="53"/>
+        <location filename="../tutorial_guide.py" line="79"/>
         <source>Choosing a walkthrough opens the sample spectrum (flux and error FITS pair, resolving power already set) before the first coach mark appears, replacing whatever project was open.</source>
         <translation>コースを選ぶと、最初のコーチマークが表示される前にサンプルスペクトル（フラックスと誤差の FITS ファイル 2 点。装置分解能は設定済み）が開き、それまで開いていたプロジェクトは置き換えられます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="60"/>
+        <location filename="../tutorial_guide.py" line="86"/>
         <source>Short Walkthrough or Full Walkthrough</source>
         <translation>基本コースと全機能コース</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="63"/>
+        <location filename="../tutorial_guide.py" line="89"/>
         <source>The dialog offers two lengths; both start from the same first chapter.</source>
         <translation>ダイアログでは長さの異なる 2 つのコースを選べます。どちらも同じ最初の章から始まります。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="66"/>
+        <location filename="../tutorial_guide.py" line="92"/>
         <source>Dialog Button</source>
         <translation>ダイアログのボタン</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="67"/>
+        <location filename="../tutorial_guide.py" line="93"/>
         <source>Coverage</source>
         <translation>学べる範囲</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="68"/>
-        <location filename="../tutorial_guide.py" line="90"/>
+        <location filename="../tutorial_guide.py" line="94"/>
+        <location filename="../tutorial_guide.py" line="116"/>
         <source>Chapters</source>
         <translation>章</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="71"/>
+        <location filename="../tutorial_guide.py" line="97"/>
         <source>[Try the Essential Workflow]</source>
         <translation>［基本の流れを体験する］</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="72"/>
+        <location filename="../tutorial_guide.py" line="98"/>
         <source>The minimal loop: load data, identify one absorption system, fit it, save the project.</source>
         <translation>最小限の流れです。データを読み込み、吸収系を 1 つ同定し、フィットして、プロジェクトを保存します。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="80"/>
+        <location filename="../tutorial_guide.py" line="106"/>
         <source>[Explore All Features]</source>
         <translation>［すべての機能を体験する］</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="81"/>
+        <location filename="../tutorial_guide.py" line="107"/>
         <source>Everything in the essential workflow plus building a custom preset, the velocity plot, merging regions, tying ions together, and continuum correction.</source>
-        <translation>基本コースの内容に加えて、カスタムプリセットの作成、速度プロット、領域の統合、イオン間のタイ、連続光補正まで進みます。</translation>
+        <translation>基本コースの内容に加えて、カスタムプリセットの作成、速度プロット、領域の統合、イオン間のパラメータ共有、連続光補正まで進みます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="91"/>
+        <location filename="../tutorial_guide.py" line="117"/>
         <source>Chapters run in the order below. A chapter marked Full only is skipped in the essential workflow.</source>
         <translation>章は次の順に進みます。「全機能のみ」の章は、基本コースでは省略されます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="97"/>
-        <location filename="../tutorial_guide.py" line="203"/>
+        <location filename="../tutorial_guide.py" line="123"/>
+        <location filename="../tutorial_guide.py" line="252"/>
         <source>Chapter</source>
         <translation>章</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="98"/>
+        <location filename="../tutorial_guide.py" line="124"/>
         <source>Included In</source>
         <translation>対象コース</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="99"/>
+        <location filename="../tutorial_guide.py" line="125"/>
         <source>What You Learn</source>
         <translation>学べる内容</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="100"/>
+        <location filename="../tutorial_guide.py" line="126"/>
         <source>Essential and Full</source>
         <translation>基本・全機能</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="101"/>
+        <location filename="../tutorial_guide.py" line="127"/>
         <source>Full only</source>
         <translation>全機能のみ</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="104"/>
+        <location filename="../tutorial_guide.py" line="131"/>
         <source>Getting Started</source>
         <translation>はじめに</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="106"/>
+        <location filename="../tutorial_guide.py" line="133"/>
         <source>Navigating the loaded spectrum: wheel/keyboard zoom and pan, rectangle zoom, undo/redo, typing an exact wavelength range, [Auto Adjust], [Reset View], and where to open your own data instead.</source>
         <translation>読み込んだスペクトルの操作方法です。ホイールとキーボードによるズームと移動、範囲ズーム、元に戻す・やり直し、波長範囲の直接入力、［自動調整］、［表示をリセット］、そしてご自身のデータを開く場所を扱います。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="114"/>
+        <location filename="../tutorial_guide.py" line="143"/>
         <source>Identifying Absorption Systems</source>
         <translation>吸収系の同定</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="116"/>
+        <location filename="../tutorial_guide.py" line="145"/>
         <source>Selecting the built-in &quot;Metal Lines&quot; preset, choosing a reference line, marking a candidate absorption system on the spectrum, and confirming it as a region.</source>
         <translation>組み込みプリセット「金属線」を選び、基準ラインを決めて、スペクトル上で吸収系の候補をマークし、領域として確定します。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="123"/>
-        <location filename="../tutorial_guide.py" line="207"/>
+        <location filename="../tutorial_guide.py" line="154"/>
+        <location filename="../tutorial_guide.py" line="257"/>
         <source>Reviewing Analysis Readiness</source>
         <translation>解析状態のレビュー</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="125"/>
+        <location filename="../tutorial_guide.py" line="156"/>
         <source>Selecting the confirmed region in Analysis Overview and reading its fit readiness.</source>
         <translation>確定した領域を解析概要で選び、フィットの準備状況を読み取ります。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="131"/>
-        <location filename="../tutorial_guide.py" line="211"/>
+        <location filename="../tutorial_guide.py" line="164"/>
+        <location filename="../tutorial_guide.py" line="262"/>
         <source>Fitting a Region in Detail</source>
         <translation>領域詳細でのフィット</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="133"/>
+        <location filename="../tutorial_guide.py" line="166"/>
         <source>Opening Analysis Region Detail, adding a fit component to a line, running the optimizer, and reading the fit outcome.</source>
         <translation>解析の領域詳細を開き、ラインにフィットコンポーネントを追加して最適化を実行し、フィット結果を読み取ります。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="140"/>
+        <location filename="../tutorial_guide.py" line="175"/>
         <source>Building a Custom Preset</source>
         <translation>カスタムプリセットの作成</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="142"/>
+        <location filename="../tutorial_guide.py" line="177"/>
         <source>Creating a named preset, adding Fe II and Mg II lines to it, linking and unlinking lines into tie groups, and choosing its reference line.</source>
         <translation>名前を付けたプリセットを作成し、Fe II と Mg II のラインを追加して、ラインのリンクグループを組んだり解除したりし、基準ラインを選びます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="149"/>
-        <location filename="../tutorial_guide.py" line="215"/>
+        <location filename="../tutorial_guide.py" line="186"/>
+        <location filename="../tutorial_guide.py" line="267"/>
         <source>Identifying with the Velocity Plot</source>
         <translation>速度プロットで同定する</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="151"/>
+        <location filename="../tutorial_guide.py" line="188"/>
         <source>Selecting the custom preset, moving to a second, hidden absorption system in the sample, and using the velocity plot to identify and confirm it.</source>
         <translation>カスタムプリセットを選び、サンプルの中に隠れたもう 1 つの吸収系へ移動して、速度プロットで同定・確定します。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="158"/>
-        <location filename="../tutorial_guide.py" line="219"/>
+        <location filename="../tutorial_guide.py" line="197"/>
+        <location filename="../tutorial_guide.py" line="272"/>
         <source>Merging Regions</source>
         <translation>領域の統合</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="160"/>
-        <source>Opening Analysis Structure for a region and merging it with another so a single region spans more than one ion species.</source>
-        <translation>領域の解析の構造編集を開き、別の領域と統合して、1 つの領域が複数のイオン種にまたがるようにします。</translation>
+        <location filename="../tutorial_guide.py" line="199"/>
+        <source>Opening Analysis Structure for two regions, merging them so one region spans more than one ion species, splitting the Mg II multiplet back out, and re-merging the regions.</source>
+        <translation>解析の構造編集で 2 つの領域を開き、複数のイオン種にまたがる 1 つの領域へ統合し、Mg II マルチプレットを再び分割してから、領域を再統合します。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="167"/>
+        <location filename="../tutorial_guide.py" line="211"/>
+        <source>Building three-component models for both ions, tying their main components&apos; redshift together, running a joint fit, and fixing the saturated Mg II logN before fitting again.</source>
+        <translation>両方のイオンに 3 成分モデルを構築し、主成分の赤方偏移をイオン間で共有して同時フィットを実行し、飽和した Mg II の logN を固定して再フィットします。</translation>
+    </message>
+    <message>
         <location filename="../tutorial_guide.py" line="223"/>
+        <source>Switching to Continuum mode and running [Auto Estimate] to fit the continuum around the spectrum, adding and moving a control point, deleting a point, and undoing those edits.</source>
+        <translation>連続光モードに切り替え、［自動推定］を実行してスペクトルに沿った連続光を求め、制御点の追加・移動・削除と、それらの編集の取り消しを行います。</translation>
+    </message>
+    <message>
+        <location filename="../tutorial_guide.py" line="245"/>
+        <source>Five chapters open only after earlier chapters have left the project in the state they need. When a chapter&apos;s prerequisite is unmet, the tour shows a warning bubble instead of that chapter&apos;s first step, offering [Back] to return to the previous step or [Continue anyway] to ignore the prerequisite and start that chapter from its first step.</source>
+        <translation>5 つの章は、それ以前の章によってプロジェクトが必要な状態になってから開きます。前提条件が満たされていない場合、その章の最初のステップの代わりに警告の吹き出しが表示され、［戻る］で前のステップに戻るか、［このまま続行］で前提条件を無視してその章の最初のステップから開始するかを選べます。</translation>
+    </message>
+    <message>
+        <location filename="../tutorial_guide.py" line="209"/>
+        <location filename="../tutorial_guide.py" line="277"/>
         <source>Tying Ions and Fitting Together</source>
-        <translation>イオン間タイと同時フィット</translation>
+        <translation>イオン間のパラメータ共有と同時フィット</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="169"/>
-        <source>Adding a fit component to one ion, tying its redshift to another ion in the same region, and running a joint fit across both.</source>
-        <translation>片方のイオンにフィットコンポーネントを追加し、同じ領域内のもう一方のイオンと赤方偏移をタイして、両方をまとめてフィットします。</translation>
-    </message>
-    <message>
-        <location filename="../tutorial_guide.py" line="176"/>
+        <location filename="../tutorial_guide.py" line="221"/>
         <source>Correcting the Continuum</source>
         <translation>連続光の補正</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="178"/>
-        <source>Switching to Continuum mode and running [Auto Estimate] to fit the continuum around the spectrum.</source>
-        <translation>連続光モードに切り替え、［自動推定］を実行してスペクトルに沿った連続光を求めます。</translation>
-    </message>
-    <message>
-        <location filename="../tutorial_guide.py" line="185"/>
+        <location filename="../tutorial_guide.py" line="233"/>
         <source>Saving Your Work</source>
         <translation>プロジェクトの保存</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="187"/>
+        <location filename="../tutorial_guide.py" line="235"/>
         <source>Saving the project, and a recap of the load, identify, review, fit, and save loop just completed.</source>
         <translation>プロジェクトを保存し、ここまでたどった「読み込み・同定・レビュー・フィット・保存」の流れを振り返ります。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="195"/>
+        <location filename="../tutorial_guide.py" line="244"/>
         <source>Chapter Prerequisites</source>
         <translation>章の前提条件</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="196"/>
-        <source>Five chapters open only after earlier chapters have left the project in the state they need. When a chapter&apos;s prerequisite is unmet, the tour shows a warning bubble instead of that chapter&apos;s first step, offering [Back] to return to the previous step or [Continue anyway] to skip straight past the chapter.</source>
-        <translation>5 つの章は、それ以前の章によってプロジェクトが必要な状態になってから開きます。前提条件が満たされていない場合、その章の最初のステップの代わりに警告の吹き出しが表示され、［戻る］で前のステップに戻るか、［このまま続行］でその章を飛ばすかを選べます。</translation>
-    </message>
-    <message>
-        <location filename="../tutorial_guide.py" line="204"/>
+        <location filename="../tutorial_guide.py" line="253"/>
         <source>Needs</source>
         <translation>必要な状態</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="208"/>
-        <location filename="../tutorial_guide.py" line="212"/>
+        <location filename="../tutorial_guide.py" line="258"/>
+        <location filename="../tutorial_guide.py" line="263"/>
         <source>At least one confirmed absorption region.</source>
         <translation>確定した吸収領域が 1 つ以上あること。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="216"/>
+        <location filename="../tutorial_guide.py" line="268"/>
         <source>A custom preset created in an earlier chapter.</source>
         <translation>前の章で作成したカスタムプリセットがあること。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="220"/>
+        <location filename="../tutorial_guide.py" line="273"/>
         <source>At least two confirmed absorption regions.</source>
         <translation>確定した吸収領域が 2 つ以上あること。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="224"/>
+        <location filename="../tutorial_guide.py" line="278"/>
         <source>A region that combines two or more ion species.</source>
         <translation>2 つ以上のイオン種を含む領域があること。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="228"/>
+        <location filename="../tutorial_guide.py" line="282"/>
         <source>Step Controls</source>
         <translation>ステップの操作ボタン</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="229"/>
+        <location filename="../tutorial_guide.py" line="283"/>
         <source>Every coach-mark bubble carries the same controls, alongside the step&apos;s instruction and expected result.</source>
         <translation>コーチマークの吹き出しには、そのステップの操作内容と期待される結果に加えて、どれも同じ操作ボタンが並びます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="234"/>
+        <location filename="../tutorial_guide.py" line="288"/>
         <source>Control</source>
         <translation>ボタン</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="235"/>
+        <location filename="../tutorial_guide.py" line="289"/>
         <source>Effect</source>
         <translation>動作</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="239"/>
+        <location filename="../tutorial_guide.py" line="290"/>
+        <source>[{label}]</source>
+        <translation>［{label}］</translation>
+    </message>
+    <message>
+        <location filename="../tutorial_guide.py" line="294"/>
         <source>Advances to the next step. On a step that checks for a specific action (for example, confirming a region or linking preset lines), [Next] stays disabled and the expected-result line stays unchecked until that action is performed; performing it enables [Next] without advancing automatically, so you can read the confirmation first.</source>
         <translation>次のステップへ進みます。特定の操作を確認するステップ（領域の確定やプリセットのラインのリンクなど）では、その操作を行うまで［次へ］は無効のままで、期待される結果にもチェックが付きません。操作を行うと［次へ］が有効になりますが、自動では進まないため、確認の表示を読んでから進められます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="250"/>
+        <location filename="../tutorial_guide.py" line="305"/>
         <source>Returns to the previous step, or to the previous chapter&apos;s last step at a chapter&apos;s first step. It does not undo anything you did in the application.</source>
         <translation>前のステップに戻ります。章の最初のステップでは、前の章の最後のステップに戻ります。アプリケーション側で行った操作が取り消されることはありません。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="258"/>
+        <location filename="../tutorial_guide.py" line="313"/>
         <source>Closes the tour immediately, keeping whatever the tour has done to the project so far.</source>
         <translation>ツアーをすぐに終了します。ツアーがそれまでにプロジェクトへ加えた変更はそのまま残ります。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="266"/>
+        <location filename="../tutorial_guide.py" line="321"/>
         <source>Shown only on steps that carry background information beyond the instruction itself; expands or collapses that note in place.</source>
         <translation>操作内容だけでは分からない補足があるステップにのみ表示され、その場で補足の表示と非表示を切り替えます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="274"/>
+        <location filename="../tutorial_guide.py" line="329"/>
         <source>Ending and Restarting</source>
         <translation>終了と再開</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="276"/>
+        <location filename="../tutorial_guide.py" line="331"/>
         <source>&gt; [!NOTE]
 &gt; The tour keeps no memory of where you stopped. Whether you close it with [Exit Tour] or quit chappy, the next walkthrough you start from [Help] &gt; [Tutorial] begins again at the first chapter, [Getting Started], and reopens the sample spectrum. Switching modes yourself does not end the tour, but the widget the current step points at is no longer on screen; switch back to the mode the chapter is guiding to see the coach mark again.</source>
         <translation>&gt; [!NOTE]
 &gt; ツアーは中断した位置を記憶しません。［ツアーを終了］で閉じた場合も、chappy を終了した場合も、次に［ヘルプ］&gt;［チュートリアル］から始めたコースは最初の章［はじめに］からやり直しになり、サンプルスペクトルも開き直されます。自分でモードを切り替えてもツアーは終了しませんが、現在のステップが指しているウィジェットは画面から消えます。その章が案内しているモードに戻すと、コーチマークが再び表示されます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="289"/>
+        <location filename="../tutorial_guide.py" line="344"/>
         <source>&gt; [!TIP]
 &gt; The tour targets specific widgets by name. If a step&apos;s highlighted area looks empty, the window may be too narrow to show that widget; enlarge the window or reveal the collapsed panel it belongs to.</source>
         <translation>&gt; [!TIP]
 &gt; ツアーはウィジェットを名前で指し示します。ハイライトされた場所が空に見える場合は、ウィンドウが狭くてそのウィジェットが表示されていない可能性があります。ウィンドウを広げるか、そのウィジェットが含まれる折りたたまれたパネルを展開すると表示されます。</translation>
     </message>
     <message>
-        <location filename="../tutorial_guide.py" line="300"/>
+        <location filename="../tutorial_guide.py" line="355"/>
         <location filename="../user_manual_manifest.py" line="88"/>
         <source>Load Data into the Application</source>
         <translation>データを読み込む</translation>
@@ -3252,7 +3257,7 @@
     <message>
         <location filename="../line_database_guide.py" line="204"/>
         <location filename="../scenarios/start.py" line="86"/>
-        <location filename="../tutorial_guide.py" line="298"/>
+        <location filename="../tutorial_guide.py" line="353"/>
         <location filename="../user_manual_manifest.py" line="392"/>
         <source>Menu List</source>
         <translation>メニュー一覧</translation>
@@ -3786,6 +3791,29 @@
         <location filename="../templates.py" line="46"/>
         <source>Continuum</source>
         <translation>連続光</translation>
+    </message>
+</context>
+<context>
+    <name>Tutorial</name>
+    <message>
+        <location filename="../tutorial_guide.py" line="293"/>
+        <source>Next</source>
+        <translation>次へ</translation>
+    </message>
+    <message>
+        <location filename="../tutorial_guide.py" line="304"/>
+        <source>Back</source>
+        <translation>戻る</translation>
+    </message>
+    <message>
+        <location filename="../tutorial_guide.py" line="312"/>
+        <source>Exit Tour</source>
+        <translation>ツアーを終了</translation>
+    </message>
+    <message>
+        <location filename="../tutorial_guide.py" line="320"/>
+        <source>What is this?</source>
+        <translation>これは何？</translation>
     </message>
 </context>
 </TS>

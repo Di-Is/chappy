@@ -8,9 +8,11 @@ import logging
 import os
 import shutil
 import subprocess
+import tempfile
 import tomllib
 from importlib import metadata as importlib_metadata
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QApplication
 
@@ -19,13 +21,19 @@ from chappy.gui.application_font import (
     configure_application_font,
     configure_offscreen_font_environment,
 )
+from chappy.gui.theme import apply_application_theme
 from chappy.i18n import get_language_switcher
 from chappy_user_manual_generator.exporter import ensure_high_dpi_mode
 from chappy_user_manual_generator.pipeline import RuntimeOptions, run_manifest
 from chappy_user_manual_generator.profiles import available_profiles, load_profile
 from chappy_user_manual_generator.translations import install_language as install_manual_language
 
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
 logger = logging.getLogger(__name__)
+
+_CONFIG_DIR_ENV_VAR = "CHAPPY_CONFIG_DIR"
 
 
 def _project_root() -> Path:
@@ -89,6 +97,23 @@ def _derive_html_out_dir(markdown_dir: Path) -> Path:
     name = markdown_dir.name
     candidate = name.replace("markdown", "html") if "markdown" in name else f"{name}_html"
     return markdown_dir.parent / candidate
+
+
+@contextlib.contextmanager
+def _isolated_language_preference(language: str) -> Iterator[None]:
+    """Expose the requested language without changing the user's saved preference."""
+    previous_config_dir = os.environ.get(_CONFIG_DIR_ENV_VAR)
+    with tempfile.TemporaryDirectory(prefix="chappy-manual-language-") as config_dir:
+        config_path = Path(config_dir) / "config.toml"
+        config_path.write_text(f'[ui]\nlanguage = "{language}"\n', encoding="utf-8")
+        os.environ[_CONFIG_DIR_ENV_VAR] = config_dir
+        try:
+            yield
+        finally:
+            if previous_config_dir is None:
+                os.environ.pop(_CONFIG_DIR_ENV_VAR, None)
+            else:
+                os.environ[_CONFIG_DIR_ENV_VAR] = previous_config_dir
 
 
 def parse_args() -> argparse.Namespace:
@@ -168,6 +193,7 @@ def main() -> int:
 
     existing_app = QApplication.instance()
     app = existing_app if isinstance(existing_app, QApplication) else QApplication([])
+    apply_application_theme(app)
     ensure_high_dpi_mode()
 
     try:
@@ -177,22 +203,24 @@ def main() -> int:
         app.quit()
         return 1
 
-    if args.language:
+    with _isolated_language_preference(language):
         language_switcher = get_language_switcher()
-        language_switcher.set_language(args.language)
-        install_manual_language(args.language)
+        if language_switcher.current_language != language:
+            msg = "The manual generator language switcher was initialized too early"
+            raise RuntimeError(msg)
+        install_manual_language(language)
 
-    manifest = load_profile(profile_name, version=version)
-    options = RuntimeOptions(
-        out_dir=out_dir,
-        html_out_dir=html_out_dir,
-        version=version,
-        scale_width=args.scale_width,
-        show_internal_id=args.show_internal_id,
-        language=language,
-        headless=True,
-    )
-    run_manifest(app, manifest, options)
+        manifest = load_profile(profile_name, version=version)
+        options = RuntimeOptions(
+            out_dir=out_dir,
+            html_out_dir=html_out_dir,
+            version=version,
+            scale_width=args.scale_width,
+            show_internal_id=args.show_internal_id,
+            language=language,
+            headless=True,
+        )
+        run_manifest(app, manifest, options)
     app.quit()
     return 0
 

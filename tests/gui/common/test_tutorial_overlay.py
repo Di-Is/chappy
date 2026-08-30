@@ -334,6 +334,24 @@ def test_target_outside_scroll_viewport_has_no_cutout(qtbot: QtBot) -> None:
     assert overlay.mask().contains(previous_center)
 
 
+def test_hidden_only_target_does_not_mask_the_host(qtbot: QtBot) -> None:
+    """A control hidden during its step must leave the host usable for recovery."""
+    window = QWidget()
+    window.resize(320, 220)
+    target = QWidget(window)
+    target.hide()
+    qtbot.addWidget(window)
+    window.show()
+    qtbot.waitExposed(window)
+    overlay = TutorialSpotlightOverlay(window)
+    overlay.set_targets((_target(target),))
+    overlay.show()
+    QApplication.processEvents()
+
+    assert overlay.spotlight_rects() == ()
+    assert overlay.mask().isEmpty()
+
+
 def test_bubble_placement_stays_inside_parent(qtbot: QtBot) -> None:
     """The bubble must stay within the window for every spotlight geometry."""
     window = QWidget()

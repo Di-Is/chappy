@@ -40,7 +40,7 @@ class OrganizeRefreshPanelPort(Protocol):
         ...
 
     def refresh(self) -> None:
-        """Refresh panel contents from the current project."""
+        """Refresh panel contents outside committed topology publication."""
         ...
 
     def group_entry(self, identifier: str) -> OrganizeGroupEntry | None:
@@ -62,7 +62,6 @@ type ProjectProvider = Callable[[], SpectroscopyProject | None]
 type HistoryRecorderProvider = Callable[[], OrganizeHistoryRecorder | None]
 type FocusRangeCallback = Callable[[float, float], None]
 type StatusCallback = Callable[[str, int, bool], None]
-type DataChangedCallback = Callable[[], None]
 type DeleteConfirmation = Callable[[StructureImpactPreview, SpectroscopyProject], bool]
 type UnlinkConfirmation = Callable[[StructureImpactPreview, SpectroscopyProject], bool]
 
@@ -75,7 +74,6 @@ class OrganizeInteractionPorts:
     history_recorder_provider: HistoryRecorderProvider
     focus_range_callback: FocusRangeCallback
     status_callback: StatusCallback
-    data_changed_callback: DataChangedCallback
     delete_confirmation: DeleteConfirmation
     unlink_confirmation: UnlinkConfirmation
     context_menu_parent: QWidget
@@ -393,13 +391,9 @@ class OrganizeInteractionCoordinator(QObject):
         """Run independent UI observers after a scientific structure commit."""
         actions: list[Callable[[], object]] = []
         panel = self._panel
-        if panel is not None:
-            if clear_panel_selection:
-                actions.append(panel.clear_selection)
-            actions.append(panel.refresh)
-        actions.extend(
-            (lambda: self.handle_selection([], []), self._ports.data_changed_callback, announce)
-        )
+        if panel is not None and clear_panel_selection:
+            actions.append(panel.clear_selection)
+        actions.extend((lambda: self.handle_selection([], []), announce))
         run_postcommit_actions_isolated(*actions)
 
     def _get_region_display_name(

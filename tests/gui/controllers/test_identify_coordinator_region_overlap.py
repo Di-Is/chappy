@@ -20,7 +20,6 @@ from chappy.application.identify import (
 )
 from chappy.core.absorption.models import AbsorptionLine, AbsorptionRegion
 from chappy.core.atomic_data import AtomicLine, AtomicLineData
-from chappy.core.editing_mode import EditingMode, FittingGroupSummary
 from chappy.core.identify_state import CandidateLine, IdentifySessionState
 from chappy.core.spectroscopy_project import SpectroscopyProject
 from chappy.gui.modes.identify.coordinator import IdentifyModeCoordinator
@@ -107,34 +106,12 @@ class _DummyIdentifyPresetStore:
         return [self._preset]
 
 
-class _DummyModeStateStore:
-    def __init__(self) -> None:
-        self.current_mode = EditingMode.IDENTIFY
-        self._fitting_groups: dict[str, FittingGroupSummary] = {}
-
-    def get_fitting_group(self, name: str) -> FittingGroupSummary:
-        if name not in self._fitting_groups:
-            self._fitting_groups[name] = FittingGroupSummary(
-                name=name,
-                wavelength_min=None,
-                wavelength_max=None,
-                system_ids=(),
-                absorber_names=(),
-            )
-        return self._fitting_groups[name]
-
-    @property
-    def fitting_groups(self) -> dict[str, FittingGroupSummary]:
-        """Return stored fitting groups."""
-        return self._fitting_groups
-
-
 class _DummyMainWindow(QObject):
     """Small QObject-backed main window double for coordinator construction."""
 
     project_changed = Signal(SpectroscopyProject)
 
-    def __init__(self, mode_state_store: _DummyModeStateStore) -> None:
+    def __init__(self, mode_state_store: object) -> None:
         super().__init__()
         self.mode_state_store = mode_state_store
         self.mode_shell_coordinator = None
@@ -168,12 +145,10 @@ def _registration_messages() -> IdentifyRegistrationWorkflowMessages:
 
 def _build_coordinator(project: SpectroscopyProject) -> IdentifyRegistrationWorkflow:
     """Build a registration workflow with the given project for testing."""
-    mode_state_store = _DummyModeStateStore()
     return IdentifyRegistrationWorkflow(
         IdentifyRegistrationWorkflowPorts(
             project_provider=lambda: project,
             session_provider=IdentifySessionState,
-            mode_state_provider=lambda: mode_state_store,
             history_recorder_provider=lambda: None,
             primary_members_provider=lambda: {},
             messages_provider=_registration_messages,
